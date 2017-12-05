@@ -1,0 +1,6 @@
+disabled_rules:
+  - custom_class_name
+enabled_rules:
+  - relative_to_margin
+excluded:
+  - Carthage
