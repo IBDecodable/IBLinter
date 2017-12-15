@@ -32,6 +32,14 @@ fi
 
 ## Rules
 
+| Rule id              | description                                                                    |
+|:---------------------|:-------------------------------------------------------------------------------|
+| `custom_class_name`  | Custom class name of ViewController in storyboard should be same as file name. |
+| `relative_to_margin` | Forbid to use `relative to margin` option.                                     |
+| `misplaced`          | Display error when views are misplaced.                                        |
+| `enable_autolayout`  | Force to use `useAutolayout` option                                            |
+
+
 Pull requests are encouraged.
 
 
@@ -40,11 +48,11 @@ Pull requests are encouraged.
 You can configure IBLinter by adding a `.iblinter.yml` file from project root directory.
 
 
-|key|description|
-|:--|:--|
-|`enabled_rules` | Enable rules.|
-|`disabled_rules`| Disable rules.
-|`excluded`	  	 | Path to ignore for lint.|
+| key              | description              |
+|:-----------------|:-------------------------|
+| `enabled_rules`  | Enabled rules id.        |
+| `disabled_rules` | Disabled rules id.       |
+| `excluded`       | Path to ignore for lint. |
 
 
 ```yaml
