@@ -35,11 +35,13 @@ Pull requests are encouraged.
 
 You can configure IBLinter by adding a `.iblinter` file from project root directory.
 
+
 |key|description|
-|-::|-::|
+|:--|:--|
 |`enabled_rules` | Enable rules.|
 |`disabled_rules`| Disable rules.
 |`excluded`	  	 | Path to ignore for lint.|
+
 
 ```yaml
 enabled_rules:
