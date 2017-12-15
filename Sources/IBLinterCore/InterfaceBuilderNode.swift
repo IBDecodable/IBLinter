@@ -7,18 +7,6 @@
 
 public enum InterfaceBuilderNode {}
 
-protocol XMLDecodable {
-    static func decode(_ xml: XMLIndexerProtocol) throws -> Self
-}
-
-func decodeValue<T: XMLDecodable>(_ xml: XMLIndexerProtocol) throws -> T {
-    return try T.decode(xml)
-}
-
-func decodeValue<T: XMLDecodable>(_ xml: XMLIndexerProtocol) -> T? {
-    return try? T.decode(xml)
-}
-
 public extension InterfaceBuilderNode {
 
     public struct StoryboardDocument: XMLDecodable {
