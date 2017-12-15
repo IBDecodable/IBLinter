@@ -37,7 +37,7 @@ Pull requests are encouraged.
 
 ## Configuration
 
-You can configure IBLinter by adding a `.iblinter` file from project root directory.
+You can configure IBLinter by adding a `.iblinter.yml` file from project root directory.
 
 
 |key|description|

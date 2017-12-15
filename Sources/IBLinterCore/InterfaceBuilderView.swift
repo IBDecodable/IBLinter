@@ -15,6 +15,7 @@ public protocol ViewProtocol {
     var contentMode: String? { get }
     var customClass: String? { get }
     var customModule: String? { get }
+    var isMisplaced: Bool? { get }
     var opaque: Bool? { get }
     var rect: InterfaceBuilderNode.View.Rect { get }
     var subviews: [InterfaceBuilderNode.View]? { get }
@@ -52,6 +53,7 @@ extension InterfaceBuilderNode {
         public var contentMode: String? { return _view.contentMode }
         public var customClass: String? { return _view.customClass }
         public var customModule: String? { return _view.customModule }
+        public var isMisplaced: Bool? { return _view.isMisplaced }
         public var opaque: Bool? { return _view.opaque }
         public var rect: InterfaceBuilderNode.View.Rect { return _view.rect }
         public var subviews: [InterfaceBuilderNode.View]? { return _view.subviews }
@@ -114,6 +116,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -130,6 +133,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -152,6 +156,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -169,6 +174,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -190,6 +196,7 @@ extension InterfaceBuilderNode {
             public let customModule: String?
             public let image: String
             public let insetsLayoutMarginsFromSafeArea: Bool?
+            public let isMisplaced: Bool?
             public let multipleTouchEnabled: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
@@ -208,6 +215,7 @@ extension InterfaceBuilderNode {
                     customModule:                              xml.attributeValue(of: "customModule"),
                     image:                                     try xml.attributeValue(of: "image"),
                     insetsLayoutMarginsFromSafeArea:           xml.attributeValue(of: "insetsLayoutMarginsFromSafeArea"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     multipleTouchEnabled:                      xml.attributeValue(of: "multipleTouchEnabled"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
@@ -233,6 +241,7 @@ extension InterfaceBuilderNode {
             public let font: FontDescription?
             public let horizontalHuggingPriority: Int?
             public let lineBreakMode: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -258,6 +267,7 @@ extension InterfaceBuilderNode {
                     font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
                     horizontalHuggingPriority:                 xml.attributeValue(of: "horizontalHuggingPriority"),
                     lineBreakMode:                             xml.attributeValue(of: "lineBreakMode"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -285,6 +295,7 @@ extension InterfaceBuilderNode {
             public let customModule: String?
             public let dataMode: DataMode?
             public let estimatedRowHeight: Float?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let rowHeight: Float?
@@ -321,6 +332,7 @@ extension InterfaceBuilderNode {
                     customModule:                              xml.attributeValue(of: "customModule"),
                     dataMode:                                  xml.attributeValue(of: "dataMode"),
                     estimatedRowHeight:                        xml.attributeValue(of: "estimatedRowHeight"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     rowHeight:                                 xml.attributeValue(of: "rowHeight"),
@@ -346,6 +358,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             private let _subviews: [InterfaceBuilderNode.View]?
@@ -365,6 +378,7 @@ extension InterfaceBuilderNode {
                 public let contentMode: String?
                 public let customClass: String?
                 public let customModule: String?
+                public let isMisplaced: Bool?
                 public let opaque: Bool?
                 public let rect: InterfaceBuilderNode.View.Rect
                 public let subviews: [InterfaceBuilderNode.View]?
@@ -380,6 +394,7 @@ extension InterfaceBuilderNode {
                         contentMode:                               xml.attributeValue(of: "contentMode"),
                         customClass:                               xml.attributeValue(of: "customClass"),
                         customModule:                              xml.attributeValue(of: "customModule"),
+                        isMisplaced:                               xml.attributeValue(of: "misplaced"),
                         opaque:                                    xml.attributeValue(of: "opaque"),
                         rect:                                      try decodeValue(xml.byKey("rect")),
                         subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -399,6 +414,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     _subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -418,6 +434,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -434,6 +451,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -454,6 +472,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             private let _subviews: [InterfaceBuilderNode.View]?
@@ -473,6 +492,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     _subviews:                                 xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -497,6 +517,7 @@ extension InterfaceBuilderNode {
             public let customModule: String?
             public let font: FontDescription?
             public let lineBreakMode: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -564,6 +585,7 @@ extension InterfaceBuilderNode {
                     customModule:                              xml.attributeValue(of: "customModule"),
                     font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
                     lineBreakMode:                             xml.attributeValue(of: "lineBreakMode"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -587,6 +609,7 @@ extension InterfaceBuilderNode {
             public let contentVerticalAlignment: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let segmentControlStyle: String?
@@ -615,6 +638,7 @@ extension InterfaceBuilderNode {
                     contentVerticalAlignment:                   xml.attributeValue(of: "contentVerticalAlignment"),
                     customClass:                                xml.attributeValue(of: "customClass"),
                     customModule:                               xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                     xml.attributeValue(of: "opaque"),
                     rect:                                       try decodeValue(xml.byKey("rect")),
                     segmentControlStyle:                        xml.attributeValue(of: "segmentControlStyle"),
@@ -644,6 +668,7 @@ extension InterfaceBuilderNode {
             public let fixedFrame: Bool?
             public let font: FontDescription?
             public let minimumFontSize: Float?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -666,6 +691,7 @@ extension InterfaceBuilderNode {
                     fixedFrame:                                xml.attributeValue(of: "fixedFrame"),
                     font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
                     minimumFontSize:                           xml.attributeValue(of: "minimumFontSize"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -690,6 +716,7 @@ extension InterfaceBuilderNode {
             public let customClass: String?
             public let customModule: String?
             public let font: FontDescription?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let scrollEnabled: Bool?
@@ -714,6 +741,7 @@ extension InterfaceBuilderNode {
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     scrollEnabled:                             xml.attributeValue(of: "scrollEnabled"),
@@ -740,6 +768,7 @@ extension InterfaceBuilderNode {
             public let customClass: String?
             public let customModule: String?
             public let items: [BarButtonItem]?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -773,6 +802,7 @@ extension InterfaceBuilderNode {
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     items:                                     xml.byKey("items")?.byKey("barButtonItem")?.allElements.flatMap(decodeValue),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -795,6 +825,7 @@ extension InterfaceBuilderNode {
             public let customClass: String?
             public let customModule: String?
             public let horizontalHuggingPriority: Int?
+            public let isMisplaced: Bool?
             public let on: Bool
             public let onTintColor: Color?
             public let opaque: Bool?
@@ -816,6 +847,7 @@ extension InterfaceBuilderNode {
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     horizontalHuggingPriority:                 xml.attributeValue(of: "horizontalHuggingPriority"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     on:                                        try xml.attributeValue(of: "on"),
                     onTintColor:                               xml.byKey("color").flatMap(decodeValue),
                     opaque:                                    xml.attributeValue(of: "opaque"),
@@ -838,6 +870,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -853,6 +886,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
@@ -872,6 +906,7 @@ extension InterfaceBuilderNode {
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
+            public let isMisplaced: Bool?
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
@@ -887,6 +922,7 @@ extension InterfaceBuilderNode {
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),

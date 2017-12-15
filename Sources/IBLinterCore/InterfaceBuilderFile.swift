@@ -7,4 +7,5 @@
 
 public protocol InterfaceBuilderFile {
     var pathString: String { get }
+    var fileName: String { get }
 }
