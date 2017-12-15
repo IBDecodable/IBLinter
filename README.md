@@ -6,6 +6,10 @@ A linter tool to normarize `.xib` and `.storyboard` files. Inspired by [realm/Sw
 
 ## Installation
 
+```
+$ brew install kateinoigakukun/homebrew-tap/iblinter
+```
+
 ## Usage
 
 You can see all description by `iblinter help`
