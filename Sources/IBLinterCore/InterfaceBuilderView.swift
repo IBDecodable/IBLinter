@@ -100,10 +100,7 @@ extension InterfaceBuilderNode {
             case "textView":                 return try .textView(decodeValue(xml))
             case "toolbar":                  return try .toolbar(decodeValue(xml))
             case "view":                     return try .view(decodeValue(xml))
-            case "placeholder": throw Error.unsupportedViewClass(elementName)
-            default:
-                print(elementName)
-                throw Error.unsupportedViewClass(elementName)
+            default:                         throw Error.unsupportedViewClass(elementName)
             }
         }
 

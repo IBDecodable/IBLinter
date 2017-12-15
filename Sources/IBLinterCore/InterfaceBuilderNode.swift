@@ -34,6 +34,7 @@ public extension InterfaceBuilderNode {
         public let initialViewController: String?
         public let device: Device?
         public let scenes: [Scene]?
+        public let placeholders: [Placeholder]?
 
         static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.StoryboardDocument {
             return InterfaceBuilderNode.StoryboardDocument.init(
@@ -48,7 +49,8 @@ public extension InterfaceBuilderNode {
                 colorMatched:          xml.attributeValue(of: "colorMatched"),
                 initialViewController: xml.attributeValue(of: "initialViewController"),
                 device:                xml.byKey("device").flatMap(decodeValue),
-                scenes:                xml.byKey("scenes")?.byKey("scene")?.allElements.flatMap(decodeValue)
+                scenes:                xml.byKey("scenes")?.byKey("scene")?.allElements.flatMap(decodeValue),
+                placeholders:          xml.byKey("objects")?.byKey("placeholder")?.allElements.flatMap(decodeValue)
             )
         }
     }
@@ -65,6 +67,7 @@ public extension InterfaceBuilderNode {
         public let colorMatched: Bool?
         public let device: Device?
         public let views: [View]?
+        public let placeholders: [Placeholder]?
 
         static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.XibDocument {
             return InterfaceBuilderNode.XibDocument.init(
@@ -78,7 +81,8 @@ public extension InterfaceBuilderNode {
                 useSafeAreas:          xml.attributeValue(of: "useSafeAreas"),
                 colorMatched:          xml.attributeValue(of: "colorMatched"),
                 device:                xml.byKey("device").flatMap(decodeValue),
-                views:                 xml.byKey("objects")?.childrenNode.flatMap(decodeValue)
+                views:                 xml.byKey("objects")?.childrenNode.flatMap(decodeValue),
+                placeholders:          xml.byKey("objects")?.byKey("placeholder")?.allElements.flatMap(decodeValue)
             )
         }
     }
@@ -110,9 +114,20 @@ public extension InterfaceBuilderNode {
     }
 
     public struct Placeholder: XMLDecodable {
+        public let id: String
+        public let placeholderIdentifier: String
+        public let userLabel: String?
+        public let sceneMemberID: String?
+        public let customClass: String?
 
         static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.Placeholder {
-            fatalError()
+            return Placeholder.init(
+                id:                    try xml.attributeValue(of: "id"),
+                placeholderIdentifier: try xml.attributeValue(of: "placeholderIdentifier"),
+                userLabel:             xml.attributeValue(of: "userLabel"),
+                sceneMemberID:         xml.attributeValue(of: "userLabel"),
+                customClass:           xml.attributeValue(of: "customClass")
+            )
         }
     }
 

@@ -1,11 +1,13 @@
 import Foundation
 
-private func isDirectory(_ url: String) -> Bool {
-    var isDirectory: ObjCBool = false
-    if FileManager.default.fileExists(atPath: url, isDirectory: &isDirectory) {
-        return isDirectory.boolValue
-    } else {
-        return false
+extension FileManager {
+    public func isDirectory(_ url: String) -> Bool {
+        var isDirectory: ObjCBool = false
+        if fileExists(atPath: url, isDirectory: &isDirectory) {
+            return isDirectory.boolValue
+        } else {
+            return false
+        }
     }
 }
 
@@ -26,7 +28,7 @@ private func expandGlobstar(pattern: String) -> [String] {
     do {
         directories = try fileManager.subpathsOfDirectory(atPath: firstPart).flatMap { subpath in
             let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)
-            guard isDirectory(fullPath) else { return nil }
+            guard fileManager.isDirectory(fullPath) else { return nil }
             return fullPath
         }
     } catch {

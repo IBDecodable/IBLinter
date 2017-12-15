@@ -19,6 +19,7 @@ struct ValidateCommand: CommandProtocol {
 
     func run(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
         let workDirectory = options.path ?? FileManager.default.currentDirectoryPath
+        guard FileManager.default.isDirectory(workDirectory) else { fatalError("\(workDirectory) is not directory.") }
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
         let violations = validate(workDirectory: workDirectory, config: config)
 
