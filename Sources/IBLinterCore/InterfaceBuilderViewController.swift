@@ -5,8 +5,6 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-import SWXMLHash
-
 public protocol ViewControllerProtocol {
     var id: String { get }
     var customClass: String? { get }

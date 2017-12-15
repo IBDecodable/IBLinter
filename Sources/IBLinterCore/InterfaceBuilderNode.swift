@@ -5,8 +5,6 @@
 //  Created by SaitoYuta on 2017/12/05.
 //
 
-import SWXMLHash
-
 public enum InterfaceBuilderNode {}
 
 protocol XMLDecodable {

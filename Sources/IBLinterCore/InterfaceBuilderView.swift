@@ -5,8 +5,6 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-import SWXMLHash
-
 public protocol ViewProtocol {
     var elementClass: String { get }
     var id: String { get }
@@ -956,10 +954,10 @@ extension InterfaceBuilderNode {
             public let weight: String?
 
             static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.FontDescription {
-                return try FontDescription.init(
-                    type: xml.attributeValue(of: "type"),
-                    pointSize: xml.attributeValue(of: "pointSize"),
-                    weight: try? xml.attributeValue(of: "weight")
+                return FontDescription.init(
+                    type:      try xml.attributeValue(of: "type"),
+                    pointSize: try xml.attributeValue(of: "pointSize"),
+                    weight:    xml.attributeValue(of: "weight")
                 )
             }
         }
@@ -971,11 +969,11 @@ extension InterfaceBuilderNode {
             public let height: Float
 
             static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.Rect {
-                return try Rect.init(
-                    x: xml.attributeValue(of: "x"),
-                    y: xml.attributeValue(of: "y"),
-                    width: xml.attributeValue(of: "width"),
-                    height: xml.attributeValue(of: "height")
+                return Rect.init(
+                    x:      try xml.attributeValue(of: "x"),
+                    y:      try xml.attributeValue(of: "y"),
+                    width:  try xml.attributeValue(of: "width"),
+                    height: try xml.attributeValue(of: "height")
                 )
             }
         }

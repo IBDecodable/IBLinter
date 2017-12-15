@@ -8,4 +8,3 @@
 public protocol InterfaceBuilderFile {
     var pathString: String { get }
 }
-
