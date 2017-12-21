@@ -1,12 +1,12 @@
 # IBLinter
 
-A linter tool to normarize `.xib` and `.storyboard` files. Inspired by [realm/SwiftLint](https://github.com/realm/SwiftLint)
+A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/SwiftLint](https://github.com/realm/SwiftLint)
 
 ![](assets/warning.png)
 
 ## Installation
 
-```
+```sh
 $ brew install kateinoigakukun/homebrew-tap/iblinter
 ```
 
@@ -14,7 +14,7 @@ $ brew install kateinoigakukun/homebrew-tap/iblinter
 
 You can see all description by `iblinter help`
 
-- `lint` Print lint warnings and errors (default command)
+- `lint` prints lint warnings and errors (default command)
 	- `--path` default is current directory.
 
 
