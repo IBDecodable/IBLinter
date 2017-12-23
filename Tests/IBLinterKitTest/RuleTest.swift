@@ -17,5 +17,12 @@ class RuleTest: XCTestCase {
         let violations = rule.validate(storyboard: StoryboardFile.init(path: path))
         XCTAssertEqual(violations.count, 1)
     }
+
+    func testDuplicateConstraint() {
+        let path = "Tests/IBLinterKitTest/Resources/DuplicateConstraint.xib"
+        let rule = Rules.DuplicateConstraintRule.init()
+        let violations = rule.validate(xib: XibFile.init(path: path))
+        XCTAssertEqual(violations.count, 2)
+    }
 }
 
