@@ -21,14 +21,16 @@ public struct Rules {
             CustomClassNameRule.self,
             RelativeToMarginRule.self,
             MisplacedViewRule.self,
-            ForceToEnableAutoLayoutRule.self
+            ForceToEnableAutoLayoutRule.self,
+            DuplicateConstraintRule.self
         ]
     }
 
     static var defaultRules: [Rule.Type] {
         return [
             CustomClassNameRule.self,
-            ForceToEnableAutoLayoutRule.self
+            ForceToEnableAutoLayoutRule.self,
+            DuplicateConstraintRule.self
         ]
     }
 

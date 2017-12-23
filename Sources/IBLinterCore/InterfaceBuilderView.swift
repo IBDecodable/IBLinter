@@ -1055,8 +1055,9 @@ extension InterfaceBuilderNode {
                     switch (lhs, rhs) {
                     case (.left, .left), (.right, .right), (.top, .top), (.bottom, .bottom),
                          (.leading, .leading), (.trailing, .trailing), (.width, .width),
-                         (.height, height), (.centerX, .centerX), (.leftMargin, .leftMargin),
-                         (.rightMargin, .rightMargin), (.topMargin, .topMargin), (.bottomMargin, .bottomMargin),
+                         (.height, height), (.centerX, .centerX), (.centerY, .centerY),
+                         (.leftMargin, .leftMargin), (.rightMargin, .rightMargin),
+                         (.topMargin, .topMargin), (.bottomMargin, .bottomMargin),
                          (.leadingMargin, .leadingMargin), (.trailingMargin, .trailingMargin): return true
                     case (.other(let msg1), .other(let msg2)): return msg1 == msg2
                     default: return false
