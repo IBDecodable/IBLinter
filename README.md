@@ -32,12 +32,13 @@ fi
 
 ## Rules
 
-| Rule id              | description                                                                    |
-|:---------------------|:-------------------------------------------------------------------------------|
-| `custom_class_name`  | Custom class name of ViewController in storyboard should be same as file name. |
-| `relative_to_margin` | Forbid to use `relative to margin` option.                                     |
-| `misplaced`          | Display error when views are misplaced.                                        |
-| `enable_autolayout`  | Force to use `useAutolayout` option                                            |
+| Rule id                | description                                                                    |
+|:-----------------------|:-------------------------------------------------------------------------------|
+| `custom_class_name`    | Custom class name of ViewController in storyboard should be same as file name. |
+| `relative_to_margin`   | Forbid to use `relative to margin` option.                                     |
+| `misplaced`            | Display error when views are misplaced.                                        |
+| `enable_autolayout`    | Force to use `useAutolayout` option                                            |
+| `duplicate_constraint` | Display warning when view has duplicated constraint.                           |
 
 
 Pull requests are encouraged.
