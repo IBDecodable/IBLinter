@@ -107,4 +107,34 @@ class InterfaceBuilderParserTest: XCTestCase {
 
         XCTAssertEqual(cell.subviews?.count, 1)
     }
+
+    func testParseOutlet() throws {
+        let document = try parser.parseStoryboard(xml: xmlString(fileName: "OutletTest.storyboard"))
+        XCTAssertNotNil(document.scenes?[0].viewController?.rootView)
+
+        let viewController = document.scenes![0].viewController!
+        XCTAssertEqual(viewController.connections?.count, 5)
+
+        let labelOutlet = viewController.connections![0]
+        switch labelOutlet {
+        case .outlet(let property, let destination, let id):
+            XCTAssertEqual(property, "label")
+            XCTAssertEqual(destination, "4Kb-9I-U6T")
+            XCTAssertEqual(id, "pIv-Ri-ced")
+        default: fatalError()
+        }
+
+        let button = viewController.rootView!.subviews!.first(where: { $0.id == "8M7-on-UR7" })!
+        XCTAssertEqual(button.connections?.count, 1)
+
+        let actionOutlet = button.connections![0]
+        switch actionOutlet {
+        case .action(let selector, let destination, let eventType, let id):
+            XCTAssertEqual(selector, "touchUpInsideAction:")
+            XCTAssertEqual(destination, "Ksm-ni-UfK")
+            XCTAssertEqual(eventType, "touchUpInside")
+            XCTAssertEqual(id, "soG-Tt-FV9")
+        default: fatalError()
+        }
+    }
 }

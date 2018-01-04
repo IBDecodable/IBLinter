@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Outlet Test-->
+        <scene sceneID="l70-Av-Ehx">
+            <objects>
+                <viewController id="Ksm-ni-UfK" customClass="OutletTest" customModule="AlphannictTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HJI-z1-vj7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8xx-RP-XBa">
+                                <rect key="frame" x="16" y="36" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ulz-qw-r0G">
+                                <rect key="frame" x="78" y="36" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nuQ-9T-S11">
+                                <rect key="frame" x="140" y="36" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XnY-el-17d">
+                                <rect key="frame" x="202" y="36" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8M7-on-UR7">
+                                <rect key="frame" x="172" y="326" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Tap"/>
+                                <connections>
+                                    <action selector="touchUpInsideAction:" destination="Ksm-ni-UfK" eventType="touchUpInside" id="soG-Tt-FV9"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Kb-9I-U6T">
+                                <rect key="frame" x="166" y="413" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="XnY-el-17d" firstAttribute="top" secondItem="5WY-CO-3yu" secondAttribute="top" constant="16" id="7io-gt-jnM"/>
+                            <constraint firstItem="XnY-el-17d" firstAttribute="leading" secondItem="nuQ-9T-S11" secondAttribute="trailing" constant="16" id="JJD-D3-GE1"/>
+                            <constraint firstItem="nuQ-9T-S11" firstAttribute="leading" secondItem="Ulz-qw-r0G" secondAttribute="trailing" constant="16" id="V3D-GH-RXw"/>
+                            <constraint firstItem="Ulz-qw-r0G" firstAttribute="leading" secondItem="8xx-RP-XBa" secondAttribute="trailing" constant="16" id="VHM-m2-nci"/>
+                            <constraint firstItem="nuQ-9T-S11" firstAttribute="top" secondItem="5WY-CO-3yu" secondAttribute="top" constant="16" id="X4j-DP-XMo"/>
+                            <constraint firstItem="8xx-RP-XBa" firstAttribute="top" secondItem="5WY-CO-3yu" secondAttribute="top" constant="16" id="dRt-Ox-xoo"/>
+                            <constraint firstItem="Ulz-qw-r0G" firstAttribute="top" secondItem="5WY-CO-3yu" secondAttribute="top" constant="16" id="nCv-zM-Kol"/>
+                            <constraint firstItem="8xx-RP-XBa" firstAttribute="leading" secondItem="5WY-CO-3yu" secondAttribute="leading" constant="16" id="wIV-Lr-HGY"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="5WY-CO-3yu"/>
+                    </view>
+                    <connections>
+                        <outlet property="label" destination="4Kb-9I-U6T" id="pIv-Ri-ced"/>
+                        <outletCollection property="buttons" destination="8xx-RP-XBa" collectionClass="NSMutableArray" id="lRk-MP-xW4"/>
+                        <outletCollection property="buttons" destination="Ulz-qw-r0G" collectionClass="NSMutableArray" id="IWl-Al-b0P"/>
+                        <outletCollection property="buttons" destination="nuQ-9T-S11" collectionClass="NSMutableArray" id="pVK-zw-QQZ"/>
+                        <outletCollection property="buttons" destination="XnY-el-17d" collectionClass="NSMutableArray" id="Ogn-7z-bU1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ykv-WK-WPL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6" y="102"/>
+        </scene>
+    </scenes>
+</document>

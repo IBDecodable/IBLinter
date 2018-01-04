@@ -150,6 +150,7 @@ public extension InterfaceBuilderNode {
         case unsupportedConstraint(String)
         case unsupportedTableViewDataMode(String)
         case unsupportedColorSpace(String)
+        case unsupportedConnectionType(String)
 
         public var description: String {
             switch self {
@@ -165,6 +166,8 @@ public extension InterfaceBuilderNode {
                 return "unsupported dataMode '\(name)'"
             case .unsupportedColorSpace(let colorSpace):
                 return "unsupported color space '\(colorSpace)'"
+            case .unsupportedConnectionType(let connectionType):
+                return "unsupported connection type \(connectionType)"
             }
         }
     }
