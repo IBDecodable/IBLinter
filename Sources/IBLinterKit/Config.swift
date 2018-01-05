@@ -30,12 +30,12 @@ public struct Config: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        disabledRules = try container.decodeIfPresent([String].self, forKey: .disabledRules) ?? []
-        enabledRules = try container.decodeIfPresent([String].self, forKey: .enabledRules) ?? []
-        excluded = try container.decodeIfPresent([String].self, forKey: .excluded) ?? []
+        disabledRules = try container.decodeIfPresent(Optional<[String]>.self, forKey: .disabledRules).flatMap { $0 } ?? []
+        enabledRules = try container.decodeIfPresent(Optional<[String]>.self, forKey: .enabledRules)?.flatMap { $0 } ?? []
+        excluded = try container.decodeIfPresent(Optional<[String]>.self, forKey: .excluded)?.flatMap { $0 } ?? []
     }
 
-    public static func load(from configPath: String) throws -> Config {
+    public static func load(from configPath: String, fileName: String = fileName) throws -> Config {
         let path = URL.init(fileURLWithPath: configPath).appendingPathComponent(fileName)
         return try YAMLDecoder.init().decode(from: String.init(contentsOf: path))
     }
