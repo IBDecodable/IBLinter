@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Clang_C",
+        "repositoryURL": "https://github.com/norio-nomura/Clang_C.git",
+        "state": {
+          "branch": null,
+          "revision": "90a9574276f0fd17f02f58979423c3fd4d73b59e",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "Commandant",
         "repositoryURL": "https://github.com/Carthage/Commandant.git",
         "state": {
@@ -47,12 +56,30 @@
         }
       },
       {
+        "package": "SourceKit",
+        "repositoryURL": "https://github.com/norio-nomura/SourceKit.git",
+        "state": {
+          "branch": null,
+          "revision": "18eaa67ca44443bbe39646916792b9f0c98dbaa1",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "SourceKitten",
+        "repositoryURL": "https://github.com/jpsim/SourceKitten.git",
+        "state": {
+          "branch": null,
+          "revision": "71e8297e5d95118588f8aa8e1de892762346dc9d",
+          "version": "0.18.4"
+        }
+      },
+      {
         "package": "Yams",
         "repositoryURL": "https://github.com/jpsim/Yams.git",
         "state": {
           "branch": null,
-          "revision": "95f45caf07472ec78223ebada45255086a85b01a",
-          "version": "0.5.0"
+          "revision": "90a76f3cdb552b8e6aea5dabdd6c3578b8a7ad45",
+          "version": "0.4.1"
         }
       }
     ]
