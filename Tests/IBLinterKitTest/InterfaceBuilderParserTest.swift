@@ -137,4 +137,19 @@ class InterfaceBuilderParserTest: XCTestCase {
         default: fatalError()
         }
     }
+
+    func testFindView() throws {
+        let document = try parser.parseXib(xml: xmlString(fileName: "ViewTest.xib"))
+        let view = document.views![0]
+        let matchedView = view.find(by: "TSs-N3-WO3")
+        XCTAssertNotNil(matchedView)
+        let button: InterfaceBuilderNode.View.Button = {
+            switch matchedView! {
+            case .button(let button):
+                return button
+            default: fatalError()
+            }
+        }()
+        XCTAssertEqual(button.buttonType, "roundedRect")
+    }
 }

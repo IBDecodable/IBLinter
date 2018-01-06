@@ -5,7 +5,7 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-public protocol ViewProtocol {
+public protocol ViewProtocol: Identifiable {
     var elementClass: String { get }
     var id: String { get }
 
