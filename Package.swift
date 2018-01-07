@@ -26,11 +26,12 @@ let package = Package(
             dependencies: ["IBLinterKit"]),
         .target(
             name: "IBLinterCore",
-            dependencies: ["SWXMLHash"]),
+            dependencies: ["SWXMLHash", "SourceKittenFramework"]),
         .target(
             name: "IBLinterKit",
-            dependencies: ["IBLinterCore", "Commandant", "Yams", "SourceKittenFramework"]),
+            dependencies: ["IBLinterCore", "Commandant", "Yams"]),
         .testTarget(name: "IBLinterKitTest",
-            dependencies: ["IBLinterKit"])
+            dependencies: ["IBLinterKit"],
+            exclude: ["Resources"])
     ]
 )

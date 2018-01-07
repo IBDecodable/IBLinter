@@ -1114,7 +1114,7 @@ extension InterfaceBuilderNode {
             }
         }
 
-        public enum Connection: XMLDecodable {
+        public enum Connection: XMLDecodable, Equatable {
 
             case outlet(property: String, destination: String, id: String)
             case outletCollection(property: String, destination: String, collectionClass: String, id: String)
@@ -1147,6 +1147,20 @@ extension InterfaceBuilderNode {
                 }
             }
 
+            public static func ==(lhs: InterfaceBuilderNode.View.Connection, rhs: InterfaceBuilderNode.View.Connection) -> Bool {
+                switch (lhs, rhs) {
+                case (.outlet(let property1, let destination1, let id1),
+                      .outlet(let property2, let destination2, let id2)):
+                    return property1 == property2 && destination1 == destination2 && id1 == id2
+                case (.outletCollection(let property1, let destination1, let collectionClass1, let id1),
+                      .outletCollection(let property2, let destination2, let collectionClass2, let id2)):
+                    return property1 == property2 && destination1 == destination2 && collectionClass1 == collectionClass2 && id1 == id2
+                case (.action(let selector1, let destination1, let eventType1, let id1),
+                      .action(let selector2, let destination2, let eventType2, let id2)):
+                    return selector1 == selector2 && destination1 == destination2 && eventType1 == eventType2 && id1 == id2
+                default: return false
+                }
+            }
         }
 
         public struct AutoresizingMask: XMLDecodable {
