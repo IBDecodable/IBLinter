@@ -15,14 +15,14 @@ public extension Rules {
 
         public init() {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             let scenes = storyboard.document.scenes
             let viewControllers = scenes?.flatMap { $0.viewController }
             return viewControllers?.flatMap { $0.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] {
             return xib.document.views?.flatMap { validate(for: $0, file: xib) } ?? []
         }
 

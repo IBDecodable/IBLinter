@@ -6,7 +6,6 @@
 //
 
 import IBLinterCore
-import SourceKittenFramework
 
 extension Rules {
 
@@ -86,18 +85,15 @@ extension Rules {
             }
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
-            guard let views = xib.document.views else { return [] }
+        public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] {
             fatalError()
         }
 
         private func validate(for view: ViewProtocol) -> [Violation] {
-            let mapper = Mapper.init(view: view)
-            mapper.classNameToConnection
             fatalError()
         }
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let viewControllers = scenes.flatMap { $0.viewController }
             let views = viewControllers.flatMap { $0.rootView }

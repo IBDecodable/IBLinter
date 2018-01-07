@@ -21,7 +21,9 @@ struct ValidateCommand: CommandProtocol {
         let workDirectory = options.path ?? FileManager.default.currentDirectoryPath
         guard FileManager.default.isDirectory(workDirectory) else { fatalError("\(workDirectory) is not directory.") }
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
-        let violations = validate(workDirectory: workDirectory, config: config)
+
+        let swiftIBParser = SwiftIBParser(swiftFilePaths: swiftFiles(workDirectory: workDirectory, config: config))
+        let violations = validate(workDirectory: workDirectory, swiftParser: swiftIBParser, config: config)
 
         let reporter = XcodeReporter.init()
         violations.map(reporter.report).forEach { print($0) }
@@ -34,26 +36,31 @@ struct ValidateCommand: CommandProtocol {
         }
     }
 
-    private func validate(workDirectory: String, config: Config) -> [Violation] {
-        return validateXib(workDirectory: workDirectory, config: config) + validateStoryboard(workDirectory: workDirectory, config: config)
+    private func validate(workDirectory: String, swiftParser: SwiftIBParser, config: Config) -> [Violation] {
+        return validateXib(workDirectory: workDirectory, swiftParser: swiftParser, config: config)
+            + validateStoryboard(workDirectory: workDirectory, swiftParser: swiftParser, config: config)
     }
 
-    public func validateStoryboard(workDirectory: String, config: Config) -> [Violation] {
+    public func validateStoryboard(workDirectory: String, swiftParser: SwiftIBParser, config: Config) -> [Violation] {
         let paths = glob(pattern: "\(workDirectory)/**/*.storyboard")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.storyboard") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
         let storyboards = lintablePaths.map { StoryboardFile.init(path: $0.relativePath) }
-        let violations = Rules.rules(config).flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
+        let violations = Rules.rules(config).flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0, swiftParser: swiftParser) } }
         return violations
     }
 
-    public func validateXib(workDirectory: String, config: Config) -> [Violation] {
+    public func validateXib(workDirectory: String, swiftParser: SwiftIBParser, config: Config) -> [Violation] {
         let paths = glob(pattern: "\(workDirectory)/**/*.xib")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.xib") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
         let xibs = lintablePaths.map { XibFile.init(path: $0.relativePath) }
-        let violations = Rules.rules(config).flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
+        let violations = Rules.rules(config).flatMap { rule in xibs.flatMap { rule.validate(xib: $0, swiftParser: swiftParser) } }
         return violations
+    }
+
+    private func swiftFiles(workDirectory: String, config: Config) -> [String] {
+        return glob(pattern: "\(workDirectory)/**/*.swift").map { $0.relativePath }
     }
 }
 

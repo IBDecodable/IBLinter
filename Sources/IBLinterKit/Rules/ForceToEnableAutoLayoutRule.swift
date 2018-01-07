@@ -15,12 +15,12 @@ extension Rules {
 
         public init() {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             guard let useAutolayout = storyboard.document.useAutolayout else { return [] }
             return violation(useAutolayout: useAutolayout, file: storyboard)
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] {
             guard let useAutolayout = xib.document.useAutolayout else { return [] }
             return violation(useAutolayout: useAutolayout, file: xib)
         }

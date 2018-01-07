@@ -10,8 +10,8 @@ import IBLinterCore
 public protocol Rule {
     init()
     static var identifier: String { get }
-    func validate(storyboard: StoryboardFile) -> [Violation]
-    func validate(xib: XibFile) -> [Violation]
+    func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation]
+    func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation]
 }
 
 public struct Rules {

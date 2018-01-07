@@ -25,7 +25,7 @@ extension Rules {
 
         public init() {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             return storyboard.document.scenes?.flatMap { scene in
                 guard let viewController = scene.viewController,
                     let customClass = viewController.customClass else { return nil }
@@ -35,6 +35,6 @@ extension Rules {
             } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] { return [] }
+        public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] { return [] }
     }
 }
