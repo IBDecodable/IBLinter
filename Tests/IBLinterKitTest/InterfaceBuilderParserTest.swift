@@ -109,7 +109,7 @@ class InterfaceBuilderParserTest: XCTestCase {
     }
 
     func testParseOutlet() throws {
-        let document = try parser.parseStoryboard(xml: xmlString(fileName: "OutletTest.storyboard"))
+        let document = try parser.parseStoryboard(xml: xmlString(fileName: "IBConnectionViewController.storyboard"))
         XCTAssertNotNil(document.scenes?[0].viewController?.rootView)
 
         let viewController = document.scenes![0].viewController!

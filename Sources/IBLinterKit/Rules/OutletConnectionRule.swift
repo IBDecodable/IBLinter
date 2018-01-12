@@ -85,6 +85,52 @@ extension Rules {
             }
         }
 
+        private static let uiKitClassConnections: [String: SwiftIBParser.Class] = {
+            let uiKitOutlets: [String: [String]] = [
+                "UITextField": ["delegate"],
+                "UITableView": ["delegate", "dataSource"],
+                "UITableViewCell": ["accessoryView", "backgroundView", "editingAccessoryView", "selectedBackgroundView"],
+                "UICollectionView": ["delegate", "dataSource", "prefetchDataSource"],
+                "UICollectionViewCell": ["backgroundView", "selectedBackgroundView"],
+                "UITextView": ["delegate"],
+                "UIScrollView": ["delegate"],
+                "UIPickerView": ["delegate", "dataSource"],
+                "MKMapView": ["delegate"],
+                "GLKView": ["delegate"],
+                "SCNView": ["delegate"],
+                "UIWebView": ["delegate"],
+                "UITapGestureRecognizer": ["delegate"],
+                "UIPinchGestureRecognizer": ["delegate"],
+                "UIRotationGestureRecognizer": ["delegate"],
+                "UISwipeGestureRecognizer": ["delegate"],
+                "UIPanGestureRecognizer": ["delegate"],
+                "UIScreenEdgePanGestureRecognizer": ["delegate"],
+                "UILongPressGestureRecognizer": ["delegate"],
+                "UIGestureRecognizer": ["delegate"],
+                "UINavigationBar": ["delegate"],
+                "UINavigationItem": ["backBarButtonItem", "leftBarButtonItem", "rightBarButtonItem", "titleView"],
+                "UIToolbar": ["delegate"],
+                "UITabBar": ["delegate"],
+                "UISearchBar": ["delegate"],
+                "UIViewController": ["view"]
+            ]
+
+            var dict: [String: SwiftIBParser.Class] = [:]
+            for (name, outlets) in uiKitOutlets {
+                var _outlets = outlets.map { o in
+                    SwiftIBParser.Connection.outlet(
+                        property: o, isOptional: false,
+                        declaration: .init(line: 0, column: 0, path: nil))
+                }
+                dict[name] = SwiftIBParser.Class.init(
+                    file: .init(path: ""), name: name,
+                    connections: _outlets, inheritedClassNames: [],
+                    declaration: .init(line: 0, column: 0, path: nil))
+            }
+
+            return dict
+        }()
+
         public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] {
             guard let views = xib.document.views else { return [] }
             return views.map(Mapper.init(view: ))
@@ -94,80 +140,102 @@ extension Rules {
         public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let viewControllers = scenes.flatMap { $0.viewController }
-            let views = viewControllers.flatMap { $0.rootView }
-            let mappers = viewControllers.map(Mapper.init(viewController: )) + views.map(Mapper.init(view: ))
+            let mappers = viewControllers.map(Mapper.init(viewController: ))
             return mappers.flatMap { self.validate(for: $0, file: storyboard, swiftParser: swiftParser) }
         }
 
         private func validate(for mapper: Mapper, file: FileProtocol, swiftParser: SwiftIBParser) -> [Violation] {
-            func isEqual(viewConnection: InterfaceBuilderNode.View.Connection, swiftConnection: SwiftIBParser.Connection) -> Bool {
-                switch (viewConnection, swiftConnection) {
-                case (.outlet(let viewProperty, _, _),
-                      .outlet(let swiftProperty, let isOptional, _)):
-                    return viewProperty == swiftProperty || isOptional
-                case (.outletCollection(let viewProperty, _, _, _),
-                      .outlet(let swiftProperty, let isOptional, _)):
-                    return viewProperty == swiftProperty || isOptional
-                case (.action(let viewSelector, _, _, _),
-                      .action(let swiftSelector, _)):
-                    return viewSelector == swiftSelector
-                default:
-                    return false
-                }
-            }
-
-            let swiftMissingViolations = mapper.classNameToConnection
-                .flatMap { (className, viewConnections) -> [Violation] in
-
-                    guard let classStructure = swiftParser.classNameToStructure[className] else { return [] }
-                    let swiftConnections = classStructure.connections
-
-                    return viewConnections.filter { viewConnection in
-                        swiftConnections.contains(where: { swiftConnection in
-                            !isEqual(viewConnection: viewConnection, swiftConnection: swiftConnection)
-                        })
-                        }.map { connection in
-                            let message: String = {
-                                switch connection {
-                                case .outlet(let property, _, _):
-                                    return "IBOutlet missing: \(property) is not implemented"
-                                case .outletCollection(let property, _, _, _):
-                                    return "IBOutletCollection missing: \(property) is not implemented"
-                                case .action(let selector, _, _, _):
-                                    return "IBAction missing: \(selector) is not implemented"
-                                }
-                            }()
-                            return Violation(file: classStructure.file, message: message, level: .error,
-                                             location: .init(line: classStructure.declaration.line,
-                                                             column: classStructure.declaration.column))
-                    }
-            }
-
-            // Swift側にあるがInterfaceBuilderに無い
-            let ibMissingViolations = swiftParser.classNameToStructure
-                .flatMap { className, classStructure -> [Violation] in
-                    let viewConnections = mapper.classNameToConnection[className] ?? []
-                    let swiftConnections = classStructure.connections
-
-                    return swiftConnections.filter { swiftConnection in
-                        viewConnections.contains(where: { viewConnection in
-                            !isEqual(viewConnection: viewConnection, swiftConnection: swiftConnection)
-                        })
-                        }.map { connection in
-                            let message: String = {
-                                switch connection {
-                                case .outlet(let property, _, _):
-                                    return "IBOutlet missing: \(property) is not connected"
-                                case .action(let selector, _):
-                                    return "IBAction missing: \(selector) is not connected"
-                                }
-                            }()
-                            return Violation(file: file, message: message, level: .error)
-                    }
-            }
-
-            return swiftMissingViolations + ibMissingViolations
+            return missingElements(for: mapper, swiftParser: swiftParser) +
+                unnecessaryElements(for: mapper, swiftParser: swiftParser, file: file)
         }
 
+        private func missingElements(for mapper: Mapper, swiftParser: SwiftIBParser) -> [Violation] {
+
+            return mapper.classNameToConnection.flatMap { (className, ibConnections) -> [Violation] in
+                guard !ibConnections.isEmpty else { return [] }
+                guard let swiftClass = swiftParser.classNameToStructure[className] else { return [] }
+
+                return ibConnections
+                    .filter { !self.match(className: className, swiftParser: swiftParser, connection: $0) }
+                    .map { (connection: InterfaceBuilderNode.View.Connection) -> Violation in
+                        let message: String = {
+                            switch connection {
+                            case .outlet(let property, _, _):
+                                return "IBOutlet missing: \(property) is not implemented"
+                            case .outletCollection(let property, _, _, _):
+                                return "IBOutletCollection missing: \(property) is not implemented"
+                            case .action(let selector, _, _, _):
+                                return "IBAction missing: \(selector) is not implemented"
+                            }
+                        }()
+                        return Violation(file: swiftClass.file, message: message, level: .error,
+                                         location: .init(line: swiftClass.declaration.line,
+                                                         column: swiftClass.declaration.column))
+                }
+            }
+        }
+
+        private func unnecessaryElements(for mapper: Mapper, swiftParser: SwiftIBParser, file: FileProtocol) -> [Violation] {
+            return swiftParser.classNameToStructure.flatMap { className, swiftClass -> [Violation] in
+                guard !swiftClass.connections.isEmpty else { return [] }
+                guard let ibConnections = mapper.classNameToConnection[className] else { return [] }
+
+                return swiftClass.connections
+                    .filter { swiftConnection in
+                        return !ibConnections.contains(where: { self.matchConnection(viewConnection: $0, swiftConnection: swiftConnection)})
+                    }
+                    .map { connection in
+                        let message: String = {
+                            switch connection {
+                            case .outlet(let property, _, _):
+                                return "IBOutlet missing: \(property) is not connected"
+                            case .action(let selector, _):
+                                return "IBAction missing: \(selector) is not connected"
+                            }
+                        }()
+                        return Violation(file: file, message: message, level: .error)
+                }
+
+            }
+        }
+
+        private func match(className: String, swiftParser: SwiftIBParser, connection: InterfaceBuilderNode.View.Connection) -> Bool {
+            let _match: (SwiftIBParser.Class, InterfaceBuilderNode.View.Connection) -> Bool = { klass, connection in
+                klass.connections.contains(where: {
+                    self.matchConnection(viewConnection: connection, swiftConnection: $0)
+                })
+            }
+
+            if let uiKitClass = type(of: self).uiKitClassConnections[className] {
+                return _match(uiKitClass, connection)
+            } else if let klass = swiftParser.classNameToStructure[className] {
+                if _match(klass, connection) {
+                    return true
+                } else {
+                    return klass.inheritedClassNames.contains {
+                        match(className: $0, swiftParser: swiftParser, connection: connection)
+                    }
+                }
+            } else {
+                return false
+            }
+        }
+
+
+        private func matchConnection(viewConnection: InterfaceBuilderNode.View.Connection, swiftConnection: SwiftIBParser.Connection) -> Bool {
+            switch (viewConnection, swiftConnection) {
+            case (.outlet(let viewProperty, _, _),
+                  .outlet(let swiftProperty, let isOptional, _)):
+                return viewProperty == swiftProperty || isOptional
+            case (.outletCollection(let viewProperty, _, _, _),
+                  .outlet(let swiftProperty, let isOptional, _)):
+                return viewProperty == swiftProperty || isOptional
+            case (.action(let viewSelector, _, _, _),
+                  .action(let swiftSelector, _)):
+                return viewSelector == swiftSelector
+            default:
+                return false
+            }
+        }
     }
 }

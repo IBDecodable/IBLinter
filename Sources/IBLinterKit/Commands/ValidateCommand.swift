@@ -60,7 +60,7 @@ struct ValidateCommand: CommandProtocol {
     }
 
     private func swiftFiles(workDirectory: String, config: Config) -> [String] {
-        return glob(pattern: "\(workDirectory)/**/*.swift").map { $0.relativePath }
+        return glob(pattern: "\(workDirectory)/**/*.swift").map { $0.absoluteString }
     }
 }
 

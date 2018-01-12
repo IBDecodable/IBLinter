@@ -14,13 +14,16 @@ public class SwiftIBParser {
         public let file: SwiftFile
         public let name: String
         public let connections: [Connection]
+        public let inheritedClassNames: [String]
         public let declaration: Declaration
 
-        public init(file: SwiftFile, name: String, connections: [Connection], declaration: Declaration) {
+        public init(file: SwiftFile, name: String, connections: [Connection],
+                    inheritedClassNames: [String], declaration: Declaration) {
             self.file = file
             self.name = name
             self.connections = connections
             self.declaration = declaration
+            self.inheritedClassNames = inheritedClassNames
         }
     }
 
@@ -32,7 +35,7 @@ public class SwiftIBParser {
             switch self {
             case .action(_, let declaration),
                  .outlet(_, _, let declaration):
-                return declaration.url.map { SwiftFile.init(path: $0.relativePath) }
+                return declaration.path.map { SwiftFile.init(path: $0) }
             }
         }
     }
@@ -41,18 +44,21 @@ public class SwiftIBParser {
 
         public let line: Int
         public let column: Int
-        public let url: URL?
+        public let path: String?
 
-        init(file: File, offset: Int64) {
+        public init(line: Int, column: Int, path: String?) {
+            self.line = line
+            self.column = column
+            self.path = path
+        }
+
+        public init(file: File, offset: Int64) {
             let fileOffset = type(of: self).getLineColumnNumber(of: file, offset: Int(offset))
-            var url: URL?
-            if let path = file.path {
-                url = URL(fileURLWithPath: path)
-            }
 
             self.line = fileOffset.line
             self.column = fileOffset.column
-            self.url = url
+            // SourceKitten use no file scheme prefix path
+            self.path = file.path.map { URL.init(fileURLWithPath: $0).absoluteString }
         }
 
         private static func getLineColumnNumber(of file: File, offset: Int) -> (line: Int, column: Int) {
@@ -82,8 +88,9 @@ public class SwiftIBParser {
             var connections: [Connection] = []
 
             guard let kind = structure["key.kind"] as? String, let name = structure["key.name"] as? String,
+                let nameOffset64 = structure["key.nameoffset"] as? Int64,
+                let inheritedTypes = structure["key.inheritedtypes"] as? [[String: String]],
                 kind == "source.lang.swift.decl.class" || kind == "source.lang.swift.decl.extension" else { return }
-            guard let nameOffset64 = structure["key.nameoffset"] as? Int64 else { return }
 
             structure.substructure.forEach { insideStructure in
                 guard let attributes = insideStructure["key.attributes"] as? [[String: String]],
@@ -106,6 +113,7 @@ public class SwiftIBParser {
 
             self?.classNameToStructure[name] = Class(file: SwiftFile(path: path),
                                                      name: name, connections: connections,
+                                                     inheritedClassNames: inheritedTypes.flatMap { $0["key.name"] },
                                                      declaration: .init(file: file, offset: nameOffset64))
         }
     }
@@ -150,6 +158,6 @@ extension SwiftIBParser.Declaration: Equatable {
     public static func ==(lhs: SwiftIBParser.Declaration, rhs: SwiftIBParser.Declaration) -> Bool {
         return lhs.column == rhs.column &&
                lhs.line == rhs.line &&
-               lhs.url == rhs.url
+               lhs.path == rhs.path
     }
 }
