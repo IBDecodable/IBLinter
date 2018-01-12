@@ -8,7 +8,7 @@
 import SWXMLHash
 import Foundation
 
-public class StoryboardFile: InterfaceBuilderFile {
+public class StoryboardFile: FileProtocol {
     public var pathString: String
     public var fileName: String {
         return pathString.components(separatedBy: "/").last!

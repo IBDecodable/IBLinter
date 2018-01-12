@@ -31,7 +31,7 @@ extension Rules {
                     let customClass = viewController.customClass else { return nil }
                 if customClass == storyboard.fileNameWithoutExtension { return nil }
                 let message = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
-                return Violation.init(interfaceBuilderFile: storyboard, message: message, level: .error)
+                return Violation.init(file: storyboard, message: message, level: .error)
             } ?? []
         }
 

@@ -25,9 +25,9 @@ extension Rules {
             return violation(useAutolayout: useAutolayout, file: xib)
         }
 
-        private func violation(useAutolayout: Bool, file: InterfaceBuilderFile) -> [Violation] {
+        private func violation(useAutolayout: Bool, file: FileProtocol) -> [Violation] {
             let message = "\(file.fileName) is not enabled to use Autolayout."
-            return useAutolayout ? [] : [Violation(interfaceBuilderFile: file, message: message, level: .warning)]
+            return useAutolayout ? [] : [Violation(file: file, message: message, level: .warning)]
         }
     }
 }
