@@ -22,7 +22,8 @@ public struct Rules {
             RelativeToMarginRule.self,
             MisplacedViewRule.self,
             ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self
+            DuplicateConstraintRule.self,
+            OutletConnectionRule.self
         ]
     }
 
@@ -30,7 +31,8 @@ public struct Rules {
         return [
             CustomClassNameRule.self,
             ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self
+            DuplicateConstraintRule.self,
+            OutletConnectionRule.self
         ]
     }
 

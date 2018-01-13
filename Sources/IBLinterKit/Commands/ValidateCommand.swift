@@ -60,7 +60,9 @@ struct ValidateCommand: CommandProtocol {
     }
 
     private func swiftFiles(workDirectory: String, config: Config) -> [String] {
-        return glob(pattern: "\(workDirectory)/**/*.swift").map { $0.absoluteString }
+        let paths = glob(pattern: "\(workDirectory)/**/*.swift")
+        let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.swift") }
+        return paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }.map { $0.relativePath }
     }
 }
 

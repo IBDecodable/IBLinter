@@ -117,14 +117,14 @@ extension Rules {
 
             var dict: [String: SwiftIBParser.Class] = [:]
             for (name, outlets) in uiKitOutlets {
-                var _outlets = outlets.map { o in
+                var connections = outlets.map { o in
                     SwiftIBParser.Connection.outlet(
                         property: o, isOptional: false,
                         declaration: .init(line: 0, column: 0, path: nil))
                 }
                 dict[name] = SwiftIBParser.Class.init(
                     file: .init(path: ""), name: name,
-                    connections: _outlets, inheritedClassNames: [],
+                    connections: connections, inheritedClassNames: [],
                     declaration: .init(line: 0, column: 0, path: nil))
             }
 
@@ -182,7 +182,7 @@ extension Rules {
 
                 return swiftClass.connections
                     .filter { swiftConnection in
-                        return !ibConnections.contains(where: { self.matchConnection(viewConnection: $0, swiftConnection: swiftConnection)})
+                        !ibConnections.contains(where: { self.matchConnection(viewConnection: $0, swiftConnection: swiftConnection)})
                     }
                     .map { connection in
                         let message: String = {

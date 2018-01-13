@@ -5,7 +5,7 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-public protocol ViewProtocol: Identifiable {
+public protocol ViewProtocol {
     var elementClass: String { get }
     var id: String { get }
 
@@ -132,7 +132,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-                    connections:                               xml.byKey("connections")?.allElements.flatMap(decodeValue),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),

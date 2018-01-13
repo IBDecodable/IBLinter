@@ -9,13 +9,13 @@ import IBLinterCore
 import Foundation
 
 public struct Violation {
-    let interfaceBuilderFile: FileProtocol
+    let file: FileProtocol
     let message: String
     let level: Level
     let location: Location?
 
     init(file: FileProtocol, message: String, level: Level, location: Location? = nil) {
-        self.interfaceBuilderFile = file
+        self.file = file
         self.message = message
         self.level = level
         self.location = location

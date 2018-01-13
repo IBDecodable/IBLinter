@@ -13,7 +13,7 @@ public class SwiftIBParser {
     public struct Class {
         public let file: SwiftFile
         public let name: String
-        public let connections: [Connection]
+        public fileprivate(set) var connections: [Connection]
         public let inheritedClassNames: [String]
         public let declaration: Declaration
 
@@ -111,10 +111,14 @@ public class SwiftIBParser {
                 }
             }
 
-            self?.classNameToStructure[name] = Class(file: SwiftFile(path: path),
-                                                     name: name, connections: connections,
-                                                     inheritedClassNames: inheritedTypes.flatMap { $0["key.name"] },
-                                                     declaration: .init(file: file, offset: nameOffset64))
+            if self?.classNameToStructure[name] == nil {
+                self?.classNameToStructure[name] = Class(file: SwiftFile(path: path),
+                                                         name: name, connections: connections,
+                                                         inheritedClassNames: inheritedTypes.flatMap { $0["key.name"] },
+                                                         declaration: .init(file: file, offset: nameOffset64))
+            } else {
+                self?.classNameToStructure[name]?.connections.append(contentsOf: connections)
+            }
         }
     }
 }

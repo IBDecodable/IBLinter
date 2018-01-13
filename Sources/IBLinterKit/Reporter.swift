@@ -14,7 +14,7 @@ protocol Reporter {
 struct XcodeReporter: Reporter {
     func report(violation: Violation) -> String {
         return [
-            "\(violation.interfaceBuilderFile.pathString):",
+            "\(violation.file.pathString):",
             "\(violation.location?.line.description ?? ""):",
             "\(violation.location?.column.description ?? ""): ",
             "\(violation.level.rawValue): ",
