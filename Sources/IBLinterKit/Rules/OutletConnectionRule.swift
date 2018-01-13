@@ -117,9 +117,9 @@ extension Rules {
 
             var dict: [String: SwiftIBParser.Class] = [:]
             for (name, outlets) in uiKitOutlets {
-                var connections = outlets.map { o in
+                var connections = outlets.map { outlet in
                     SwiftIBParser.Connection.outlet(
-                        property: o, isOptional: false,
+                        property: outlet, isOptional: false,
                         declaration: .init(line: 0, column: 0, path: nil))
                 }
                 dict[name] = SwiftIBParser.Class.init(

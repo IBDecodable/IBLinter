@@ -30,14 +30,6 @@ public class SwiftIBParser {
     public enum Connection {
         case action(selector: String, declaration: Declaration)
         case outlet(property: String, isOptional: Bool, declaration: Declaration)
-
-        var swiftFile: SwiftFile? {
-            switch self {
-            case .action(_, let declaration),
-                 .outlet(_, _, let declaration):
-                return declaration.path.map { SwiftFile.init(path: $0) }
-            }
-        }
     }
 
     public struct Declaration {
@@ -88,8 +80,6 @@ public class SwiftIBParser {
             var connections: [Connection] = []
 
             guard let kind = structure["key.kind"] as? String, let name = structure["key.name"] as? String,
-                let nameOffset64 = structure["key.nameoffset"] as? Int64,
-                let inheritedTypes = structure["key.inheritedtypes"] as? [[String: String]],
                 kind == "source.lang.swift.decl.class" || kind == "source.lang.swift.decl.extension" else { return }
 
             structure.substructure.forEach { insideStructure in
@@ -112,6 +102,9 @@ public class SwiftIBParser {
             }
 
             if self?.classNameToStructure[name] == nil {
+                guard let nameOffset64 = structure["key.nameoffset"] as? Int64,
+                    let inheritedTypes = structure["key.inheritedtypes"] as? [[String: String]] else { return }
+
                 self?.classNameToStructure[name] = Class(file: SwiftFile(path: path),
                                                          name: name, connections: connections,
                                                          inheritedClassNames: inheritedTypes.flatMap { $0["key.name"] },

@@ -1,9 +1,9 @@
 import UIKit
 
-class IBConnectionViewController: UIViewController {
+class IBConnectionViewController: UIViewController, UITableViewDelegate {
 
     //@IBOutlet weak var label: UILabel!
-    @IBOutlet weak var buttons: [UIButton]!
+    @IBOutlet var buttons: [UIButton]!
 
     @IBAction func touchUpInsideAction(_ sender: Any) {}
 }

@@ -12,11 +12,15 @@ protocol Reporter {
 }
 
 struct XcodeReporter: Reporter {
+
+    private func locationDescription(_ location: Violation.Location) -> String {
+        return "\(location.line):\(location.column): "
+    }
+
     func report(violation: Violation) -> String {
         return [
             "\(violation.file.pathString):",
-            "\(violation.location?.line.description ?? ""):",
-            "\(violation.location?.column.description ?? ""): ",
+            "\(violation.location.map { locationDescription($0) } ?? ":: " )",
             "\(violation.level.rawValue): ",
             violation.message,
             ].joined()
