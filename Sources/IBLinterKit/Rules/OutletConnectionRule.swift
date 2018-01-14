@@ -66,8 +66,11 @@ extension Rules {
             }
 
             private func mappingClassNameToConnection(for viewController: ViewControllerProtocol) {
-                guard let connections = viewController.connections else { return }
-                connections.forEach { [weak self] connection in
+                let connections = viewController.connections ?? []
+                let navigatoinConnections = viewController.navigationItem?.items?
+                    .flatMap({ $0.connections }).flatMap({ $0 }) ?? []
+                let toolBarConnections = viewController.toolbarItems?.flatMap({ $0.connections }).flatMap({ $0 }) ?? []
+                (connections + navigatoinConnections + toolBarConnections).forEach { [weak self] connection in
                     switch connection {
                     case .outlet:
                         guard let className = viewController.customClass else { return }
