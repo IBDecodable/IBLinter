@@ -30,14 +30,14 @@ class InterfaceBuilderParserTest: XCTestCase {
             default: fatalError()
             }
         }()
-        XCTAssertEqual(button.title.normal, "Default Title")
-        XCTAssertEqual(button.title.selected, "Selected Title")
-        XCTAssertEqual(button.title.highlighted, "Highlighted Title")
-        XCTAssertEqual(button.title.disabled, "Disabled Title")
-        XCTAssertEqual(button.textColor.normal?.sRGB?.red, 0.97647058819999999)
-        XCTAssertEqual(button.textColor.normal?.sRGB?.green, 0.25882352939999997)
-        XCTAssertEqual(button.textColor.normal?.sRGB?.blue, 0.24313725489999999)
-        XCTAssertEqual(button.textColor.normal?.sRGB?.key, "titleColor")
+        XCTAssertEqual(button.title?.normal, "Default Title")
+        XCTAssertEqual(button.title?.selected, "Selected Title")
+        XCTAssertEqual(button.title?.highlighted, "Highlighted Title")
+        XCTAssertEqual(button.title?.disabled, "Disabled Title")
+        XCTAssertEqual(button.textColor?.normal?.sRGB?.red, 0.97647058819999999)
+        XCTAssertEqual(button.textColor?.normal?.sRGB?.green, 0.25882352939999997)
+        XCTAssertEqual(button.textColor?.normal?.sRGB?.blue, 0.24313725489999999)
+        XCTAssertEqual(button.textColor?.normal?.sRGB?.key, "titleColor")
 
         let label: InterfaceBuilderNode.View.Label = {
             switch view.subviews![1] {

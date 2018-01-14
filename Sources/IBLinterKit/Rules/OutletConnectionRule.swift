@@ -48,10 +48,8 @@ extension Rules {
             }
 
             private func mappingClassNameToConnection(for view: ViewProtocol) {
-                guard let connections = view.connections else {
-                    view.subviews?.forEach(mappingClassNameToConnection)
-                    return
-                }
+                defer { view.subviews?.forEach(mappingClassNameToConnection) }
+                guard let connections = view.connections else { return }
                 connections.forEach { [weak self] connection in
                     switch connection {
                     case .outlet:

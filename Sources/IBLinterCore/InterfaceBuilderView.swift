@@ -27,6 +27,7 @@ public protocol ViewProtocol {
 
 extension InterfaceBuilderNode {
     public enum View: XMLDecodable, ViewProtocol {
+        case barButtonItem(BarButtonItem)
         case button(Button)
         case collectionView(CollectionView)
         case collectionViewCell(CollectionViewCell)
@@ -64,6 +65,7 @@ extension InterfaceBuilderNode {
 
         private var _view: ViewProtocol {
             switch self {
+            case .barButtonItem(let barButtonItem):           return barButtonItem
             case .button(let button):                         return button
             case .collectionView(let collectionView):         return collectionView
             case .collectionViewCell(let collectionViewCell): return collectionViewCell
@@ -310,13 +312,33 @@ extension InterfaceBuilderNode {
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let rowHeight: Float?
+            public let sections: [TableViewSection]?
             public let sectionFooterHeight: Float?
             public let sectionHeaderHeight: Float?
             public let separatorStyle: String?
             public let style: String?
-            public let subviews: [InterfaceBuilderNode.View]?
+            private let _subviews: [InterfaceBuilderNode.View]?
+            public var subviews: [InterfaceBuilderNode.View]? {
+                let cells: [InterfaceBuilderNode.View.TableViewCell]? = sections?.flatMap { $0.cells }.flatMap { $0 }
+                return (_subviews ?? []) + (cells?.map { .tableViewCell($0) } ?? [])
+            }
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
+
+            public struct TableViewSection: XMLDecodable {
+
+                public let id: String
+                public let headerTitle: String?
+                public let cells: [InterfaceBuilderNode.View.TableViewCell]?
+
+                static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.TableView.TableViewSection {
+                    return TableViewSection.init(
+                        id:          try xml.attributeValue(of: "id"),
+                        headerTitle: xml.attributeValue(of: "headerTitle"),
+                        cells:       xml.byKey("cells")?.byKey("tableViewCell")?.allElements.flatMap(decodeValue)
+                    )
+                }
+            }
 
             public enum DataMode: XMLAttributeDecodable {
                 case `static`, prototypes
@@ -348,11 +370,12 @@ extension InterfaceBuilderNode {
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      try decodeValue(xml.byKey("rect")),
                     rowHeight:                                 xml.attributeValue(of: "rowHeight"),
+                    sections:                                  xml.byKey("sections")?.byKey("tableViewSection")?.allElements.flatMap(decodeValue),
                     sectionFooterHeight:                       xml.attributeValue(of: "sectionFooterHeight"),
                     sectionHeaderHeight:                       xml.attributeValue(of: "sectionHeaderHeight"),
                     separatorStyle:                            xml.attributeValue(of: "separatorStyle"),
                     style:                                     xml.attributeValue(of: "style"),
-                    subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
+                    _subviews:                                 xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
                 )
@@ -400,6 +423,8 @@ extension InterfaceBuilderNode {
                 public let userInteractionEnabled: Bool?
 
                 static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.TableViewCell.TableViewContentView {
+                    let subviews: [InterfaceBuilderNode.View]? = xml.byKey("subviews")?.childrenNode.flatMap(decodeValue)
+                    print(subviews)
                     return TableViewContentView.init(
                         id:                                        try xml.attributeValue(of: "id"),
                         autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
@@ -542,8 +567,8 @@ extension InterfaceBuilderNode {
             public let opaque: Bool?
             public let rect: InterfaceBuilderNode.View.Rect
             public let subviews: [InterfaceBuilderNode.View]?
-            public let textColor: TextColor
-            public let title: Title
+            public let textColor: TextColor?
+            public let title: Title?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
 
@@ -968,6 +993,44 @@ extension InterfaceBuilderNode {
             }
         }
 
+        public struct BarButtonItem: XMLDecodable, ViewProtocol {
+            public let id: String
+            public let elementClass: String = "UIBarButtonItem"
+
+            public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
+            public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
+            public let constraints: [InterfaceBuilderNode.View.Constraint]?
+            public let contentMode: String?
+            public let customClass: String?
+            public let customModule: String?
+            public let isMisplaced: Bool?
+            public let opaque: Bool?
+            public let rect: InterfaceBuilderNode.View.Rect
+            public let subviews: [InterfaceBuilderNode.View]?
+            public let translatesAutoresizingMaskIntoConstraints: Bool?
+            public let userInteractionEnabled: Bool?
+
+            static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.BarButtonItem {
+                return BarButtonItem.init(
+                    id:                                        try xml.attributeValue(of: "id"),
+                    autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
+                    clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                    constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
+                    contentMode:                               xml.attributeValue(of: "contentMode"),
+                    customClass:                               xml.attributeValue(of: "customClass"),
+                    customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
+                    opaque:                                    xml.attributeValue(of: "opaque"),
+                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
+                    translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
+                    userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+                )
+            }
+        }
+
         public enum Color: XMLDecodable {
             public typealias CalibratedWhite = (key: String, white: Float, alpha: Float)
             public typealias SRGB = (key: String, red: Float, blue: Float, green: Float, alpha: Float)
@@ -1137,11 +1200,14 @@ extension InterfaceBuilderNode {
                         id: xml.attributeValue(of: "id")
                     )
                 case "action":
-                    return try .action(
-                        selector: xml.attributeValue(of: "selector"),
+                    let selector: String = try xml.attributeValue(of: "selector")
+                    let a: Connection = try .action(
+                        selector: selector,
                         destination: xml.attributeValue(of: "destination"),
                         eventType: xml.attributeValue(of: "eventType"),
                         id: xml.attributeValue(of: "id"))
+                    print(a)
+                    return a
                 default:
                     throw Error.unsupportedConnectionType(elementName)
                 }
