@@ -151,6 +151,7 @@ public extension InterfaceBuilderNode {
         case unsupportedTableViewDataMode(String)
         case unsupportedColorSpace(String)
         case unsupportedConnectionType(String)
+        case notViewElement
 
         public var description: String {
             switch self {
@@ -168,6 +169,8 @@ public extension InterfaceBuilderNode {
                 return "unsupported color space '\(colorSpace)'"
             case .unsupportedConnectionType(let connectionType):
                 return "unsupported connection type \(connectionType)"
+            case .notViewElement:
+                return "not view element"
             }
         }
     }

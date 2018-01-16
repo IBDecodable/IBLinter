@@ -45,6 +45,7 @@ extension InterfaceBuilderNode {
         case textView(TextView)
         case toolbar(Toolbar)
         case view(View)
+        case unknownView(UnknownView)
 
         public var id: String { return _view.id }
         public var elementClass: String { return _view.elementClass }
@@ -83,6 +84,7 @@ extension InterfaceBuilderNode {
             case .textView(let textView):                     return textView
             case .toolbar(let toolbar):                       return toolbar
             case .view(let view):                             return view
+            case .unknownView(let unknownView):               return unknownView
             }
         }
 
@@ -106,7 +108,11 @@ extension InterfaceBuilderNode {
             case "textView":                 return try .textView(decodeValue(xml))
             case "toolbar":                  return try .toolbar(decodeValue(xml))
             case "view":                     return try .view(decodeValue(xml))
-            default:                         throw Error.unsupportedViewClass(elementName)
+            case "placeholder":              throw Error.notViewElement
+            default:
+                let error = Error.unsupportedViewClass(elementName)
+                print(error.description)
+                return try .unknownView(decodeValue(xml))
             }
         }
 
@@ -423,8 +429,6 @@ extension InterfaceBuilderNode {
                 public let userInteractionEnabled: Bool?
 
                 static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.TableViewCell.TableViewContentView {
-                    let subviews: [InterfaceBuilderNode.View]? = xml.byKey("subviews")?.childrenNode.flatMap(decodeValue)
-                    print(subviews)
                     return TableViewContentView.init(
                         id:                                        try xml.attributeValue(of: "id"),
                         autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
@@ -636,8 +640,8 @@ extension InterfaceBuilderNode {
                     opaque:                                    xml.attributeValue(of: "opaque"),
                     rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
-                    textColor:                                 try decodeValue(xml),
-                    title:                                     try decodeValue(xml),
+                    textColor:                                 decodeValue(xml),
+                    title:                                     decodeValue(xml),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
                 )
@@ -993,6 +997,46 @@ extension InterfaceBuilderNode {
             }
         }
 
+        public struct UnknownView: XMLDecodable, ViewProtocol {
+            public let id: String
+            public let elementClass: String
+
+            public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
+            public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
+            public let constraints: [InterfaceBuilderNode.View.Constraint]?
+            public let contentMode: String?
+            public let customClass: String?
+            public let customModule: String?
+            public let isMisplaced: Bool?
+            public let opaque: Bool?
+            public let rect: InterfaceBuilderNode.View.Rect?
+            public let subviews: [InterfaceBuilderNode.View]?
+            public let translatesAutoresizingMaskIntoConstraints: Bool?
+            public let userInteractionEnabled: Bool?
+
+            static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.UnknownView {
+                guard let elementName = xml.elementNode?.name else { throw Error.elementNotFound }
+                return UnknownView.init(
+                    id:                                        try xml.attributeValue(of: "id"),
+                    elementClass:                              elementName,
+                    autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
+                    clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                    constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
+                    contentMode:                               xml.attributeValue(of: "contentMode"),
+                    customClass:                               xml.attributeValue(of: "customClass"),
+                    customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
+                    opaque:                                    xml.attributeValue(of: "opaque"),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
+                    subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
+                    translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
+                    userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+                )
+            }
+        }
+
         public struct BarButtonItem: XMLDecodable, ViewProtocol {
             public let id: String
             public let elementClass: String = "UIBarButtonItem"
@@ -1200,14 +1244,11 @@ extension InterfaceBuilderNode {
                         id: xml.attributeValue(of: "id")
                     )
                 case "action":
-                    let selector: String = try xml.attributeValue(of: "selector")
-                    let a: Connection = .action(
-                        selector: selector,
-                        destination: try xml.attributeValue(of: "destination"),
+                    return try .action(
+                        selector: xml.attributeValue(of: "selector"),
+                        destination: xml.attributeValue(of: "destination"),
                         eventType: xml.attributeValue(of: "eventType"),
-                        id: try xml.attributeValue(of: "id"))
-                    print(a)
-                    return a
+                        id: xml.attributeValue(of: "id"))
                 default:
                     throw Error.unsupportedConnectionType(elementName)
                 }
