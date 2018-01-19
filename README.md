@@ -28,6 +28,8 @@ Add a `Run Script Phase` to integrate IBLinter with Xcode
 ```sh
 if which iblinter >/dev/null; then
   iblinter lint
+else
+  echo "warning: IBLinter not installed, download from https://github.com/kateinoigakukun/IBLinter"
 fi
 ```
 
