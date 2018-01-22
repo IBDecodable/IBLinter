@@ -820,7 +820,10 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
-            public let connections: [InterfaceBuilderNode.View.Connection]?
+            private let _connections: [InterfaceBuilderNode.View.Connection]?
+            public var connections: [InterfaceBuilderNode.View.Connection]? {
+                return (items?.flatMap { $0.connections }.flatMap { $0 } ?? []) + (_connections ?? [])
+            }
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
@@ -836,16 +839,18 @@ extension InterfaceBuilderNode {
 
             public struct BarButtonItem: XMLDecodable {
                 public let id: String
+                public let connections: [InterfaceBuilderNode.View.Connection]?
                 public let style: String?
                 public let systemItem: String?
                 public let title: String?
 
                 static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.Toolbar.BarButtonItem {
                     return BarButtonItem.init(
-                        id:         try xml.attributeValue(of: "id"),
-                        style:      xml.attributeValue(of: "style"),
-                        systemItem: xml.attributeValue(of: "systemItem"),
-                        title:      xml.attributeValue(of: "title")
+                        id:          try xml.attributeValue(of: "id"),
+                        connections: xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                        style:       xml.attributeValue(of: "style"),
+                        systemItem:  xml.attributeValue(of: "systemItem"),
+                        title:       xml.attributeValue(of: "title")
                     )
                 }
             }
@@ -855,7 +860,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                    _connections:                              xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
