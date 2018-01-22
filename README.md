@@ -8,9 +8,19 @@ A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/Sw
 
 ## Installation
 
+### Using Homebrew
+
 ```sh
 $ brew install kateinoigakukun/homebrew-tap/iblinter
 ```
+
+### Compiling from source
+
+You can build from source by cloning this repository and running
+```
+$ make install
+```
+`iblinter` will be installed in `/usr/local/bin`.
 
 ## Usage
 
