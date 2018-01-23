@@ -110,6 +110,7 @@ extension InterfaceBuilderNode {
             case "view":                     return try .view(decodeValue(xml))
             case "placeholder":              throw Error.notViewElement
             default:
+                if GestureRecognizer.classNames.contains(elementName) { throw Error.notViewElement }
                 let error = Error.unsupportedViewClass(elementName)
                 print(error.description)
                 return try .unknownView(decodeValue(xml))

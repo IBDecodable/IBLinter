@@ -28,9 +28,9 @@ class RuleTest: XCTestCase {
     func testOutletConnection() {
         let path = "Tests/IBLinterKitTest/Resources/IBConnectionViewController.storyboard"
         let storyboard = StoryboardFile.init(path: path)
-        guard let viewController = storyboard.document.scenes?.first?.viewController else { return }
+        let document = storyboard.document
 
-        let cache = Rules.OutletConnectionRule.Mapper.init(viewController: viewController)
+        let cache = Rules.OutletConnectionRule.Mapper.init(storyboardDocument: document)
         XCTAssertEqual(cache.idToClassName["Ksm-ni-UfK"], "IBConnectionViewController")
         let classNameToConnection: [InterfaceBuilderNode.View.Connection] = [
             .outlet(property: "label", destination: "4Kb-9I-U6T", id: "pIv-Ri-ced"),

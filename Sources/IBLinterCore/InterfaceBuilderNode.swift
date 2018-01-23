@@ -55,6 +55,7 @@ public extension InterfaceBuilderNode {
         public let colorMatched: Bool?
         public let device: Device?
         public let views: [View]?
+        public let gestureRecognizers: [GestureRecognizer]?
         public let placeholders: [Placeholder]?
 
         static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.XibDocument {
@@ -70,6 +71,7 @@ public extension InterfaceBuilderNode {
                 colorMatched:          xml.attributeValue(of: "colorMatched"),
                 device:                xml.byKey("device").flatMap(decodeValue),
                 views:                 xml.byKey("objects")?.childrenNode.flatMap(decodeValue),
+                gestureRecognizers:    xml.byKey("objects")?.childrenNode.flatMap(decodeValue),
                 placeholders:          xml.byKey("objects")?.byKey("placeholder")?.allElements.flatMap(decodeValue)
             )
         }
@@ -92,11 +94,13 @@ public extension InterfaceBuilderNode {
     public struct Scene: XMLDecodable {
         public let id: String
         public let viewController: ViewController?
+        public let gestureRecognizers: [GestureRecognizer]?
 
         static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.Scene {
             return Scene.init(
-                id:             try xml.attributeValue(of: "sceneID"),
-                viewController: xml.byKey("objects")?.childrenNode.first.flatMap(decodeValue)
+                id:                 try xml.attributeValue(of: "sceneID"),
+                viewController:     xml.byKey("objects")?.childrenNode.flatMap(decodeValue).first,
+                gestureRecognizers: xml.byKey("objects")?.childrenNode.flatMap(decodeValue)
             )
         }
     }
@@ -139,6 +143,28 @@ public extension InterfaceBuilderNode {
             return try LayoutGuide.init(
                 key: xml.attributeValue(of: "key"),
                 id: xml.attributeValue(of: "id")
+            )
+        }
+    }
+
+    public struct GestureRecognizer: XMLDecodable {
+
+        static let classNames: [String] = [
+            "tapGestureRecognizer", "pinchGestureRecognizer",
+            "rotationGestureRecognizer", "swipeGestureRecognizer",
+            "panGestureRecognizer", "screenEdgePanGestureRecognizer",
+            "pongPressGestureRecognizer", "gestureRecognizer",
+            ]
+
+        public let connections: [InterfaceBuilderNode.View.Connection]?
+        
+        static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.GestureRecognizer {
+            guard let elementName = xml.elementNode?.name, classNames.contains(elementName) else {
+                throw Error.elementNotFound
+            }
+
+            return GestureRecognizer.init(
+                connections: xml.byKey("connections")?.childrenNode.flatMap(decodeValue)
             )
         }
     }

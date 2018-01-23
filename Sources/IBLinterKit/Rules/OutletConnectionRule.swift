@@ -19,17 +19,25 @@ extension Rules {
             public private(set) var idToClassName: [String: String] = [:]
             public private(set) var classNameToConnection: [String: [InterfaceBuilderNode.View.Connection]] = [:]
 
-            public init(view: ViewProtocol) {
-                mappingIdToClassName(for: view)
-                mappingClassNameToConnection(for: view)
+            public init(xibDocument: InterfaceBuilderNode.XibDocument) {
+                xibDocument.views?.forEach { [weak self] view in
+                    self?.mappingIdToClassName(for: view)
+                    self?.mappingClassNameToConnection(for: view)
+                    self?.mappingGestureRecognizer(for: xibDocument.gestureRecognizers ?? [])
+                }
             }
 
-            public init(viewController: ViewControllerProtocol) {
-                mappingIdToClassName(for: viewController)
-                mappingClassNameToConnection(for: viewController)
-                guard let rootView = viewController.rootView else { return }
-                mappingIdToClassName(for: rootView)
-                mappingClassNameToConnection(for: rootView)
+            public init(storyboardDocument: InterfaceBuilderNode.StoryboardDocument) {
+                storyboardDocument.scenes?.flatMap { $0.viewController }
+                    .forEach { [weak self] viewController in
+                        self?.mappingIdToClassName(for: viewController)
+                        self?.mappingClassNameToConnection(for: viewController)
+                        guard let rootView = viewController.rootView else { return }
+                        self?.mappingIdToClassName(for: rootView)
+                        self?.mappingClassNameToConnection(for: rootView)
+                }
+                let gestureRecognizers = storyboardDocument.scenes?.flatMap { $0.gestureRecognizers }.flatMap { $0 } ?? []
+                mappingGestureRecognizer(for: gestureRecognizers)
             }
 
             private func mappingIdToClassName(for viewController: ViewControllerProtocol) {
@@ -45,6 +53,19 @@ extension Rules {
                     classNameToConnection[customClassName] = []
                 }
                 view.subviews?.forEach(mappingIdToClassName)
+            }
+
+            private func mappingGestureRecognizer(for gestureRecognizers: [InterfaceBuilderNode.GestureRecognizer]) {
+                gestureRecognizers.flatMap { $0.connections }.flatMap { $0 }
+                    .forEach { [weak self] connection in
+                        switch connection {
+                        case .action(_, let destination, _, _):
+                            guard let className = self?.idToClassName[destination] else { return }
+                            self?.classNameToConnection[className]?.append(connection)
+                        default: return
+                        }
+                }
+
             }
 
             private func mappingClassNameToConnection(for view: ViewProtocol) {
@@ -133,16 +154,13 @@ extension Rules {
         }()
 
         public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] {
-            guard let views = xib.document.views else { return [] }
-            return views.map(Mapper.init(view: ))
-                .flatMap { self.validate(for: $0, file: xib, swiftParser: swiftParser) }
+            let mapper = Mapper.init(xibDocument: xib.document)
+            return validate(for: mapper, file: xib, swiftParser: swiftParser)
         }
 
         public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
-            guard let scenes = storyboard.document.scenes else { return [] }
-            let viewControllers = scenes.flatMap { $0.viewController }
-            let mappers = viewControllers.map(Mapper.init(viewController: ))
-            return mappers.flatMap { self.validate(for: $0, file: storyboard, swiftParser: swiftParser) }
+            let mapper = Mapper.init(storyboardDocument: storyboard.document)
+            return validate(for: mapper, file: storyboard, swiftParser: swiftParser)
         }
 
         private func validate(for mapper: Mapper, file: FileProtocol, swiftParser: SwiftIBParser) -> [Violation] {
