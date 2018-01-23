@@ -11,13 +11,14 @@ public protocol ViewProtocol {
 
     var autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask? { get }
     var clipsSubviews: Bool? { get }
+    var connections: [InterfaceBuilderNode.View.Connection]? { get }
     var constraints: [InterfaceBuilderNode.View.Constraint]? { get }
     var contentMode: String? { get }
     var customClass: String? { get }
     var customModule: String? { get }
     var isMisplaced: Bool? { get }
     var opaque: Bool? { get }
-    var rect: InterfaceBuilderNode.View.Rect { get }
+    var rect: InterfaceBuilderNode.View.Rect? { get }
     var subviews: [InterfaceBuilderNode.View]? { get }
     var translatesAutoresizingMaskIntoConstraints: Bool? { get }
     var userInteractionEnabled: Bool? { get }
@@ -26,6 +27,7 @@ public protocol ViewProtocol {
 
 extension InterfaceBuilderNode {
     public enum View: XMLDecodable, ViewProtocol {
+        case barButtonItem(BarButtonItem)
         case button(Button)
         case collectionView(CollectionView)
         case collectionViewCell(CollectionViewCell)
@@ -43,25 +45,28 @@ extension InterfaceBuilderNode {
         case textView(TextView)
         case toolbar(Toolbar)
         case view(View)
+        case unknownView(UnknownView)
 
         public var id: String { return _view.id }
         public var elementClass: String { return _view.elementClass }
 
         public var autoresizingMask: AutoresizingMask? { return _view.autoresizingMask }
         public var clipsSubviews: Bool? { return _view.clipsSubviews }
+        public var connections: [InterfaceBuilderNode.View.Connection]? { return _view.connections }
         public var constraints: [InterfaceBuilderNode.View.Constraint]? { return _view.constraints }
         public var contentMode: String? { return _view.contentMode }
         public var customClass: String? { return _view.customClass }
         public var customModule: String? { return _view.customModule }
         public var isMisplaced: Bool? { return _view.isMisplaced }
         public var opaque: Bool? { return _view.opaque }
-        public var rect: InterfaceBuilderNode.View.Rect { return _view.rect }
+        public var rect: InterfaceBuilderNode.View.Rect? { return _view.rect }
         public var subviews: [InterfaceBuilderNode.View]? { return _view.subviews }
         public var translatesAutoresizingMaskIntoConstraints: Bool? { return _view.translatesAutoresizingMaskIntoConstraints }
         public var userInteractionEnabled: Bool? { return _view.userInteractionEnabled }
 
         private var _view: ViewProtocol {
             switch self {
+            case .barButtonItem(let barButtonItem):           return barButtonItem
             case .button(let button):                         return button
             case .collectionView(let collectionView):         return collectionView
             case .collectionViewCell(let collectionViewCell): return collectionViewCell
@@ -79,6 +84,7 @@ extension InterfaceBuilderNode {
             case .textView(let textView):                     return textView
             case .toolbar(let toolbar):                       return toolbar
             case .view(let view):                             return view
+            case .unknownView(let unknownView):               return unknownView
             }
         }
 
@@ -102,7 +108,12 @@ extension InterfaceBuilderNode {
             case "textView":                 return try .textView(decodeValue(xml))
             case "toolbar":                  return try .toolbar(decodeValue(xml))
             case "view":                     return try .view(decodeValue(xml))
-            default:                         throw Error.unsupportedViewClass(elementName)
+            case "placeholder":              throw Error.notViewElement
+            default:
+                if GestureRecognizer.classNames.contains(elementName) { throw Error.notViewElement }
+                let error = Error.unsupportedViewClass(elementName)
+                print(error.description)
+                return try .unknownView(decodeValue(xml))
             }
         }
 
@@ -112,13 +123,14 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: Rect
+            public let rect: Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -129,13 +141,14 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled"),
@@ -152,13 +165,14 @@ extension InterfaceBuilderNode {
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let axis: String?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: Rect
+            public let rect: Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -170,13 +184,14 @@ extension InterfaceBuilderNode {
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     axis:                                      xml.attributeValue(of: "axis"),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -190,6 +205,7 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
@@ -199,7 +215,7 @@ extension InterfaceBuilderNode {
             public let isMisplaced: Bool?
             public let multipleTouchEnabled: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -209,6 +225,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
@@ -218,7 +235,7 @@ extension InterfaceBuilderNode {
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     multipleTouchEnabled:                      xml.attributeValue(of: "multipleTouchEnabled"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -234,6 +251,7 @@ extension InterfaceBuilderNode {
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let baselineAdjustment: String?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
@@ -243,7 +261,7 @@ extension InterfaceBuilderNode {
             public let lineBreakMode: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let text: String
             public let textAlignment: String?
@@ -260,6 +278,7 @@ extension InterfaceBuilderNode {
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     baselineAdjustment:                        xml.attributeValue(of: "baselineAdjustment"),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
@@ -269,7 +288,7 @@ extension InterfaceBuilderNode {
                     lineBreakMode:                             xml.attributeValue(of: "lineBreakMode"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     text:                                      try xml.attributeValue(of: "text"),
                     textAlignment:                             xml.attributeValue(of: "textAlignment"),
@@ -289,6 +308,7 @@ extension InterfaceBuilderNode {
             public let alwaysBounceVertical: Bool?
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
@@ -297,15 +317,35 @@ extension InterfaceBuilderNode {
             public let estimatedRowHeight: Float?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let rowHeight: Float?
+            public let sections: [TableViewSection]?
             public let sectionFooterHeight: Float?
             public let sectionHeaderHeight: Float?
             public let separatorStyle: String?
             public let style: String?
-            public let subviews: [InterfaceBuilderNode.View]?
+            private let _subviews: [InterfaceBuilderNode.View]?
+            public var subviews: [InterfaceBuilderNode.View]? {
+                let cells: [InterfaceBuilderNode.View.TableViewCell]? = sections?.flatMap { $0.cells }.flatMap { $0 }
+                return (_subviews ?? []) + (cells?.map { .tableViewCell($0) } ?? [])
+            }
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
+
+            public struct TableViewSection: XMLDecodable {
+
+                public let id: String
+                public let headerTitle: String?
+                public let cells: [InterfaceBuilderNode.View.TableViewCell]?
+
+                static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.TableView.TableViewSection {
+                    return TableViewSection.init(
+                        id:          try xml.attributeValue(of: "id"),
+                        headerTitle: xml.attributeValue(of: "headerTitle"),
+                        cells:       xml.byKey("cells")?.byKey("tableViewCell")?.allElements.flatMap(decodeValue)
+                    )
+                }
+            }
 
             public enum DataMode: XMLAttributeDecodable {
                 case `static`, prototypes
@@ -326,6 +366,7 @@ extension InterfaceBuilderNode {
                     alwaysBounceVertical:                      xml.attributeValue(of: "alwaysBounceVertical"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
@@ -334,13 +375,14 @@ extension InterfaceBuilderNode {
                     estimatedRowHeight:                        xml.attributeValue(of: "estimatedRowHeight"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     rowHeight:                                 xml.attributeValue(of: "rowHeight"),
+                    sections:                                  xml.byKey("sections")?.byKey("tableViewSection")?.allElements.flatMap(decodeValue),
                     sectionFooterHeight:                       xml.attributeValue(of: "sectionFooterHeight"),
                     sectionHeaderHeight:                       xml.attributeValue(of: "sectionHeaderHeight"),
                     separatorStyle:                            xml.attributeValue(of: "separatorStyle"),
                     style:                                     xml.attributeValue(of: "style"),
-                    subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
+                    _subviews:                                 xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
                 )
@@ -353,6 +395,7 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentView: TableViewContentView
             public let contentMode: String?
@@ -360,7 +403,7 @@ extension InterfaceBuilderNode {
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             private let _subviews: [InterfaceBuilderNode.View]?
             public var subviews: [InterfaceBuilderNode.View]? {
                 return (_subviews ?? []) + [.tableViewCellContentView(contentView)]
@@ -374,13 +417,14 @@ extension InterfaceBuilderNode {
 
                 public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
                 public let clipsSubviews: Bool?
+                public let connections: [InterfaceBuilderNode.View.Connection]?
                 public let constraints: [InterfaceBuilderNode.View.Constraint]?
                 public let contentMode: String?
                 public let customClass: String?
                 public let customModule: String?
                 public let isMisplaced: Bool?
                 public let opaque: Bool?
-                public let rect: InterfaceBuilderNode.View.Rect
+                public let rect: InterfaceBuilderNode.View.Rect?
                 public let subviews: [InterfaceBuilderNode.View]?
                 public let translatesAutoresizingMaskIntoConstraints: Bool?
                 public let userInteractionEnabled: Bool?
@@ -390,13 +434,14 @@ extension InterfaceBuilderNode {
                         id:                                        try xml.attributeValue(of: "id"),
                         autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                         clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                        connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                         constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                         contentMode:                               xml.attributeValue(of: "contentMode"),
                         customClass:                               xml.attributeValue(of: "customClass"),
                         customModule:                              xml.attributeValue(of: "customModule"),
                         isMisplaced:                               xml.attributeValue(of: "misplaced"),
                         opaque:                                    xml.attributeValue(of: "opaque"),
-                        rect:                                      try decodeValue(xml.byKey("rect")),
+                        rect:                                      xml.byKey("rect").flatMap(decodeValue),
                         subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                         translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                         userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -409,6 +454,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentView:                               try decodeValue(xml.byKey("tableViewCellContentView")),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
@@ -416,7 +462,7 @@ extension InterfaceBuilderNode {
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     _subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -430,13 +476,14 @@ extension InterfaceBuilderNode {
             public let alwaysBounceHorizontal: Bool?
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -447,13 +494,14 @@ extension InterfaceBuilderNode {
                     alwaysBounceHorizontal:                    xml.attributeValue(of: "alwaysBounceHorizontal"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -467,6 +515,7 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentView: View
             public let contentMode: String?
@@ -474,7 +523,7 @@ extension InterfaceBuilderNode {
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             private let _subviews: [InterfaceBuilderNode.View]?
             public var subviews: [InterfaceBuilderNode.View]? {
                 return (_subviews ?? []) + [.view(contentView)]
@@ -487,6 +536,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentView:                               try decodeValue(xml.byKey("view")),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
@@ -494,7 +544,7 @@ extension InterfaceBuilderNode {
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     _subviews:                                 xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -509,6 +559,7 @@ extension InterfaceBuilderNode {
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let buttonType: String?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentHorizontalAlignment: String?
             public let contentMode: String?
@@ -519,10 +570,10 @@ extension InterfaceBuilderNode {
             public let lineBreakMode: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
-            public let textColor: TextColor
-            public let title: Title
+            public let textColor: TextColor?
+            public let title: Title?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
 
@@ -577,6 +628,7 @@ extension InterfaceBuilderNode {
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     buttonType:                                xml.attributeValue(of: "buttonType"),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
@@ -587,10 +639,10 @@ extension InterfaceBuilderNode {
                     lineBreakMode:                             xml.attributeValue(of: "lineBreakMode"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
-                    textColor:                                 try decodeValue(xml),
-                    title:                                     try decodeValue(xml),
+                    textColor:                                 decodeValue(xml),
+                    title:                                     decodeValue(xml),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
                 )
@@ -603,6 +655,7 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentHorizontalAlignment: String?
             public let contentMode: String?
@@ -611,7 +664,7 @@ extension InterfaceBuilderNode {
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let segmentControlStyle: String?
             public let segments: [Segment]
             public let selectedSegmentIndex: Int?
@@ -632,6 +685,7 @@ extension InterfaceBuilderNode {
                     id:                                         try xml.attributeValue(of: "id"),
                     autoresizingMask:                           xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                              xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                                xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentHorizontalAlignment:                 xml.attributeValue(of: "contentHorizontalAlignment"),
                     contentMode:                                xml.attributeValue(of: "contentMode"),
@@ -640,7 +694,7 @@ extension InterfaceBuilderNode {
                     customModule:                               xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                     xml.attributeValue(of: "opaque"),
-                    rect:                                       try decodeValue(xml.byKey("rect")),
+                    rect:                                       xml.byKey("rect").flatMap(decodeValue),
                     segmentControlStyle:                        xml.attributeValue(of: "segmentControlStyle"),
                     segments:                                   try xml.byKey("segments").byKey("segment").allElements.map(decodeValue),
                     selectedSegmentIndex:                       xml.attributeValue(of: "selectedSegmentIndex"),
@@ -659,6 +713,7 @@ extension InterfaceBuilderNode {
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let borderStyle: String?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentHorizontalAlignment: String?
             public let contentMode: String?
@@ -670,7 +725,7 @@ extension InterfaceBuilderNode {
             public let minimumFontSize: Float?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let textAlignment: String?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
@@ -682,6 +737,7 @@ extension InterfaceBuilderNode {
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     borderStyle:                               xml.attributeValue(of: "borderStyle"),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
@@ -693,7 +749,7 @@ extension InterfaceBuilderNode {
                     minimumFontSize:                           xml.attributeValue(of: "minimumFontSize"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     textAlignment:                             xml.attributeValue(of: "textAlignment"),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
@@ -711,6 +767,7 @@ extension InterfaceBuilderNode {
             public let bounces: Bool?
             public let bouncesZoom: Bool?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
@@ -718,7 +775,7 @@ extension InterfaceBuilderNode {
             public let font: FontDescription?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let scrollEnabled: Bool?
             public let showsHorizontalScrollIndicator: Bool?
             public let showsVerticalScrollIndicator: Bool?
@@ -736,6 +793,7 @@ extension InterfaceBuilderNode {
                     bounces:                                   xml.attributeValue(of: "bounces"),
                     bouncesZoom:                               xml.attributeValue(of: "bouncesZoom"),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
@@ -743,7 +801,7 @@ extension InterfaceBuilderNode {
                     font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     scrollEnabled:                             xml.attributeValue(of: "scrollEnabled"),
                     showsHorizontalScrollIndicator:            xml.attributeValue(of: "showsHorizontalScrollIndicator"),
                     showsVerticalScrollIndicator:              xml.attributeValue(of: "showsVerticalScrollIndicator"),
@@ -763,6 +821,10 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            private let _connections: [InterfaceBuilderNode.View.Connection]?
+            public var connections: [InterfaceBuilderNode.View.Connection]? {
+                return (items?.flatMap { $0.connections }.flatMap { $0 } ?? []) + (_connections ?? [])
+            }
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
@@ -770,7 +832,7 @@ extension InterfaceBuilderNode {
             public let items: [BarButtonItem]?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -778,16 +840,18 @@ extension InterfaceBuilderNode {
 
             public struct BarButtonItem: XMLDecodable {
                 public let id: String
+                public let connections: [InterfaceBuilderNode.View.Connection]?
                 public let style: String?
                 public let systemItem: String?
                 public let title: String?
 
                 static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.Toolbar.BarButtonItem {
                     return BarButtonItem.init(
-                        id:         try xml.attributeValue(of: "id"),
-                        style:      xml.attributeValue(of: "style"),
-                        systemItem: xml.attributeValue(of: "systemItem"),
-                        title:      xml.attributeValue(of: "title")
+                        id:          try xml.attributeValue(of: "id"),
+                        connections: xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                        style:       xml.attributeValue(of: "style"),
+                        systemItem:  xml.attributeValue(of: "systemItem"),
+                        title:       xml.attributeValue(of: "title")
                     )
                 }
             }
@@ -797,6 +861,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    _connections:                              xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
@@ -804,7 +869,7 @@ extension InterfaceBuilderNode {
                     items:                                     xml.byKey("items")?.byKey("barButtonItem")?.allElements.flatMap(decodeValue),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -818,6 +883,7 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentHorizontalAlignment: String?
             public let contentMode: String?
@@ -829,7 +895,7 @@ extension InterfaceBuilderNode {
             public let on: Bool
             public let onTintColor: Color?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -840,6 +906,7 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
@@ -851,7 +918,7 @@ extension InterfaceBuilderNode {
                     on:                                        try xml.attributeValue(of: "on"),
                     onTintColor:                               xml.byKey("color").flatMap(decodeValue),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled"),
@@ -866,13 +933,14 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -882,13 +950,14 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -902,13 +971,14 @@ extension InterfaceBuilderNode {
 
             public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
             public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
             public let constraints: [InterfaceBuilderNode.View.Constraint]?
             public let contentMode: String?
             public let customClass: String?
             public let customModule: String?
             public let isMisplaced: Bool?
             public let opaque: Bool?
-            public let rect: InterfaceBuilderNode.View.Rect
+            public let rect: InterfaceBuilderNode.View.Rect?
             public let subviews: [InterfaceBuilderNode.View]?
             public let translatesAutoresizingMaskIntoConstraints: Bool?
             public let userInteractionEnabled: Bool?
@@ -918,13 +988,92 @@ extension InterfaceBuilderNode {
                     id:                                        try xml.attributeValue(of: "id"),
                     autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                     clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
                     constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
                     contentMode:                               xml.attributeValue(of: "contentMode"),
                     customClass:                               xml.attributeValue(of: "customClass"),
                     customModule:                              xml.attributeValue(of: "customModule"),
                     isMisplaced:                               xml.attributeValue(of: "misplaced"),
                     opaque:                                    xml.attributeValue(of: "opaque"),
-                    rect:                                      try decodeValue(xml.byKey("rect")),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
+                    subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
+                    translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
+                    userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+                )
+            }
+        }
+
+        public struct UnknownView: XMLDecodable, ViewProtocol {
+            public let id: String
+            public let elementClass: String
+
+            public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
+            public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
+            public let constraints: [InterfaceBuilderNode.View.Constraint]?
+            public let contentMode: String?
+            public let customClass: String?
+            public let customModule: String?
+            public let isMisplaced: Bool?
+            public let opaque: Bool?
+            public let rect: InterfaceBuilderNode.View.Rect?
+            public let subviews: [InterfaceBuilderNode.View]?
+            public let translatesAutoresizingMaskIntoConstraints: Bool?
+            public let userInteractionEnabled: Bool?
+
+            static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.UnknownView {
+                guard let elementName = xml.elementNode?.name else { throw Error.elementNotFound }
+                return UnknownView.init(
+                    id:                                        try xml.attributeValue(of: "id"),
+                    elementClass:                              elementName,
+                    autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
+                    clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                    constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
+                    contentMode:                               xml.attributeValue(of: "contentMode"),
+                    customClass:                               xml.attributeValue(of: "customClass"),
+                    customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
+                    opaque:                                    xml.attributeValue(of: "opaque"),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
+                    subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
+                    translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
+                    userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+                )
+            }
+        }
+
+        public struct BarButtonItem: XMLDecodable, ViewProtocol {
+            public let id: String
+            public let elementClass: String = "UIBarButtonItem"
+
+            public let autoresizingMask: InterfaceBuilderNode.View.AutoresizingMask?
+            public let clipsSubviews: Bool?
+            public let connections: [InterfaceBuilderNode.View.Connection]?
+            public let constraints: [InterfaceBuilderNode.View.Constraint]?
+            public let contentMode: String?
+            public let customClass: String?
+            public let customModule: String?
+            public let isMisplaced: Bool?
+            public let opaque: Bool?
+            public let rect: InterfaceBuilderNode.View.Rect?
+            public let subviews: [InterfaceBuilderNode.View]?
+            public let translatesAutoresizingMaskIntoConstraints: Bool?
+            public let userInteractionEnabled: Bool?
+
+            static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.BarButtonItem {
+                return BarButtonItem.init(
+                    id:                                        try xml.attributeValue(of: "id"),
+                    autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
+                    clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
+                    connections:                               xml.byKey("connections")?.childrenNode.flatMap(decodeValue),
+                    constraints:                               xml.byKey("constraints")?.byKey("constraint")?.allElements.flatMap(decodeValue),
+                    contentMode:                               xml.attributeValue(of: "contentMode"),
+                    customClass:                               xml.attributeValue(of: "customClass"),
+                    customModule:                              xml.attributeValue(of: "customModule"),
+                    isMisplaced:                               xml.attributeValue(of: "misplaced"),
+                    opaque:                                    xml.attributeValue(of: "opaque"),
+                    rect:                                      xml.byKey("rect").flatMap(decodeValue),
                     subviews:                                  xml.byKey("subviews")?.childrenNode.flatMap(decodeValue),
                     translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                     userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
@@ -1075,6 +1224,55 @@ extension InterfaceBuilderNode {
                     secondItem:      xml.attributeValue(of: "secondItem"),
                     secondAttribute: xml.attributeValue(of: "secondAttribute")
                 )
+            }
+        }
+
+        public enum Connection: XMLDecodable, Equatable {
+
+            case outlet(property: String, destination: String, id: String)
+            case outletCollection(property: String, destination: String, collectionClass: String, id: String)
+            case action(selector: String, destination: String, eventType: String?, id: String)
+
+            static func decode(_ xml: XMLIndexerProtocol) throws -> InterfaceBuilderNode.View.Connection {
+                guard let elementName = xml.elementNode?.name else { throw Error.elementNotFound }
+                switch elementName {
+                case "outlet":
+                    return try .outlet(
+                        property: xml.attributeValue(of: "property"),
+                        destination: xml.attributeValue(of: "destination"),
+                        id: xml.attributeValue(of: "id")
+                    )
+                case "outletCollection":
+                    return try .outletCollection(
+                        property: xml.attributeValue(of: "property"),
+                        destination: xml.attributeValue(of: "destination"),
+                        collectionClass: xml.attributeValue(of: "collectionClass"),
+                        id: xml.attributeValue(of: "id")
+                    )
+                case "action":
+                    return try .action(
+                        selector: xml.attributeValue(of: "selector"),
+                        destination: xml.attributeValue(of: "destination"),
+                        eventType: xml.attributeValue(of: "eventType"),
+                        id: xml.attributeValue(of: "id"))
+                default:
+                    throw Error.unsupportedConnectionType(elementName)
+                }
+            }
+
+            public static func ==(lhs: InterfaceBuilderNode.View.Connection, rhs: InterfaceBuilderNode.View.Connection) -> Bool {
+                switch (lhs, rhs) {
+                case (.outlet(let property1, let destination1, let id1),
+                      .outlet(let property2, let destination2, let id2)):
+                    return property1 == property2 && destination1 == destination2 && id1 == id2
+                case (.outletCollection(let property1, let destination1, let collectionClass1, let id1),
+                      .outletCollection(let property2, let destination2, let collectionClass2, let id2)):
+                    return property1 == property2 && destination1 == destination2 && collectionClass1 == collectionClass2 && id1 == id2
+                case (.action(let selector1, let destination1, let eventType1, let id1),
+                      .action(let selector2, let destination2, let eventType2, let id2)):
+                    return selector1 == selector2 && destination1 == destination2 && eventType1 == eventType2 && id1 == id2
+                default: return false
+                }
             }
         }
 

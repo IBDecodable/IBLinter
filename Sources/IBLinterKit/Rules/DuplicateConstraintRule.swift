@@ -16,20 +16,20 @@ extension Rules {
 
         public init() {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             return storyboard.document.scenes?.flatMap { $0.viewController?.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] {
             return xib.document.views?.flatMap { validate(for: $0, file: xib)} ?? []
         }
 
-        private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
+        private func validate(for view: ViewProtocol, file: FileProtocol) -> [Violation] {
             return duplicateConstraints(for: view.constraints ?? []).map {
                 let message = "duplicate constraint \($0.id) (firstItem: \($0.firstItem ?? "nil") attribute: \($0.firstAttribute.map(String.init(describing: )) ?? "nil") secondItem: \($0.secondItem ?? "nil") attribute: \($0.secondAttribute.map(String.init(describing: )) ?? "nil"))"
                 return Violation(
-                    interfaceBuilderFile: file,
+                    file: file,
                     message: message,
                     level: .warning)
             }

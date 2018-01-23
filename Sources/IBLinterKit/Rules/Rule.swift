@@ -10,8 +10,8 @@ import IBLinterCore
 public protocol Rule {
     init()
     static var identifier: String { get }
-    func validate(storyboard: StoryboardFile) -> [Violation]
-    func validate(xib: XibFile) -> [Violation]
+    func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation]
+    func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation]
 }
 
 public struct Rules {
@@ -22,7 +22,8 @@ public struct Rules {
             RelativeToMarginRule.self,
             MisplacedViewRule.self,
             ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self
+            DuplicateConstraintRule.self,
+            OutletConnectionRule.self
         ]
     }
 
@@ -30,7 +31,8 @@ public struct Rules {
         return [
             CustomClassNameRule.self,
             ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self
+            DuplicateConstraintRule.self,
+            OutletConnectionRule.self
         ]
     }
 

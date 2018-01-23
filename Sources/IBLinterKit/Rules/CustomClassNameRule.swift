@@ -25,16 +25,16 @@ extension Rules {
 
         public init() {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        public func validate(storyboard: StoryboardFile, swiftParser: SwiftIBParser) -> [Violation] {
             return storyboard.document.scenes?.flatMap { scene in
                 guard let viewController = scene.viewController,
                     let customClass = viewController.customClass else { return nil }
                 if customClass == storyboard.fileNameWithoutExtension { return nil }
                 let message = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
-                return Violation.init(interfaceBuilderFile: storyboard, message: message, level: .error)
+                return Violation.init(file: storyboard, message: message, level: .error)
             } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] { return [] }
+        public func validate(xib: XibFile, swiftParser: SwiftIBParser) -> [Violation] { return [] }
     }
 }
