@@ -107,4 +107,15 @@ class InterfaceBuilderParserTest: XCTestCase {
 
         XCTAssertEqual(cell.subviews?.count, 1)
     }
+
+    func testXMLFormatValidator() {
+        do {
+            _ = try parser.parseXib(xml: xmlString(fileName: "MacXibTest.xib"))
+            XCTFail("should throw error")
+        } catch _ as InterfaceBuilderParser.Error {
+            XCTAssertTrue(true)
+        } catch {
+            XCTFail("wrong error")
+        }
+    }
 }
