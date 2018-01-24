@@ -14,34 +14,16 @@ public class XibFile: InterfaceBuilderFile {
         return pathString.components(separatedBy: "/").last!
     }
 
-    public var content: String {
-        get {
-            if _content == nil {
-                _content = try! String.init(contentsOfFile: pathString)
-            }
-            return _content!
-        }
+    public let document: InterfaceBuilderNode.XibDocument
 
-        set {
-            _content = newValue
-        }
+    public init(path: String, xmlParser: XMLParserProtocol = SWXMLHash.config { _ in }) throws {
+        self.pathString = path
+        self.document = try type(of: self).parseContent(xmlParser: xmlParser, pathString: path)
     }
 
-    private var _content: String?
-
-    public lazy var document: InterfaceBuilderNode.XibDocument = {
-        let parser = InterfaceBuilderParser.init(with: self._xmlParser)
-        do {
-            return try parser.parseXib(xml: self.content)
-        } catch let error {
-            fatalError("parse error \(self.pathString): \(error)")
-        }
-    }()
-
-    private let _xmlParser: XMLParserProtocol
-
-    public init(path: String, xmlParser: XMLParserProtocol = SWXMLHash.config { _ in }) {
-        self.pathString = path
-        self._xmlParser = xmlParser
+    private static func parseContent(xmlParser: XMLParserProtocol, pathString: String) throws -> InterfaceBuilderNode.XibDocument {
+        let parser = InterfaceBuilderParser.init(with: xmlParser)
+        let content = try String.init(contentsOfFile: pathString)
+        return try parser.parseXib(xml: content)
     }
 }

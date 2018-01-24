@@ -42,7 +42,19 @@ struct ValidateCommand: CommandProtocol {
         let paths = glob(pattern: "\(workDirectory)/**/*.storyboard")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.storyboard") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
-        let storyboards = lintablePaths.map { StoryboardFile.init(path: $0.relativePath) }
+        let storyboards: [StoryboardFile] = lintablePaths.flatMap {
+            do {
+                return try StoryboardFile.init(path: $0.relativePath)
+            } catch let error as InterfaceBuilderParser.Error {
+                switch error {
+                case .invalidFormatFile:
+                    print("\($0.relativePath) is invalid format and skipped")
+                    return nil
+                }
+            } catch let error {
+                fatalError("parse error \($0.relativePath): \(error)")
+            }
+        }
         let violations = Rules.rules(config).flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
         return violations
     }
@@ -51,7 +63,19 @@ struct ValidateCommand: CommandProtocol {
         let paths = glob(pattern: "\(workDirectory)/**/*.xib")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.xib") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
-        let xibs = lintablePaths.map { XibFile.init(path: $0.relativePath) }
+        let xibs: [XibFile] = lintablePaths.flatMap {
+            do {
+                return try XibFile.init(path: $0.relativePath)
+            } catch let error as InterfaceBuilderParser.Error {
+                switch error {
+                case .invalidFormatFile:
+                    print("\($0.relativePath) is invalid format and skipped")
+                    return nil
+                }
+            } catch let error {
+                fatalError("parse error \($0.relativePath): \(error)")
+            }
+        }
         let violations = Rules.rules(config).flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
         return violations
     }
