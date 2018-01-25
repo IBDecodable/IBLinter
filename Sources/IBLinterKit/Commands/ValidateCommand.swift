@@ -50,6 +50,12 @@ struct ValidateCommand: CommandProtocol {
                 case .invalidFormatFile:
                     print("\($0.relativePath) is invalid format and skipped")
                     return nil
+                case .legacyFormat:
+                    print("\($0.relativePath) is legacy format. Please open with latest Xcode to migrate.")
+                    return nil
+                case .macFormat:
+                    print("\($0.relativePath) is mac format and skipped.")
+                    return nil
                 }
             } catch let error {
                 fatalError("parse error \($0.relativePath): \(error)")
@@ -70,6 +76,12 @@ struct ValidateCommand: CommandProtocol {
                 switch error {
                 case .invalidFormatFile:
                     print("\($0.relativePath) is invalid format and skipped")
+                    return nil
+                case .legacyFormat:
+                    print("\($0.relativePath) is legacy format. Please open with latest Xcode to migrate.")
+                    return nil
+                case .macFormat:
+                    print("\($0.relativePath) is mac format and skipped.")
                     return nil
                 }
             } catch let error {
