@@ -26,13 +26,15 @@ extension Rules {
         public init() {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
-            return storyboard.document.scenes?.flatMap { scene in
-                guard let viewController = scene.viewController,
-                    let customClass = viewController.customClass else { return nil }
-                if customClass == storyboard.fileNameWithoutExtension { return nil }
-                let message = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
-                return Violation.init(interfaceBuilderFile: storyboard, message: message, level: .error)
-            } ?? []
+            guard let viewController = storyboard.document.scenes?.first?.viewController,
+                let customClass = viewController.customClass,
+                storyboard.document.scenes?.count == 1 else {
+                // Skip when storyboard has multiple view controllers.
+                return []
+            }
+            if customClass == storyboard.fileNameWithoutExtension { return [] }
+            let message = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
+            return [Violation.init(interfaceBuilderFile: storyboard, message: message, level: .error)]
         }
 
         public func validate(xib: XibFile) -> [Violation] { return [] }
