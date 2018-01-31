@@ -53,6 +53,7 @@ fi
 | `misplaced`            | Display error when views are misplaced.                                        |
 | `enable_autolayout`    | Force to use `useAutolayout` option                                            |
 | `duplicate_constraint` | Display warning when view has duplicated constraint.                           |
+| `storyboard_viewcontroller_id` | Check that Storyboard ID same as ViewController class name. |
 
 
 Pull requests are encouraged.
