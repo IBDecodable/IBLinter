@@ -22,7 +22,8 @@ public struct Rules {
             RelativeToMarginRule.self,
             MisplacedViewRule.self,
             ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self
+            DuplicateConstraintRule.self,
+            StoryboardViewControllerId.self
         ]
     }
 
