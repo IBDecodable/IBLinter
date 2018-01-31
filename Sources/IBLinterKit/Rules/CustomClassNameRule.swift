@@ -28,8 +28,9 @@ extension Rules {
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let viewController = storyboard.document.scenes?.first?.viewController,
                 let customClass = viewController.customClass,
-                storyboard.document.scenes?.count == 1 else {
-                // Skip when storyboard has multiple view controllers.
+                storyboard.document.scenes?.count == 1,
+                storyboard.fileNameWithoutExtension != "Main" else {
+                // Skip when storyboard has multiple view controllers or Main.storyboard.
                 return []
             }
             if customClass == storyboard.fileNameWithoutExtension { return [] }
