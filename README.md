@@ -8,11 +8,21 @@ A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/Sw
 
 ## Installation
 
-### Using Homebrew
+### Using [Homebrew](http://brew.sh/)
 
 ```sh
 $ brew install kateinoigakukun/homebrew-tap/iblinter
 ```
+
+### Using [CocoaPods](https://cocoapods.org)
+
+```sh
+pod 'IBLinter'
+```
+
+This will download the IBLinter binaries and dependencies in `Pods/` during your next
+`pod install` execution and will allow you to invoke it via `${PODS_ROOT}/IBLinter/bin/iblinter`
+in your Script Build Phases.
 
 ### Compiling from source
 
@@ -43,6 +53,11 @@ else
 fi
 ```
 
+Alternatively, if you've installed IBLinter via CocoaPods the script should look like this:
+
+```bash
+"${PODS_ROOT}/IBLinter/bin/iblinter"
+```
 
 ## Rules
 
