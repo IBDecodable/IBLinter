@@ -5,6 +5,6 @@ Pod::Spec.new do |s|
   s.homepage       = 'https://github.com/kateinoigakukun/IBLinter'
   s.license        = { :type => 'MIT', :file => 'LICENSE' }
   s.author         = { 'Yuta Saito' => 'kateinoigakukun@gmail.com' }
-  s.source         = { :git => "https://github.com/kateinoigakukun/IBLinter.git", :branch => "feature/cocoapods" }
+  s.source         = { :git => "https://github.com/kateinoigakukun/IBLinter.git", :tag => s.version }
   s.source_files   = 'bin/*'
 end

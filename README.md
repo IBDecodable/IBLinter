@@ -55,7 +55,7 @@ fi
 
 Alternatively, if you've installed IBLinter via CocoaPods the script should look like this:
 
-```bash
+```sh
 "${PODS_ROOT}/IBLinter/bin/iblinter"
 ```
 
