@@ -36,7 +36,10 @@ public struct Rules {
     }
 
     static func rules(_ config: Config) -> [Rule] {
-        return (defaultRules.filter { !config.disabledRules.contains($0.identifier) }
-            + allRules.filter { config.enabledRules.contains($0.identifier) }).map { $0.init() }
+        var identifiers = Set(defaultRules.map({ $0.identifier }))
+        identifiers.subtract(config.disabledRules)
+        identifiers.formUnion(config.enabledRules)
+        
+        return allRules.filter { identifiers.contains($0.identifier) }.map { $0.init() }
     }
 }

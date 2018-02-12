@@ -27,6 +27,12 @@ public struct Config: Codable {
         enabledRules = []
         excluded = []
     }
+    
+    init(disabledRules: [String], enabledRules: [String], excluded: [String]) {
+        self.disabledRules = disabledRules
+        self.enabledRules = enabledRules
+        self.excluded = excluded
+    }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
