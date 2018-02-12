@@ -6,5 +6,5 @@ Pod::Spec.new do |s|
   s.license        = { :type => 'MIT', :file => 'LICENSE' }
   s.author         = { 'Yuta Saito' => 'kateinoigakukun@gmail.com' }
   s.source         = { :git => "https://github.com/kateinoigakukun/IBLinter.git", :tag => s.version }
-  s.source_files   = 'bin/*'
+  s.preserve_paths = 'bin/*'
 end
