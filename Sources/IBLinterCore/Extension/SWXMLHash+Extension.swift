@@ -8,25 +8,13 @@
 import SWXMLHash
 import Foundation
 
-extension SWXMLHash: XMLParserProtocol {
-    public func parseString(_ xml: String) -> XMLIndexerProtocol {
-        return parse(xml)
-    }
-}
+extension XMLIndexer {
 
-extension SWXMLHash.XMLElement: XMLElementProtocol {}
-extension XMLAttribute: XMLAttributeProtocol {}
-extension XMLIndexer: XMLIndexerProtocol {
-
-    public var childrenNode: [XMLIndexerProtocol] {
-        return children
-    }
-
-    public func attributeValue<T>(of attr: String) -> T? where T : XMLAttributeDecodable {
+    func attributeValue<T: XMLAttributeDecodable>(of attr: String) -> T? {
         return try? attributeValue(of: attr)
     }
 
-    public func attributeValue<T>(of attr: String) throws -> T where T : XMLAttributeDecodable {
+    func attributeValue<T: XMLAttributeDecodable>(of attr: String) throws -> T {
         switch self {
         case .element(let element):
             guard let attr = element.attribute(by: attr) else { throw XMLDeserializationError.nodeHasNoValue }
@@ -35,30 +23,14 @@ extension XMLIndexer: XMLIndexerProtocol {
         }
     }
 
-    public func byKey(_ key: String) throws -> XMLIndexerProtocol {
-        return try byKey(key) as XMLIndexer
-    }
-
-    public func byKey(_ key: String) -> XMLIndexerProtocol? {
+    public func byKey(_ key: String) -> XMLIndexer? {
         return try? byKey(key)
     }
-
-    public var elementNode: XMLElementProtocol? {
-        return element
-    }
-
-    public var allElements: [XMLIndexerProtocol] {
-        return all
-    }
-}
-
-func convert(x: XMLAttributeProtocol) -> XMLAttribute {
-    return x as! XMLAttribute
 }
 
 extension XMLAttributeDeserializable where Self: XMLAttributeDecodable {
-    public static func decode(_ attribute: XMLAttributeProtocol) throws -> Self {
-        return try deserialize(convert(x: attribute))
+    static func decode(_ attribute: XMLAttribute) throws -> Self {
+        return try deserialize(attribute)
     }
 }
 
@@ -66,3 +38,4 @@ extension String: XMLAttributeDecodable {}
 extension Int: XMLAttributeDecodable {}
 extension Float: XMLAttributeDecodable {}
 extension Bool: XMLAttributeDecodable {}
+

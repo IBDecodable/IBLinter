@@ -5,21 +5,23 @@
 //  Created by SaitoYuta on 2017/12/05.
 //
 
+import SWXMLHash
+
 private let cocoaTouchKey = "com.apple.InterfaceBuilder3.CocoaTouch.XIB"
 private let cocoaKey = "com.apple.InterfaceBuilder3.Cocoa.XIB"
 
 public struct InterfaceBuilderParser {
 
-    private let xmlParser: XMLParserProtocol
+    private let xmlParser: SWXMLHash
 
-    public init(with parser: XMLParserProtocol) {
-        xmlParser = parser
+    public init() {
+        xmlParser = SWXMLHash.config({_ in})
     }
 
-    public func parseStoryboard(xml: String) throws -> InterfaceBuilderNode.StoryboardDocument {
-        let root = xmlParser.parseString(xml)
-        guard let document: XMLIndexerProtocol = root.byKey("document") else {
-            guard let archive: XMLIndexerProtocol = root.byKey("archive"),
+    public func parseStoryboard(xml: String) throws -> StoryboardDocument {
+        let root = xmlParser.parse(xml)
+        guard let document: XMLIndexer = root.byKey("document") else {
+            guard let archive: XMLIndexer = root.byKey("archive"),
                 let type: String = try? archive.attributeValue(of: "type") else {
                 throw Error.invalidFormatFile
             }
@@ -36,10 +38,10 @@ public struct InterfaceBuilderParser {
         return try decodeValue(document)
     }
 
-    public func parseXib(xml: String) throws -> InterfaceBuilderNode.XibDocument {
-        let root = xmlParser.parseString(xml)
-        guard let document: XMLIndexerProtocol = root.byKey("document") else {
-            guard let archive: XMLIndexerProtocol = root.byKey("archive"),
+    public func parseXib(xml: String) throws -> XibDocument {
+        let root = xmlParser.parse(xml)
+        guard let document: XMLIndexer = root.byKey("document") else {
+            guard let archive: XMLIndexer = root.byKey("archive"),
                 let type: String = try? archive.attributeValue(of: "type") else {
                     throw Error.invalidFormatFile
             }
