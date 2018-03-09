@@ -287,8 +287,31 @@ public struct AnyView: XMLDecodable {
         self.view = view
     }
 
-    static func decode<T: XMLDecodable>(_ xml: XMLIndexer) throws -> T {
-        return try T.decode(xml)
+    static func decode(_ xml: XMLIndexer) throws -> AnyView {
+        guard let elementName = xml.element?.name else {
+            throw IBError.elementNotFound
+        }
+        switch elementName {
+        case "button":                   return try AnyView(Button.decode(xml))
+        case "collectionView":           return try AnyView(CollectionView.decode(xml))
+        case "collectionViewCell":       return try AnyView(CollectionViewCell.decode(xml))
+        case "imageView":                return try AnyView(ImageView.decode(xml))
+        case "label":                    return try AnyView(Label.decode(xml))
+        case "pickerView":               return try AnyView(PickerView.decode(xml))
+        case "scrollView":               return try AnyView(ScrollView.decode(xml))
+        case "segmentedControl":         return try AnyView(SegmentedControl.decode(xml))
+        case "stackView":                return try AnyView(StackView.decode(xml))
+        case "switch":                   return try AnyView(Switch.decode(xml))
+        case "tableView":                return try AnyView(TableView.decode(xml))
+        case "tableViewCell":            return try AnyView(TableViewCell.decode(xml))
+        case "tableViewCellContentView": return try AnyView(TableViewCell.TableViewContentView.decode(xml))
+        case "textField":                return try AnyView(TextField.decode(xml))
+        case "textView":                 return try AnyView(TextView.decode(xml))
+        case "toolbar":                  return try AnyView(Toolbar.decode(xml))
+        case "view":                     return try AnyView(View.decode(xml))
+        default:
+            throw IBError.unsupportedViewClass(elementName)
+        }
     }
 
 }
