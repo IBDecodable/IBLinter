@@ -17,7 +17,7 @@ extension Rules {
         public init() {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
-            return storyboard.document.scenes?.flatMap { $0.viewController?.rootView }
+            return storyboard.document.scenes?.flatMap { $0.viewController?.viewController.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
 

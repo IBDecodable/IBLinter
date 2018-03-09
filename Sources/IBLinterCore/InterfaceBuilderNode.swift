@@ -89,12 +89,12 @@ public struct Device: XMLDecodable {
 
 public struct Scene: XMLDecodable {
     public let id: String
-    public let viewController: ViewController?
+    public let viewController: AnyViewController?
 
     static func decode(_ xml: XMLIndexer) throws -> Scene {
         return Scene.init(
             id:             try xml.attributeValue(of: "sceneID"),
-            viewController: xml.byKey("objects")?.children.first.flatMap(decodeValue)
+            viewController: try xml.byKey("objects")?.children.first.flatMap(AnyViewController.decode)
         )
     }
 }

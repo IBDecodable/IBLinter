@@ -16,7 +16,7 @@ class InterfaceBuilderParserTest: XCTestCase {
 
     func testParseViewController() throws {
         let document = try parser.parseStoryboard(xml: xmlString(fileName: "ViewControllerTest.storyboard"))
-        let viewController = document.scenes![0].viewController!
+        let viewController = document.scenes![0].viewController!.viewController as! ViewController
         XCTAssertEqual(viewController.id, "uo8-pZ-S8b")
         
         let view = viewController.view!

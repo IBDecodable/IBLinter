@@ -17,6 +17,26 @@ public protocol ViewControllerProtocol {
     var rootView: ViewProtocol? { get }
 }
 
+public struct AnyViewController: XMLDecodable {
+
+    public let viewController: ViewControllerProtocol
+
+    init(_ viewController: ViewControllerProtocol) {
+        self.viewController = viewController
+    }
+
+    static func decode(_ xml: XMLIndexer) throws -> AnyViewController {
+        guard let elementName = xml.element?.name else {
+            throw IBError.elementNotFound
+        }
+        switch elementName {
+        case "viewController": return try AnyViewController(ViewController.decode(xml))
+        case "tableViewController": return try AnyViewController(TableViewController.decode(xml))
+        default: throw IBError.unsupportedViewControllerClass(elementName)
+        }
+    }
+}
+
 // MARK: - ViewController
 
 public struct ViewController: XMLDecodable, ViewControllerProtocol {
