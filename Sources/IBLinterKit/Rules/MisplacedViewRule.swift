@@ -17,7 +17,7 @@ extension Rules {
 
         public func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
-            return views.flatMap { validate(for: $0, file: xib) }
+            return views.flatMap { validate(for: $0.view, file: xib) }
         }
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
@@ -35,7 +35,7 @@ extension Rules {
                     return []
                 }
             }()
-            return violation + (view.subviews?.flatMap { validate(for: $0, file: file) } ?? [])
+            return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [])
         }
     }
 }

@@ -23,12 +23,12 @@ public extension Rules {
         }
 
         public func validate(xib: XibFile) -> [Violation] {
-            return xib.document.views?.flatMap { validate(for: $0, file: xib) } ?? []
+            return xib.document.views?.flatMap { validate(for: $0.view, file: xib) } ?? []
         }
 
         private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
-            guard let constraints = view.constraints else { return view.subviews?.flatMap { validate(for: $0, file: file) } ?? [] }
-            let relativeToMarginKeys: [InterfaceBuilderNode.View.Constraint.LayoutAttribute] = [
+            guard let constraints = view.constraints else { return view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [] }
+            let relativeToMarginKeys: [Constraint.LayoutAttribute] = [
                 .leadingMargin, .trailingMargin, .topMargin, .bottomMargin
             ]
             let attributes = constraints.flatMap { [$0.firstAttribute, $0.secondAttribute] }.flatMap { $0 }
@@ -38,7 +38,7 @@ public extension Rules {
                     return Violation.init(interfaceBuilderFile: file, message: message, level: .warning)
             }
             if let subviews = view.subviews {
-                return subviews.flatMap { validate(for: $0, file: file) } + violations
+                return subviews.flatMap { validate(for: $0.view, file: file) } + violations
             } else {
                 return violations
             }

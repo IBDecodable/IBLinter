@@ -22,7 +22,7 @@ extension Rules {
         }
 
         public func validate(xib: XibFile) -> [Violation] {
-            return xib.document.views?.flatMap { validate(for: $0, file: xib)} ?? []
+            return xib.document.views?.flatMap { validate(for: $0.view, file: xib)} ?? []
         }
 
         private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
@@ -34,8 +34,6 @@ extension Rules {
                     level: .warning)
             }
         }
-
-        private typealias Constraint = InterfaceBuilderNode.View.Constraint
 
         private func duplicateConstraints(for constraints: [Constraint]) -> [Constraint] {
 
