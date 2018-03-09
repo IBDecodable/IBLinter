@@ -6,7 +6,7 @@ import SWXMLHash
 class InterfaceBuilderParserTest: XCTestCase {
 
     private lazy var parser: InterfaceBuilderParser = {
-        return InterfaceBuilderParser.init(with: SWXMLHash.config { _ in })
+        return InterfaceBuilderParser()
     }()
 
     private func xmlString(fileName: String) -> String {
@@ -19,16 +19,16 @@ class InterfaceBuilderParserTest: XCTestCase {
         let viewController = document.scenes![0].viewController!
         XCTAssertEqual(viewController.id, "uo8-pZ-S8b")
         
-        let view = viewController.viewController!.view!
+        let view = viewController.view!
         XCTAssertEqual(view.id, "EHN-qE-V0Y")
         XCTAssertEqual(view.contentMode, "scaleToFill")
         XCTAssertEqual(view.subviews?.count, 4)
 
-        let button: InterfaceBuilderNode.View.Button = {
-            switch view.subviews![0] {
-            case .button(let button): return button
-            default: fatalError()
+        let button: Button = {
+            guard let button = view.subviews![0].view as? Button else {
+                fatalError()
             }
+            return button
         }()
         XCTAssertEqual(button.title.normal, "Default Title")
         XCTAssertEqual(button.title.selected, "Selected Title")
@@ -39,29 +39,29 @@ class InterfaceBuilderParserTest: XCTestCase {
         XCTAssertEqual(button.textColor.normal?.sRGB?.blue, 0.24313725489999999)
         XCTAssertEqual(button.textColor.normal?.sRGB?.key, "titleColor")
 
-        let label: InterfaceBuilderNode.View.Label = {
-            switch view.subviews![1] {
-            case .label(let label): return label
-            default: fatalError()
+        let label: Label = {
+            guard let label = view.subviews![1].view as? Label else {
+                fatalError()
             }
+            return label
         }()
         XCTAssertEqual(label.text, "Label")
         XCTAssertEqual(label.adjustsFontSizeToFit, false)
 
-        let segmentedControl: InterfaceBuilderNode.View.SegmentedControl = {
-            switch view.subviews![2] {
-            case .segmentedControl(let segmentedControl): return segmentedControl
-            default: fatalError()
+        let segmentedControl: SegmentedControl = {
+            guard let control = view.subviews![2].view as? SegmentedControl else {
+                fatalError()
             }
+            return control
         }()
         XCTAssertEqual(segmentedControl.segmentControlStyle, "plain")
         XCTAssertEqual(segmentedControl.segments[0].title, "First")
 
-        let textField: InterfaceBuilderNode.View.TextField = {
-            switch view.subviews![3] {
-            case .textField(let textField): return textField
-            default: fatalError()
+        let textField: TextField = {
+            guard let textField = view.subviews![3].view as? TextField else {
+                fatalError()
             }
+            return textField
         }()
 
         XCTAssertEqual(textField.font?.pointSize, 14)
@@ -98,11 +98,11 @@ class InterfaceBuilderParserTest: XCTestCase {
 
     func testParseTableViewCell() throws {
         let document = try parser.parseXib(xml: xmlString(fileName: "TableViewCell.xib"))
-        let cell: InterfaceBuilderNode.View.TableViewCell = {
-            switch document.views![0] {
-            case .tableViewCell(let cell): return cell
-            default: fatalError()
+        let cell: TableViewCell = {
+            guard let cell = document.views![0].view as? TableViewCell else {
+                fatalError()
             }
+            return cell
         }()
 
         XCTAssertEqual(cell.subviews?.count, 1)
