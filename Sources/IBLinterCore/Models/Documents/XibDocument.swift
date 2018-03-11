@@ -33,7 +33,7 @@ public struct XibDocument: XMLDecodable {
             useSafeAreas:          xml.attributeValue(of: "useSafeAreas"),
             colorMatched:          xml.attributeValue(of: "colorMatched"),
             device:                xml.byKey("device").flatMap(decodeValue),
-            views:                 try xml.byKey("objects")?.children.flatMap(AnyView.decode),
+            views:                 xml.byKey("objects")?.children.flatMap(decodeValue),
             placeholders:          xml.byKey("objects")?.byKey("placeholder")?.all.flatMap(decodeValue)
         )
     }

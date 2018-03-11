@@ -35,7 +35,7 @@ public struct Switch: XMLDecodable, ViewProtocol {
             id:                                        try xml.attributeValue(of: "id"),
             autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
             clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
             contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
             contentMode:                               xml.attributeValue(of: "contentMode"),
             contentVerticalAlignment:                  xml.attributeValue(of: "contentVerticalAlignment"),
@@ -47,7 +47,7 @@ public struct Switch: XMLDecodable, ViewProtocol {
             onTintColor:                               xml.byKey("color").flatMap(decodeValue),
             opaque:                                    xml.attributeValue(of: "opaque"),
             rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
             translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
             userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled"),
             verticalHuggingPriority:                   xml.attributeValue(of: "verticalHuggingPriority")

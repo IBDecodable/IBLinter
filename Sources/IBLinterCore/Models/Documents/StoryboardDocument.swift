@@ -68,7 +68,7 @@ public struct Scene: XMLDecodable {
     static func decode(_ xml: XMLIndexer) throws -> Scene {
         return Scene.init(
             id:             try xml.attributeValue(of: "sceneID"),
-            viewController: try xml.byKey("objects")?.children.first.flatMap(AnyViewController.decode)
+            viewController: xml.byKey("objects")?.children.first.flatMap(decodeValue)
         )
     }
 }

@@ -54,7 +54,7 @@ public struct TableView: XMLDecodable, ViewProtocol {
             alwaysBounceVertical:                      xml.attributeValue(of: "alwaysBounceVertical"),
             autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
             clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
             contentMode:                               xml.attributeValue(of: "contentMode"),
             customClass:                               xml.attributeValue(of: "customClass"),
             customModule:                              xml.attributeValue(of: "customModule"),
@@ -68,7 +68,7 @@ public struct TableView: XMLDecodable, ViewProtocol {
             sectionHeaderHeight:                       xml.attributeValue(of: "sectionHeaderHeight"),
             separatorStyle:                            xml.attributeValue(of: "separatorStyle"),
             style:                                     xml.attributeValue(of: "style"),
-            subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
             translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
             userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
         )
@@ -121,14 +121,14 @@ public struct TableViewCell: XMLDecodable, ViewProtocol {
                 id:                                        try xml.attributeValue(of: "id"),
                 autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
                 clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-                constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+                constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
                 contentMode:                               xml.attributeValue(of: "contentMode"),
                 customClass:                               xml.attributeValue(of: "customClass"),
                 customModule:                              xml.attributeValue(of: "customModule"),
                 isMisplaced:                               xml.attributeValue(of: "misplaced"),
                 opaque:                                    xml.attributeValue(of: "opaque"),
                 rect:                                      try decodeValue(xml.byKey("rect")),
-                subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+                subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
                 translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
                 userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
             )
@@ -140,7 +140,7 @@ public struct TableViewCell: XMLDecodable, ViewProtocol {
             id:                                        try xml.attributeValue(of: "id"),
             autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
             clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
             contentView:                               try decodeValue(xml.byKey("tableViewCellContentView")),
             contentMode:                               xml.attributeValue(of: "contentMode"),
             customClass:                               xml.attributeValue(of: "customClass"),
@@ -148,7 +148,7 @@ public struct TableViewCell: XMLDecodable, ViewProtocol {
             isMisplaced:                               xml.attributeValue(of: "misplaced"),
             opaque:                                    xml.attributeValue(of: "opaque"),
             rect:                                      try decodeValue(xml.byKey("rect")),
-            _subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+            _subviews:                                 xml.byKey("subviews")?.children.flatMap(decodeValue),
             translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
             userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
         )

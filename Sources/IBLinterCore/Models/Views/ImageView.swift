@@ -32,7 +32,7 @@ public struct ImageView: XMLDecodable, ViewProtocol {
             id:                                        try xml.attributeValue(of: "id"),
             autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
             clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
             contentMode:                               xml.attributeValue(of: "contentMode"),
             customClass:                               xml.attributeValue(of: "customClass"),
             customModule:                              xml.attributeValue(of: "customModule"),
@@ -42,7 +42,7 @@ public struct ImageView: XMLDecodable, ViewProtocol {
             multipleTouchEnabled:                      xml.attributeValue(of: "multipleTouchEnabled"),
             opaque:                                    xml.attributeValue(of: "opaque"),
             rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
             translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
             userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
         )

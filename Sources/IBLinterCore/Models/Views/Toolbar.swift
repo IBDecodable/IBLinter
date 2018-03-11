@@ -47,15 +47,15 @@ public struct Toolbar: XMLDecodable, ViewProtocol {
             id:                                        try xml.attributeValue(of: "id"),
             autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
             clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
             contentMode:                               xml.attributeValue(of: "contentMode"),
             customClass:                               xml.attributeValue(of: "customClass"),
             customModule:                              xml.attributeValue(of: "customModule"),
-            items:                                     try xml.byKey("items")?.byKey("barButtonItem")?.all.flatMap(BarButtonItem.decode),
+            items:                                     xml.byKey("items")?.byKey("barButtonItem")?.all.flatMap(decodeValue),
             isMisplaced:                               xml.attributeValue(of: "misplaced"),
             opaque:                                    xml.attributeValue(of: "opaque"),
             rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
             translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
             userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
         )

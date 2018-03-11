@@ -37,7 +37,7 @@ public struct TextField: XMLDecodable, ViewProtocol {
             autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
             borderStyle:                               xml.attributeValue(of: "borderStyle"),
             clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               try xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(Constraint.decode),
+            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
             contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
             contentMode:                               xml.attributeValue(of: "contentMode"),
             contentVerticalAlignment:                  xml.attributeValue(of: "contentVerticalAlignment"),
@@ -49,7 +49,7 @@ public struct TextField: XMLDecodable, ViewProtocol {
             isMisplaced:                               xml.attributeValue(of: "misplaced"),
             opaque:                                    xml.attributeValue(of: "opaque"),
             rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  try xml.byKey("subviews")?.children.flatMap(AnyView.decode),
+            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
             textAlignment:                             xml.attributeValue(of: "textAlignment"),
             translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
             userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
