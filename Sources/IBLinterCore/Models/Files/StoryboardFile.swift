@@ -9,10 +9,8 @@ import SWXMLHash
 import Foundation
 
 public class StoryboardFile: InterfaceBuilderFile {
+
     public var pathString: String
-    public var fileName: String {
-        return pathString.components(separatedBy: "/").last!
-    }
 
     public let document: StoryboardDocument
 
