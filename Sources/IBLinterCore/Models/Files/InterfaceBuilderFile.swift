@@ -9,3 +9,9 @@ public protocol InterfaceBuilderFile {
     var pathString: String { get }
     var fileName: String { get }
 }
+
+extension InterfaceBuilderFile {
+    public var fileName: String {
+        return pathString.components(separatedBy: "/").last!
+    }
+}

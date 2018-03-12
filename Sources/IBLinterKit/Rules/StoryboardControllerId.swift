@@ -18,9 +18,9 @@ public extension Rules {
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             let viewControllers = storyboard.document.scenes?.flatMap { $0.viewController }
             return viewControllers?.flatMap {
-                $0.customClass != $0.storyboardIdentifier ?
+                $0.viewController.customClass != $0.viewController.storyboardIdentifier ?
                     Violation(interfaceBuilderFile: storyboard,
-                              message: "\(String(describing: $0.customClass)) should have the same Storyboard Id",
+                              message: "\(String(describing: $0.viewController.customClass)) should have the same Storyboard Id",
                         level: .error) : nil
                 } ?? []
         }
