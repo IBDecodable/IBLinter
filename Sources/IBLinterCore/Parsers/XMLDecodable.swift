@@ -32,12 +32,12 @@ func decodeValue<T: XMLDecodable>(_ xml: XMLIndexer) -> T? {
 }
 
 extension XMLIndexer {
-    func container<T, K>(for type: T.Type, keys: K.Type) -> XMLIndexerContainer<T, K> {
+    func container<K>(keys: K.Type) -> XMLIndexerContainer<K> {
         return XMLIndexerContainer.init(indexer: self)
     }
 }
 
-class XMLIndexerContainer<T, K> where K: CodingKey {
+class XMLIndexerContainer<K> where K: CodingKey {
 
     private let indexer: XMLIndexer
 
@@ -81,17 +81,17 @@ class XMLIndexerContainer<T, K> where K: CodingKey {
         return nestedIndexer?.children.flatMap(decodeValue)
     }
 
-    func nestedContainer<A>(of key: K, keys: A.Type) throws -> XMLIndexerContainer<T, A> {
+    func nestedContainer<A>(of key: K, keys: A.Type) throws -> XMLIndexerContainer<A> {
         let nestedIndexer: XMLIndexer = try indexer.byKey(key.stringValue)
-        return XMLIndexerContainer<T, A>.init(indexer: nestedIndexer)
+        return XMLIndexerContainer<A>.init(indexer: nestedIndexer)
     }
 
-    func nestedContainerIfPresent<A>(of key: K, keys: A.Type) -> XMLIndexerContainer<T, A>? {
+    func nestedContainerIfPresent<A>(of key: K, keys: A.Type) -> XMLIndexerContainer<A>? {
         return try? nestedContainer(of: key, keys: keys)
     }
 
-    func nestedContainers<A>(of key: K, keys: A.Type) throws -> [XMLIndexerContainer<T, A>] {
+    func nestedContainers<A>(of key: K, keys: A.Type) throws -> [XMLIndexerContainer<A>] {
         let nestedIndexers: [XMLIndexer] = try indexer.byKey(key.stringValue).all
-        return nestedIndexers.map(XMLIndexerContainer<T,A>.init)
+        return nestedIndexers.map(XMLIndexerContainer<A>.init)
     }
 }

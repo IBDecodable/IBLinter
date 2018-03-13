@@ -30,7 +30,7 @@ public struct CollectionView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> CollectionView {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try CollectionView.init(
             id:                                        container.attribute(of: .id),
@@ -74,7 +74,7 @@ public struct CollectionViewCell: XMLDecodable, ViewProtocol, HasAutomaticCoding
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> CollectionViewCell {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         let contentView: View = try container.element(of: .view)
         let subviews: [AnyView]? = container.childrenIfPresent(of: .subviews)

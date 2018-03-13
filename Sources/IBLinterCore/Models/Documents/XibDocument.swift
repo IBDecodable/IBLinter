@@ -53,7 +53,7 @@ public struct XibDocument: XMLDecodable, HasAutomaticCodingKeys {
     }
 
     static func decode(_ xml: XMLIndexer) throws -> XibDocument {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         return try XibDocument.init(
             type:                  container.attribute(of: .type),
             version:               container.attribute(of: .version),

@@ -36,7 +36,7 @@ public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
         public let color: Color?
 
         static func decode(_ xml: XMLIndexer) throws -> Button.State {
-            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            let container = xml.container(keys: CodingKeys.self)
             return try State.init(
                 key: container.attribute(of: .key),
                 title: container.attribute(of: .title),
@@ -50,7 +50,7 @@ public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Button {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try Button.init(
             id:                                        container.attribute(of: .id),

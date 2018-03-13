@@ -53,7 +53,7 @@ public struct TableView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> TableView {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try TableView.init(
             id:                                        container.attribute(of: .id),
@@ -122,7 +122,7 @@ public struct TableViewCell: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys 
         enum ConstraintsCodingKeys: CodingKey { case constraint }
 
         static func decode(_ xml: XMLIndexer) throws -> TableViewCell.TableViewContentView {
-            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            let container = xml.container(keys: CodingKeys.self)
             let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
             return try TableViewContentView.init(
                 id:                                        container.attribute(of: .id),
@@ -145,7 +145,7 @@ public struct TableViewCell: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys 
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> TableViewCell {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         let contentView: TableViewContentView = try container.element(of: .tableViewCellContentView)
         let subviews: [AnyView]? = container.childrenIfPresent(of: .subviews)

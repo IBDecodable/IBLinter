@@ -33,7 +33,7 @@ public struct Toolbar: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
         public let title: String?
 
         static func decode(_ xml: XMLIndexer) throws -> Toolbar.BarButtonItem {
-            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            let container = xml.container(keys: CodingKeys.self)
             return try BarButtonItem.init(
                 id:         container.attribute(of: .id),
                 style:      container.attributeIfPresent(of: .style),
@@ -47,7 +47,7 @@ public struct Toolbar: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     enum ItemsCodingKeys: CodingKey { case barButtonItem }
 
     static func decode(_ xml: XMLIndexer) throws -> Toolbar {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         let itemsContainer = container.nestedContainerIfPresent(of: .items, keys: ItemsCodingKeys.self)
         return try Toolbar.init(

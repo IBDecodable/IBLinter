@@ -28,7 +28,7 @@ public struct StoryboardDocument: XMLDecodable, HasAutomaticCodingKeys {
     enum ObjectsCodingKeys: CodingKey { case placeholder }
 
     static func decode(_ xml: XMLIndexer) throws -> StoryboardDocument {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let scencesContainer = container.nestedContainerIfPresent(of: .scenes, keys: ScenesCodingKeys.self)
         let objectsContainer = container.nestedContainerIfPresent(of: .objects, keys: ObjectsCodingKeys.self)
         return try StoryboardDocument.init(
@@ -59,7 +59,7 @@ public struct Device: XMLDecodable, HasAutomaticCodingKeys {
     enum AdaptationCodingKeys: CodingKey { case id }
 
     static func decode(_ xml: XMLIndexer) throws -> Device {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let adaptationContainer = container.nestedContainerIfPresent(of: .adaptation, keys: AdaptationCodingKeys.self)
         return try Device.init(
             id:          container.attribute(of: .id),
@@ -81,7 +81,7 @@ public struct Scene: XMLDecodable, HasAutomaticCodingKeys {
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Scene {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         return try Scene.init(
             id:             container.attribute(of: .id),
             viewController: container.childrenIfPresent(of: .viewController)?.first
@@ -99,7 +99,7 @@ public struct Placeholder: XMLDecodable, HasAutomaticCodingKeys {
     public let customClass: String?
 
     static func decode(_ xml: XMLIndexer) throws -> Placeholder {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         return try Placeholder.init(
             id:                    container.attribute(of: .id),
             placeholderIdentifier: container.attribute(of: .placeholderIdentifier),

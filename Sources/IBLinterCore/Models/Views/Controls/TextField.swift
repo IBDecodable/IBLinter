@@ -34,7 +34,7 @@ public struct TextField: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> TextField {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try TextField.init(
             id:                                        container.attribute(of: .id),

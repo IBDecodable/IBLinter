@@ -30,7 +30,7 @@ public struct ImageView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> ImageView {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try ImageView.init(
             id:                                        container.attribute(of: .id),

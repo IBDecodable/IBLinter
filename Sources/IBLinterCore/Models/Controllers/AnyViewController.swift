@@ -50,7 +50,7 @@ public struct ViewControllerLayoutGuide: XMLDecodable, HasAutomaticCodingKeys {
     public let type: String
 
     static func decode(_ xml: XMLIndexer) throws -> ViewControllerLayoutGuide {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         return try ViewControllerLayoutGuide.init(
             id: container.attribute(of: .id),
             type: container.attribute(of: .type)

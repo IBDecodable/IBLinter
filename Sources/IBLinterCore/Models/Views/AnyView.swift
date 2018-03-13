@@ -77,7 +77,7 @@ public struct Rect: XMLDecodable, HasAutomaticCodingKeys {
     public let height: Float
 
     static func decode(_ xml: XMLIndexer) throws -> Rect {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         return try Rect.init(
             x:      container.attribute(of: .x),
             y:      container.attribute(of: .y),
@@ -94,7 +94,7 @@ public struct AutoresizingMask: XMLDecodable, HasAutomaticCodingKeys {
     public let heightSizable: Bool
 
     static func decode(_ xml: XMLIndexer) throws -> AutoresizingMask {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
 
         return try AutoresizingMask.init(
             widthSizable:  container.attribute(of: .widthSizable),
@@ -160,7 +160,7 @@ public struct Constraint: XMLDecodable, HasAutomaticCodingKeys {
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Constraint {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
 
         return Constraint.init(
             id:              try container.attribute(of: .id),
@@ -183,7 +183,7 @@ public enum Color: XMLDecodable, HasAutomaticCodingKeys {
         public let alpha: Float
 
         static func decode(_ xml: XMLIndexer) throws -> Color.CalibratedWhite {
-            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            let container = xml.container(keys: CodingKeys.self)
             return try CalibratedWhite.init(
                 key:   container.attribute(of: .key),
                 white: container.attribute(of: .white),
@@ -199,7 +199,7 @@ public enum Color: XMLDecodable, HasAutomaticCodingKeys {
         public let alpha: Float
 
         static func decode(_ xml: XMLIndexer) throws -> Color.SRGB {
-            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            let container = xml.container(keys: CodingKeys.self)
             return try SRGB.init(
                 key: container.attribute(of: .key),
                 red: container.attribute(of: .red),

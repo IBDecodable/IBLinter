@@ -21,7 +21,7 @@ public struct ViewController: XMLDecodable, ViewControllerProtocol, HasAutomatic
     enum LayoutGuidesCodingKeys: CodingKey { case viewControllerLayoutGuide }
 
     static func decode(_ xml: XMLIndexer) throws -> ViewController {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let layoutGuidesContainer = container.nestedContainerIfPresent(of: .layoutGuides, keys: LayoutGuidesCodingKeys.self)
         return try ViewController.init(
             id:                   container.attribute(of: .id),

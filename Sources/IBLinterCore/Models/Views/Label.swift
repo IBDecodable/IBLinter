@@ -36,7 +36,7 @@ public struct Label: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     enum ConstraintsCodingKeys: CodingKey { case constraint }
 
     static func decode(_ xml: XMLIndexer) throws -> Label {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try Label.init(
             id:                                        container.attribute(of: .id),
@@ -74,7 +74,7 @@ public struct FontDescription: XMLDecodable, HasAutomaticCodingKeys {
     public let weight: String?
 
     static func decode(_ xml: XMLIndexer) throws -> FontDescription {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         return try FontDescription.init(
             type:      container.attribute(of: .type),
             pointSize: container.attribute(of: .pointSize),

@@ -33,7 +33,7 @@ public struct SegmentedControl: XMLDecodable, ViewProtocol, HasAutomaticCodingKe
         public let title: String
 
         static func decode(_ xml: XMLIndexer) throws -> SegmentedControl.Segment {
-            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            let container = xml.container(keys: CodingKeys.self)
             return try Segment.init(title: container.attribute(of: .title))
         }
     }
@@ -42,7 +42,7 @@ public struct SegmentedControl: XMLDecodable, ViewProtocol, HasAutomaticCodingKe
     enum SegmentCodingKeys: CodingKey { case segment }
 
     static func decode(_ xml: XMLIndexer) throws -> SegmentedControl {
-        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let container = xml.container(keys: CodingKeys.self)
         let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         let segmentsContainer = container.nestedContainerIfPresent(of: .segments, keys: SegmentCodingKeys.self)
         return try SegmentedControl.init(
