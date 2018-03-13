@@ -71,6 +71,16 @@ class XMLIndexerContainer<T, K> where K: CodingKey {
         return try? elements(of: key)
     }
 
+    func children<T>(of key: K) throws -> [T] where T: XMLDecodable {
+        let nestedIndexer: XMLIndexer = try indexer.byKey(key.stringValue)
+        return try nestedIndexer.children.map(decodeValue)
+    }
+
+    func childrenIfPresent<T>(of key: K) -> [T]? where T: XMLDecodable {
+        let nestedIndexer: XMLIndexer? = indexer.byKey(key.stringValue)
+        return nestedIndexer?.children.flatMap(decodeValue)
+    }
+
     func nestedContainer<A>(of key: K, keys: A.Type) throws -> XMLIndexerContainer<T, A> {
         let nestedIndexer: XMLIndexer = try indexer.byKey(key.stringValue)
         return XMLIndexerContainer<T, A>.init(indexer: nestedIndexer)

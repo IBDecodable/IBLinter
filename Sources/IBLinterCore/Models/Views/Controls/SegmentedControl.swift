@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct SegmentedControl: XMLDecodable, ViewProtocol {
+public struct SegmentedControl: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let id: String
     public let elementClass: String = "UISegmentedControl"
 
@@ -19,45 +19,51 @@ public struct SegmentedControl: XMLDecodable, ViewProtocol {
     public let contentVerticalAlignment: String?
     public let customClass: String?
     public let customModule: String?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let segmentControlStyle: String?
-    public let segments: [Segment]
+    public let segments: [Segment]?
     public let selectedSegmentIndex: Int?
     public let subviews: [AnyView]?
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct Segment: XMLDecodable {
+    public struct Segment: XMLDecodable, HasAutomaticCodingKeys {
         public let title: String
 
         static func decode(_ xml: XMLIndexer) throws -> SegmentedControl.Segment {
-            return try Segment.init(title: xml.attributeValue(of: "title"))
+            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            return try Segment.init(title: container.attribute(of: .title))
         }
     }
 
+    enum ConstraintsCodingKeys: CodingKey { case constraint }
+    enum SegmentCodingKeys: CodingKey { case segment }
+
     static func decode(_ xml: XMLIndexer) throws -> SegmentedControl {
-        return SegmentedControl.init(
-            id:                                         try xml.attributeValue(of: "id"),
-            autoresizingMask:                           xml.byKey("autoresizingMask").flatMap(decodeValue),
-            clipsSubviews:                              xml.attributeValue(of: "clipsSubviews"),
-            constraints:                                xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentHorizontalAlignment:                 xml.attributeValue(of: "contentHorizontalAlignment"),
-            contentMode:                                xml.attributeValue(of: "contentMode"),
-            contentVerticalAlignment:                   xml.attributeValue(of: "contentVerticalAlignment"),
-            customClass:                                xml.attributeValue(of: "customClass"),
-            customModule:                               xml.attributeValue(of: "customModule"),
-            isMisplaced:                                xml.attributeValue(of: "misplaced"),
-            opaque:                                     xml.attributeValue(of: "opaque"),
-            rect:                                       try decodeValue(xml.byKey("rect")),
-            segmentControlStyle:                        xml.attributeValue(of: "segmentControlStyle"),
-            segments:                                   try xml.byKey("segments").byKey("segment").all.map(decodeValue),
-            selectedSegmentIndex:                       xml.attributeValue(of: "selectedSegmentIndex"),
-            subviews:                                   xml.byKey("subviews")?.children.flatMap(decodeValue),
-            translatesAutoresizingMaskIntoConstraints:  xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                     xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        let segmentsContainer = container.nestedContainerIfPresent(of: .segments, keys: SegmentCodingKeys.self)
+        return try SegmentedControl.init(
+            id:                                         container.attribute(of: .id),
+            autoresizingMask:                           container.elementIfPresent(of: .autoresizingMask),
+            clipsSubviews:                              container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                                constraintsContainer?.elements(of: .constraint),
+            contentHorizontalAlignment:                 container.attributeIfPresent(of: .contentHorizontalAlignment),
+            contentMode:                                container.attributeIfPresent(of: .contentMode),
+            contentVerticalAlignment:                   container.attributeIfPresent(of: .contentVerticalAlignment),
+            customClass:                                container.attributeIfPresent(of: .customClass),
+            customModule:                               container.attributeIfPresent(of: .customModule),
+            misplaced:                                  container.attributeIfPresent(of: .misplaced),
+            opaque:                                     container.attributeIfPresent(of: .opaque),
+            rect:                                       container.element(of: .rect),
+            segmentControlStyle:                        container.attributeIfPresent(of: .segmentControlStyle),
+            segments:                                   segmentsContainer?.elementsIfPresent(of: .segment),
+            selectedSegmentIndex:                       container.attributeIfPresent(of: .selectedSegmentIndex),
+            subviews:                                   container.childrenIfPresent(of: .subviews),
+            translatesAutoresizingMaskIntoConstraints:  container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                     container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
-
 }

@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct TextView: XMLDecodable, ViewProtocol {
+public struct TextView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let id: String
     public let elementClass: String = "UITextView"
 
@@ -19,8 +19,8 @@ public struct TextView: XMLDecodable, ViewProtocol {
     public let contentMode: String?
     public let customClass: String?
     public let customModule: String?
-    public let font: FontDescription?
-    public let isMisplaced: Bool?
+    public let fontDescription: FontDescription?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let scrollEnabled: Bool?
@@ -29,34 +29,38 @@ public struct TextView: XMLDecodable, ViewProtocol {
     public let subviews: [AnyView]?
     public let text: String
     public let textAlignment: String?
-    public let textColor: Color?
+    public let color: Color?
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
+    enum ConstraintsCodingKeys: CodingKey { case constraint }
+
     static func decode(_ xml: XMLIndexer) throws -> TextView {
-        return TextView.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            bounces:                                   xml.attributeValue(of: "bounces"),
-            bouncesZoom:                               xml.attributeValue(of: "bouncesZoom"),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            scrollEnabled:                             xml.attributeValue(of: "scrollEnabled"),
-            showsHorizontalScrollIndicator:            xml.attributeValue(of: "showsHorizontalScrollIndicator"),
-            showsVerticalScrollIndicator:              xml.attributeValue(of: "showsVerticalScrollIndicator"),
-            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-            text:                                      try xml.attributeValue(of: "text"),
-            textAlignment:                             xml.attributeValue(of: "textAlignment"),
-            textColor:                                 xml.byKey("color").flatMap(decodeValue),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        return try TextView.init(
+            id:                                        container.attribute(of: .id),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            bounces:                                   container.attributeIfPresent(of: .bounces),
+            bouncesZoom:                               container.attributeIfPresent(of: .bouncesZoom),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elementsIfPresent(of: .constraint),
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customModule),
+            fontDescription:                           container.elementIfPresent(of: .fontDescription),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            scrollEnabled:                             container.attributeIfPresent(of: .scrollEnabled),
+            showsHorizontalScrollIndicator:            container.attributeIfPresent(of: .showsHorizontalScrollIndicator),
+            showsVerticalScrollIndicator:              container.attributeIfPresent(of: .showsVerticalScrollIndicator),
+            subviews:                                  container.childrenIfPresent(of: .subviews),
+            text:                                      container.attribute(of: .text),
+            textAlignment:                             container.attributeIfPresent(of: .textAlignment),
+            color:                                     container.elementIfPresent(of: .color),
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
 }

@@ -20,13 +20,13 @@ public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let contentVerticalAlignment: String?
     public let customClass: String?
     public let customModule: String?
-    public let font: FontDescription?
+    public let fontDescription: FontDescription?
     public let lineBreakMode: String?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let subviews: [AnyView]?
-    public let states: [State]
+    public let state: [State]
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
@@ -45,36 +45,13 @@ public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
         }
     }
 
-    enum CodingKeys: String, CodingKey {
-         case id
-         case elementClass
-         case autoresizingMask
-         case buttonType
-         case clipsSubviews
-         case constraints
-         case contentHorizontalAlignment
-         case contentMode
-         case contentVerticalAlignment
-         case customClass
-         case customModule
-         case font = "fontDescription"
-         case lineBreakMode
-         case isMisplaced = "misplaced"
-         case opaque
-         case rect
-         case subviews
-         case states = "state"
-         case translatesAutoresizingMaskIntoConstraints
-         case userInteractionEnabled
-    }
-
-    enum NestedCodingKeys: CodingKey {
+    enum ConstraintsCodingKeys: CodingKey {
         case constraint
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Button {
         let container = xml.container(for: self.self, keys: CodingKeys.self)
-        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: NestedCodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
         return try Button.init(
             id:                                        container.attribute(of: .id),
             autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
@@ -86,13 +63,13 @@ public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
             contentVerticalAlignment:                  container.attributeIfPresent(of: .contentVerticalAlignment),
             customClass:                               container.attributeIfPresent(of: .customClass),
             customModule:                              container.attributeIfPresent(of: .customClass),
-            font:                                      container.elementIfPresent(of: .font),
+            fontDescription:                           container.elementIfPresent(of: .fontDescription),
             lineBreakMode:                             container.attributeIfPresent(of: .lineBreakMode),
-            isMisplaced:                               container.attributeIfPresent(of: .isMisplaced),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
             opaque:                                    container.attributeIfPresent(of: .opaque),
             rect:                                      container.element(of: .rect),
-            subviews:                                  container.elementsIfPresent(of: .subviews),
-            states:                                    container.elements(of: .states),
+            subviews:                                  container.childrenIfPresent(of: .subviews),
+            state:                                     container.elements(of: .state),
             translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
             userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )

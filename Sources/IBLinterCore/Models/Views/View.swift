@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct View: XMLDecodable, ViewProtocol {
+public struct View: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
 
     public let id: String
     public let elementClass: String = "UIView"
@@ -18,7 +18,7 @@ public struct View: XMLDecodable, ViewProtocol {
     public let contentMode: String?
     public let customClass: String?
     public let customModule: String?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let subviews: [AnyView]?
@@ -26,36 +26,41 @@ public struct View: XMLDecodable, ViewProtocol {
     public let userInteractionEnabled: Bool?
     public let viewLayoutGuide: LayoutGuide?
 
+    enum ConstraintsCodingKeys: CodingKey { case constraint }
+
     static func decode(_ xml: XMLIndexer) throws -> View {
-        return View.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled"),
-            viewLayoutGuide:                           xml.byKey("viewLayoutGuide").flatMap(decodeValue)
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        return try View.init(
+            id:                                        container.attribute(of: .id),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elementsIfPresent(of: .constraint),
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customModule),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            subviews:                                  container.childrenIfPresent(of: .subviews),
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled),
+            viewLayoutGuide:                           container.elementIfPresent(of: .viewLayoutGuide)
         )
     }
 }
 
 // MARK: - LayoutGuide
 
-public struct LayoutGuide: XMLDecodable {
+public struct LayoutGuide: XMLDecodable, HasAutomaticCodingKeys {
     public let key: String
     public let id: String
 
     static func decode(_ xml: XMLIndexer) throws -> LayoutGuide {
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
         return try LayoutGuide.init(
-            key: xml.attributeValue(of: "key"),
-            id: xml.attributeValue(of: "id")
+            key: container.attribute(of: .key),
+            id: container.attribute(of: .id)
         )
     }
 }

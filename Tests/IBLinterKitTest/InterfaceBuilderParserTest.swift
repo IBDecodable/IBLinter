@@ -32,7 +32,7 @@ class InterfaceBuilderParserTest: XCTestCase {
         }()
 
         func buttonState(for key: String) -> Button.State? {
-            return button.states.first(where: { $0.key == key })
+            return button.state.first(where: { $0.key == key })
         }
 
         let normalTextColor = buttonState(for: "normal")?.color?.sRGB
@@ -62,7 +62,7 @@ class InterfaceBuilderParserTest: XCTestCase {
             return control
         }()
         XCTAssertEqual(segmentedControl.segmentControlStyle, "plain")
-        XCTAssertEqual(segmentedControl.segments[0].title, "First")
+        XCTAssertEqual(segmentedControl.segments![0].title, "First")
 
         let textField: TextField = {
             guard let textField = view.subviews![3].view as? TextField else {
@@ -71,8 +71,8 @@ class InterfaceBuilderParserTest: XCTestCase {
             return textField
         }()
 
-        XCTAssertEqual(textField.font?.pointSize, 14)
-        XCTAssertEqual(textField.font?.type, "system")
+        XCTAssertEqual(textField.fontDescription?.pointSize, 14)
+        XCTAssertEqual(textField.fontDescription?.type, "system")
         XCTAssertEqual(textField.borderStyle, "roundedRect")
     }
 

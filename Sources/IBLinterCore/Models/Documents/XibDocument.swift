@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct XibDocument: XMLDecodable {
+public struct XibDocument: XMLDecodable, HasAutomaticCodingKeys {
     public let type: String
     public let version: String
     public let toolsVersion: String
@@ -18,23 +18,54 @@ public struct XibDocument: XMLDecodable {
     public let useSafeAreas: Bool?
     public let colorMatched: Bool?
     public let device: Device?
-    public let views: [AnyView]?
-    public let placeholders: [Placeholder]?
+    public var views: [AnyView]? { return objects?.flatMap { $0.view } }
+    public var placeholders: [Placeholder]? { return objects?.flatMap { $0.placeholder } }
+    let objects: [Object]?
+
+    enum Object: XMLDecodable, HasAutomaticCodingKeys {
+        case placeholder(Placeholder)
+        case view(AnyView)
+
+        var placeholder: Placeholder? {
+            switch self {
+            case .placeholder(let placeholder): return placeholder
+            case .view: return nil
+            }
+        }
+
+        var view: AnyView? {
+            switch self {
+            case .placeholder: return nil
+            case .view(let view): return view
+            }
+        }
+        static func decode(_ xml: XMLIndexer) throws -> XibDocument.Object {
+            guard let elementName = xml.element?.name else {
+                throw IBError.elementNotFound
+            }
+            switch elementName {
+            case "placeholder": return try .placeholder(decodeValue(xml))
+            default: return try .view(decodeValue(xml))
+            }
+        }
+
+        func encode(to encoder: Encoder) throws { fatalError() }
+    }
 
     static func decode(_ xml: XMLIndexer) throws -> XibDocument {
-        return XibDocument.init(
-            type:                  try xml.attributeValue(of: "type"),
-            version:               try xml.attributeValue(of: "version"),
-            toolsVersion:          try xml.attributeValue(of: "toolsVersion"),
-            targetRuntime:         try xml.attributeValue(of: "targetRuntime"),
-            propertyAccessControl: xml.attributeValue(of: "propertyAccessControl"),
-            useAutolayout:         xml.attributeValue(of: "useAutolayout"),
-            useTraitCollections:   xml.attributeValue(of: "useTraitCollections"),
-            useSafeAreas:          xml.attributeValue(of: "useSafeAreas"),
-            colorMatched:          xml.attributeValue(of: "colorMatched"),
-            device:                xml.byKey("device").flatMap(decodeValue),
-            views:                 xml.byKey("objects")?.children.flatMap(decodeValue),
-            placeholders:          xml.byKey("objects")?.byKey("placeholder")?.all.flatMap(decodeValue)
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        return try XibDocument.init(
+            type:                  container.attribute(of: .type),
+            version:               container.attribute(of: .version),
+            toolsVersion:          container.attribute(of: .toolsVersion),
+            targetRuntime:         container.attribute(of: .targetRuntime),
+            propertyAccessControl: container.attributeIfPresent(of: .propertyAccessControl),
+            useAutolayout:         container.attributeIfPresent(of: .useAutolayout),
+            useTraitCollections:   container.attributeIfPresent(of: .useTraitCollections),
+            useSafeAreas:          container.attributeIfPresent(of: .useSafeAreas),
+            colorMatched:          container.attributeIfPresent(of: .colorMatched),
+            device:                container.elementIfPresent(of: .device),
+            objects:               container.childrenIfPresent(of: .objects)
         )
     }
 }

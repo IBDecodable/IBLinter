@@ -9,7 +9,7 @@ import SWXMLHash
 
 // MARK: - StoryboardDocument
 
-public struct StoryboardDocument: XMLDecodable {
+public struct StoryboardDocument: XMLDecodable, HasAutomaticCodingKeys {
     public let type: String
     public let version: String
     public let toolsVersion: String
@@ -22,60 +22,76 @@ public struct StoryboardDocument: XMLDecodable {
     public let initialViewController: String?
     public let device: Device?
     public let scenes: [Scene]?
-    public let placeholders: [Placeholder]?
+    public let objects: [Placeholder]?
+
+    enum ScenesCodingKeys: CodingKey { case scene }
+    enum ObjectsCodingKeys: CodingKey { case placeholder }
 
     static func decode(_ xml: XMLIndexer) throws -> StoryboardDocument {
-        return StoryboardDocument.init(
-            type:                  try xml.attributeValue(of: "type"),
-            version:               try xml.attributeValue(of: "version"),
-            toolsVersion:          try xml.attributeValue(of: "toolsVersion"),
-            targetRuntime:         try xml.attributeValue(of: "targetRuntime"),
-            propertyAccessControl: xml.attributeValue(of: "propertyAccessControl"),
-            useAutolayout:         xml.attributeValue(of: "useAutolayout"),
-            useTraitCollections:   xml.attributeValue(of: "useTraitCollections"),
-            useSafeAreas:          xml.attributeValue(of: "useSafeAreas"),
-            colorMatched:          xml.attributeValue(of: "colorMatched"),
-            initialViewController: xml.attributeValue(of: "initialViewController"),
-            device:                xml.byKey("device").flatMap(decodeValue),
-            scenes:                xml.byKey("scenes")?.byKey("scene")?.all.flatMap(decodeValue),
-            placeholders:          xml.byKey("objects")?.byKey("placeholder")?.all.flatMap(decodeValue)
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let scencesContainer = container.nestedContainerIfPresent(of: .scenes, keys: ScenesCodingKeys.self)
+        let objectsContainer = container.nestedContainerIfPresent(of: .objects, keys: ObjectsCodingKeys.self)
+        return try StoryboardDocument.init(
+            type:                  container.attribute(of: .type),
+            version:               container.attribute(of: .version),
+            toolsVersion:          container.attribute(of: .toolsVersion),
+            targetRuntime:         container.attribute(of: .targetRuntime),
+            propertyAccessControl: container.attributeIfPresent(of: .propertyAccessControl),
+            useAutolayout:         container.attributeIfPresent(of: .useAutolayout),
+            useTraitCollections:   container.attributeIfPresent(of: .useTraitCollections),
+            useSafeAreas:          container.attributeIfPresent(of: .useSafeAreas),
+            colorMatched:          container.attributeIfPresent(of: .colorMatched),
+            initialViewController: container.attributeIfPresent(of: .initialViewController),
+            device:                container.elementIfPresent(of: .device),
+            scenes:                scencesContainer?.elementsIfPresent(of: .scene),
+            objects:               objectsContainer?.elementsIfPresent(of: .placeholder)
         )
     }
 }
 
 // MARK: - Device
 
-public struct Device: XMLDecodable {
+public struct Device: XMLDecodable, HasAutomaticCodingKeys {
     public let id: String
     public let orientation: String?
     public let adaptation: String?
 
+    enum AdaptationCodingKeys: CodingKey { case id }
+
     static func decode(_ xml: XMLIndexer) throws -> Device {
-        return Device.init(
-            id:          try xml.attributeValue(of: "id"),
-            orientation: xml.attributeValue(of: "orientation"),
-            adaptation:  xml.byKey("adaptation")?.attributeValue(of: "id")
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let adaptationContainer = container.nestedContainerIfPresent(of: .adaptation, keys: AdaptationCodingKeys.self)
+        return try Device.init(
+            id:          container.attribute(of: .id),
+            orientation: container.attributeIfPresent(of: .orientation),
+            adaptation:  adaptationContainer?.attributeIfPresent(of: .id)
         )
     }
 }
 
 // MARK: - Scene
 
-public struct Scene: XMLDecodable {
+public struct Scene: XMLDecodable, HasAutomaticCodingKeys {
     public let id: String
     public let viewController: AnyViewController?
 
+    enum CodingKeys: String, CodingKey {
+        case id = "sceneID"
+        case viewController = "objects"
+    }
+
     static func decode(_ xml: XMLIndexer) throws -> Scene {
-        return Scene.init(
-            id:             try xml.attributeValue(of: "sceneID"),
-            viewController: xml.byKey("objects")?.children.first.flatMap(decodeValue)
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        return try Scene.init(
+            id:             container.attribute(of: .id),
+            viewController: container.childrenIfPresent(of: .viewController)?.first
         )
     }
 }
 
 // MARK: - Placeholder
 
-public struct Placeholder: XMLDecodable {
+public struct Placeholder: XMLDecodable, HasAutomaticCodingKeys {
     public let id: String
     public let placeholderIdentifier: String
     public let userLabel: String?
@@ -83,12 +99,13 @@ public struct Placeholder: XMLDecodable {
     public let customClass: String?
 
     static func decode(_ xml: XMLIndexer) throws -> Placeholder {
-        return Placeholder.init(
-            id:                    try xml.attributeValue(of: "id"),
-            placeholderIdentifier: try xml.attributeValue(of: "placeholderIdentifier"),
-            userLabel:             xml.attributeValue(of: "userLabel"),
-            sceneMemberID:         xml.attributeValue(of: "userLabel"),
-            customClass:           xml.attributeValue(of: "customClass")
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        return try Placeholder.init(
+            id:                    container.attribute(of: .id),
+            placeholderIdentifier: container.attribute(of: .placeholderIdentifier),
+            userLabel:             container.attributeIfPresent(of: .userLabel),
+            sceneMemberID:         container.attributeIfPresent(of: .userLabel),
+            customClass:           container.attributeIfPresent(of: .customClass)
         )
     }
 }

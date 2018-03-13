@@ -19,7 +19,7 @@ public protocol ViewProtocol {
     var contentMode: String? { get }
     var customClass: String? { get }
     var customModule: String? { get }
-    var isMisplaced: Bool? { get }
+    var misplaced: Bool? { get }
     var opaque: Bool? { get }
     var rect: Rect { get }
     var subviews: [AnyView]? { get }
@@ -78,12 +78,11 @@ public struct Rect: XMLDecodable, HasAutomaticCodingKeys {
 
     static func decode(_ xml: XMLIndexer) throws -> Rect {
         let container = xml.container(for: self.self, keys: CodingKeys.self)
-
-        return Rect.init(
-            x:      try container.attribute(of: .x),
-            y:      try container.attribute(of: .y),
-            width:  try container.attribute(of: .width),
-            height: try container.attribute(of: .height)
+        return try Rect.init(
+            x:      container.attribute(of: .x),
+            y:      container.attribute(of: .y),
+            width:  container.attribute(of: .width),
+            height: container.attribute(of: .height)
         )
     }
 }
@@ -186,7 +185,7 @@ public enum Color: XMLDecodable, HasAutomaticCodingKeys {
         static func decode(_ xml: XMLIndexer) throws -> Color.CalibratedWhite {
             let container = xml.container(for: self.self, keys: CodingKeys.self)
             return try CalibratedWhite.init(
-                key: container.attribute(of: .key),
+                key:   container.attribute(of: .key),
                 white: container.attribute(of: .white),
                 alpha: container.attribute(of: .alpha)
             )
