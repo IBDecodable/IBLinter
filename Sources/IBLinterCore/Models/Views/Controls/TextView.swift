@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct TextView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct TextView: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UITextView"
 

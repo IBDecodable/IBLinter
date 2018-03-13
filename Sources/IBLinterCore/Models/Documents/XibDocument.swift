@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct XibDocument: XMLDecodable, HasAutomaticCodingKeys {
+public struct XibDocument: XMLDecodable, KeyDecodable {
     public let type: String
     public let version: String
     public let toolsVersion: String
@@ -22,7 +22,7 @@ public struct XibDocument: XMLDecodable, HasAutomaticCodingKeys {
     public var placeholders: [Placeholder]? { return objects?.flatMap { $0.placeholder } }
     let objects: [Object]?
 
-    enum Object: XMLDecodable, HasAutomaticCodingKeys {
+    enum Object: XMLDecodable, KeyDecodable {
         case placeholder(Placeholder)
         case view(AnyView)
 

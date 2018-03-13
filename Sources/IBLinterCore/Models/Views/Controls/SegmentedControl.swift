@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct SegmentedControl: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct SegmentedControl: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UISegmentedControl"
 
@@ -29,7 +29,7 @@ public struct SegmentedControl: XMLDecodable, ViewProtocol, HasAutomaticCodingKe
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct Segment: XMLDecodable, HasAutomaticCodingKeys {
+    public struct Segment: XMLDecodable, KeyDecodable {
         public let title: String
 
         static func decode(_ xml: XMLIndexer) throws -> SegmentedControl.Segment {

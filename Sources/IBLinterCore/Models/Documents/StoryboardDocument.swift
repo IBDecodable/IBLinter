@@ -9,7 +9,7 @@ import SWXMLHash
 
 // MARK: - StoryboardDocument
 
-public struct StoryboardDocument: XMLDecodable, HasAutomaticCodingKeys {
+public struct StoryboardDocument: XMLDecodable, KeyDecodable {
     public let type: String
     public let version: String
     public let toolsVersion: String
@@ -51,7 +51,7 @@ public struct StoryboardDocument: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - Device
 
-public struct Device: XMLDecodable, HasAutomaticCodingKeys {
+public struct Device: XMLDecodable, KeyDecodable {
     public let id: String
     public let orientation: String?
     public let adaptation: String?
@@ -71,7 +71,7 @@ public struct Device: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - Scene
 
-public struct Scene: XMLDecodable, HasAutomaticCodingKeys {
+public struct Scene: XMLDecodable, KeyDecodable {
     public let id: String
     public let viewController: AnyViewController?
 
@@ -91,7 +91,7 @@ public struct Scene: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - Placeholder
 
-public struct Placeholder: XMLDecodable, HasAutomaticCodingKeys {
+public struct Placeholder: XMLDecodable, KeyDecodable {
     public let id: String
     public let placeholderIdentifier: String
     public let userLabel: String?

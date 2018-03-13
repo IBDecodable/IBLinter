@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct Label: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct Label: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UILabel"
 
@@ -68,7 +68,7 @@ public struct Label: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
 
 // MARK: - FontDescription
 
-public struct FontDescription: XMLDecodable, HasAutomaticCodingKeys {
+public struct FontDescription: XMLDecodable, KeyDecodable {
     public let type: String
     public let pointSize: Float
     public let weight: String?

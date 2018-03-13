@@ -9,7 +9,7 @@ import SWXMLHash
 
 // MARK: - TableView
 
-public struct TableView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct TableView: XMLDecodable, ViewProtocol, KeyDecodable {
 
     public let id: String
     public let elementClass: String = "UITableView"
@@ -35,7 +35,7 @@ public struct TableView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public enum DataMode: XMLAttributeDecodable, HasAutomaticCodingKeys {
+    public enum DataMode: XMLAttributeDecodable, KeyDecodable {
         case `static`, prototypes
 
         static func decode(_ attribute: XMLAttribute) throws -> TableView.DataMode {
@@ -83,7 +83,7 @@ public struct TableView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
 
 // MARK: - TableViewCell
 
-public struct TableViewCell: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct TableViewCell: XMLDecodable, ViewProtocol, KeyDecodable {
 
     public let id: String
     public let elementClass: String = "UITableView"
@@ -102,7 +102,7 @@ public struct TableViewCell: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys 
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct TableViewContentView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+    public struct TableViewContentView: XMLDecodable, ViewProtocol, KeyDecodable {
         public let id: String
         public let elementClass: String = "UITableViewContentView"
 

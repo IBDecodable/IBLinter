@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct Toolbar: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct Toolbar: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UIToolbar"
 
@@ -26,7 +26,7 @@ public struct Toolbar: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let userInteractionEnabled: Bool?
 
 
-    public struct BarButtonItem: XMLDecodable, HasAutomaticCodingKeys {
+    public struct BarButtonItem: XMLDecodable, KeyDecodable {
         public let id: String
         public let style: String?
         public let systemItem: String?

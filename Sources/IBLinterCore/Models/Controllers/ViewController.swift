@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct ViewController: XMLDecodable, ViewControllerProtocol, HasAutomaticCodingKeys {
+public struct ViewController: XMLDecodable, ViewControllerProtocol, KeyDecodable {
 
     public let id: String
     public let customClass: String?

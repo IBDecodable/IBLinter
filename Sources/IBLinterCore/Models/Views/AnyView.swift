@@ -30,7 +30,7 @@ public protocol ViewProtocol {
 
 // MARK: - AnyView
 
-public struct AnyView: XMLDecodable, HasAutomaticCodingKeys {
+public struct AnyView: XMLDecodable, KeyDecodable {
 
     public let view: ViewProtocol
 
@@ -70,7 +70,7 @@ public struct AnyView: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - Rect
 
-public struct Rect: XMLDecodable, HasAutomaticCodingKeys {
+public struct Rect: XMLDecodable, KeyDecodable {
     public let x: Float
     public let y: Float
     public let width: Float
@@ -89,7 +89,7 @@ public struct Rect: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - AutoresizingMask
 
-public struct AutoresizingMask: XMLDecodable, HasAutomaticCodingKeys {
+public struct AutoresizingMask: XMLDecodable, KeyDecodable {
     public let widthSizable: Bool
     public let heightSizable: Bool
 
@@ -105,7 +105,7 @@ public struct AutoresizingMask: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - Constraint
 
-public struct Constraint: XMLDecodable, HasAutomaticCodingKeys {
+public struct Constraint: XMLDecodable, KeyDecodable {
     public let id: String
     public let constant: Int?
     public let multiplier: String?
@@ -114,7 +114,7 @@ public struct Constraint: XMLDecodable, HasAutomaticCodingKeys {
     public let secondItem: String?
     public let secondAttribute: LayoutAttribute?
 
-    public enum LayoutAttribute: XMLAttributeDecodable, Equatable, HasAutomaticCodingKeys {
+    public enum LayoutAttribute: XMLAttributeDecodable, Equatable, KeyDecodable {
         case left, right, top, bottom, leading, trailing,
         width, height, centerX, centerY
 
@@ -176,8 +176,8 @@ public struct Constraint: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - Color
 
-public enum Color: XMLDecodable, HasAutomaticCodingKeys {
-    public struct CalibratedWhite: XMLDecodable, HasAutomaticCodingKeys {
+public enum Color: XMLDecodable, KeyDecodable {
+    public struct CalibratedWhite: XMLDecodable, KeyDecodable {
         public let key: String
         public let white: Float
         public let alpha: Float
@@ -191,7 +191,7 @@ public enum Color: XMLDecodable, HasAutomaticCodingKeys {
             )
         }
     }
-    public struct SRGB: XMLDecodable, HasAutomaticCodingKeys {
+    public struct SRGB: XMLDecodable, KeyDecodable {
         public let key: String
         public let red: Float
         public let blue: Float

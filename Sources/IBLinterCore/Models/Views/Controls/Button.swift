@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct Button: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UIButton"
 
@@ -30,7 +30,7 @@ public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct State: XMLDecodable, HasAutomaticCodingKeys {
+    public struct State: XMLDecodable, KeyDecodable {
         public let key: String
         public let title: String
         public let color: Color?

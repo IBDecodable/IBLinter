@@ -20,7 +20,7 @@ protocol XMLDecodable {
     static func decode(_ xml: XMLIndexer) throws -> Self
 }
 
-protocol HasAutomaticCodingKeys: Encodable {
+protocol KeyDecodable: Encodable {
 }
 
 func decodeValue<T: XMLDecodable>(_ xml: XMLIndexer) throws -> T {

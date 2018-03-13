@@ -21,7 +21,7 @@ public protocol ViewControllerProtocol {
 
 // MARK: - AnyViewController
 
-public struct AnyViewController: XMLDecodable, HasAutomaticCodingKeys {
+public struct AnyViewController: XMLDecodable, KeyDecodable {
 
     public let viewController: ViewControllerProtocol
 
@@ -45,7 +45,7 @@ public struct AnyViewController: XMLDecodable, HasAutomaticCodingKeys {
 
 // MARK: - ViewControllerLayoutGuide
 
-public struct ViewControllerLayoutGuide: XMLDecodable, HasAutomaticCodingKeys {
+public struct ViewControllerLayoutGuide: XMLDecodable, KeyDecodable {
     public let id: String
     public let type: String
 

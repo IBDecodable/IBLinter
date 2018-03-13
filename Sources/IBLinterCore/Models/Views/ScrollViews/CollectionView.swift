@@ -9,7 +9,7 @@ import SWXMLHash
 
 // MARK: - CollectionView
 
-public struct CollectionView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct CollectionView: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UICollectionView"
 
@@ -53,7 +53,7 @@ public struct CollectionView: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys
 
 // MARK: - CollectionViewCell
 
-public struct CollectionViewCell: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
+public struct CollectionViewCell: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UICollectionViewCell"
 
