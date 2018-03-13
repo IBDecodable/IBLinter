@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct Toolbar: XMLDecodable, ViewProtocol {
+public struct Toolbar: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UIToolbar"
 
@@ -18,7 +18,7 @@ public struct Toolbar: XMLDecodable, ViewProtocol {
     public let customClass: String?
     public let customModule: String?
     public let items: [BarButtonItem]?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let subviews: [AnyView]?
@@ -26,38 +26,45 @@ public struct Toolbar: XMLDecodable, ViewProtocol {
     public let userInteractionEnabled: Bool?
 
 
-    public struct BarButtonItem: XMLDecodable {
+    public struct BarButtonItem: XMLDecodable, KeyDecodable {
         public let id: String
         public let style: String?
         public let systemItem: String?
         public let title: String?
 
         static func decode(_ xml: XMLIndexer) throws -> Toolbar.BarButtonItem {
-            return BarButtonItem.init(
-                id:         try xml.attributeValue(of: "id"),
-                style:      xml.attributeValue(of: "style"),
-                systemItem: xml.attributeValue(of: "systemItem"),
-                title:      xml.attributeValue(of: "title")
+            let container = xml.container(keys: CodingKeys.self)
+            return try BarButtonItem.init(
+                id:         container.attribute(of: .id),
+                style:      container.attributeIfPresent(of: .style),
+                systemItem: container.attributeIfPresent(of: .systemItem),
+                title:      container.attributeIfPresent(of: .title)
             )
         }
     }
 
+    enum ConstraintsCodingKeys: CodingKey { case constraint }
+    enum ItemsCodingKeys: CodingKey { case barButtonItem }
+
     static func decode(_ xml: XMLIndexer) throws -> Toolbar {
-        return Toolbar.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            items:                                     xml.byKey("items")?.byKey("barButtonItem")?.all.flatMap(decodeValue),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        let itemsContainer = container.nestedContainerIfPresent(of: .items, keys: ItemsCodingKeys.self)
+        return try Toolbar.init(
+            id:                                        container.attribute(of: .id),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elementsIfPresent(of: .constraint),
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customModule),
+            items:                                     itemsContainer?.elements(of: .barButtonItem),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            subviews:                                  container.childrenIfPresent(of: .subviews),
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
 }

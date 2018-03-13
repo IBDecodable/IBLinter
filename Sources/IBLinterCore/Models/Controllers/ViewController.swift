@@ -7,26 +7,30 @@
 
 import SWXMLHash
 
-public struct ViewController: XMLDecodable, ViewControllerProtocol {
+public struct ViewController: XMLDecodable, ViewControllerProtocol, KeyDecodable {
 
     public let id: String
     public let customClass: String?
     public let customModule: String?
     public let customModuleProvider: String?
-    public var storyboardIdentifier: String?
+    public let storyboardIdentifier: String?
     public let layoutGuides: [ViewControllerLayoutGuide]?
     public let view: View?
     public var rootView: ViewProtocol? { return view }
 
+    enum LayoutGuidesCodingKeys: CodingKey { case viewControllerLayoutGuide }
+
     static func decode(_ xml: XMLIndexer) throws -> ViewController {
-        return ViewController.init(
-            id:                   try xml.attributeValue(of: "id"),
-            customClass:          xml.attributeValue(of: "customClass"),
-            customModule:         xml.attributeValue(of: "customModule"),
-            customModuleProvider: xml.attributeValue(of: "customModuleProvider"),
-            storyboardIdentifier: xml.attributeValue(of: "storyboardIdentifier"),
-            layoutGuides:         xml.byKey("layoutGuides")?.byKey("viewControllerLayoutGuide")?.all.flatMap(decodeValue),
-            view:                 xml.byKey("view").flatMap(decodeValue)
+        let container = xml.container(keys: CodingKeys.self)
+        let layoutGuidesContainer = container.nestedContainerIfPresent(of: .layoutGuides, keys: LayoutGuidesCodingKeys.self)
+        return try ViewController.init(
+            id:                   container.attribute(of: .id),
+            customClass:          container.attributeIfPresent(of: .customClass),
+            customModule:         container.attributeIfPresent(of: .customModule),
+            customModuleProvider: container.attributeIfPresent(of: .customModuleProvider),
+            storyboardIdentifier: container.attributeIfPresent(of: .storyboardIdentifier),
+            layoutGuides:         layoutGuidesContainer?.elements(of: .viewControllerLayoutGuide),
+            view:                 container.element(of: .view)
         )
     }
 }

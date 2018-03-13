@@ -9,7 +9,7 @@ import SWXMLHash
 
 // MARK: - TableView
 
-public struct TableView: XMLDecodable, ViewProtocol {
+public struct TableView: XMLDecodable, ViewProtocol, KeyDecodable {
 
     public let id: String
     public let elementClass: String = "UITableView"
@@ -23,7 +23,7 @@ public struct TableView: XMLDecodable, ViewProtocol {
     public let customModule: String?
     public let dataMode: DataMode?
     public let estimatedRowHeight: Float?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let rowHeight: Float?
@@ -35,7 +35,7 @@ public struct TableView: XMLDecodable, ViewProtocol {
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public enum DataMode: XMLAttributeDecodable {
+    public enum DataMode: XMLAttributeDecodable, KeyDecodable {
         case `static`, prototypes
 
         static func decode(_ attribute: XMLAttribute) throws -> TableView.DataMode {
@@ -46,38 +46,44 @@ public struct TableView: XMLDecodable, ViewProtocol {
                 throw IBError.unsupportedTableViewDataMode(attribute.text)
             }
         }
+
+        public func encode(to encoder: Encoder) throws { fatalError() }
     }
 
+    enum ConstraintsCodingKeys: CodingKey { case constraint }
+
     static func decode(_ xml: XMLIndexer) throws -> TableView {
-        return TableView.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            alwaysBounceVertical:                      xml.attributeValue(of: "alwaysBounceVertical"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            dataMode:                                  xml.attributeValue(of: "dataMode"),
-            estimatedRowHeight:                        xml.attributeValue(of: "estimatedRowHeight"),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            rowHeight:                                 xml.attributeValue(of: "rowHeight"),
-            sectionFooterHeight:                       xml.attributeValue(of: "sectionFooterHeight"),
-            sectionHeaderHeight:                       xml.attributeValue(of: "sectionHeaderHeight"),
-            separatorStyle:                            xml.attributeValue(of: "separatorStyle"),
-            style:                                     xml.attributeValue(of: "style"),
-            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        return try TableView.init(
+            id:                                        container.attribute(of: .id),
+            alwaysBounceVertical:                      container.attributeIfPresent(of: .alwaysBounceVertical),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elementsIfPresent(of: .constraint),
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customModule),
+            dataMode:                                  container.attributeIfPresent(of: .dataMode),
+            estimatedRowHeight:                        container.attributeIfPresent(of: .estimatedRowHeight),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            rowHeight:                                 container.attributeIfPresent(of: .rowHeight),
+            sectionFooterHeight:                       container.attributeIfPresent(of: .sectionFooterHeight),
+            sectionHeaderHeight:                       container.attributeIfPresent(of: .sectionHeaderHeight),
+            separatorStyle:                            container.attributeIfPresent(of: .separatorStyle),
+            style:                                     container.attributeIfPresent(of: .style),
+            subviews:                                  container.childrenIfPresent(of: .subviews),
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
 }
 
 // MARK: - TableViewCell
 
-public struct TableViewCell: XMLDecodable, ViewProtocol {
+public struct TableViewCell: XMLDecodable, ViewProtocol, KeyDecodable {
 
     public let id: String
     public let elementClass: String = "UITableView"
@@ -85,21 +91,18 @@ public struct TableViewCell: XMLDecodable, ViewProtocol {
     public let autoresizingMask: AutoresizingMask?
     public let clipsSubviews: Bool?
     public let constraints: [Constraint]?
-    public let contentView: TableViewContentView
+    public let tableViewCellContentView: TableViewContentView
     public let contentMode: String?
     public let customClass: String?
     public let customModule: String?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
-    private let _subviews: [AnyView]?
-    public var subviews: [AnyView]? {
-        return (_subviews ?? []) + [AnyView(contentView)]
-    }
+    public let subviews: [AnyView]?
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct TableViewContentView: XMLDecodable, ViewProtocol {
+    public struct TableViewContentView: XMLDecodable, ViewProtocol, KeyDecodable {
         public let id: String
         public let elementClass: String = "UITableViewContentView"
 
@@ -109,48 +112,58 @@ public struct TableViewCell: XMLDecodable, ViewProtocol {
         public let contentMode: String?
         public let customClass: String?
         public let customModule: String?
-        public let isMisplaced: Bool?
+        public let misplaced: Bool?
         public let opaque: Bool?
         public let rect: Rect
         public let subviews: [AnyView]?
         public let translatesAutoresizingMaskIntoConstraints: Bool?
         public let userInteractionEnabled: Bool?
 
+        enum ConstraintsCodingKeys: CodingKey { case constraint }
+
         static func decode(_ xml: XMLIndexer) throws -> TableViewCell.TableViewContentView {
-            return TableViewContentView.init(
-                id:                                        try xml.attributeValue(of: "id"),
-                autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-                clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-                constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-                contentMode:                               xml.attributeValue(of: "contentMode"),
-                customClass:                               xml.attributeValue(of: "customClass"),
-                customModule:                              xml.attributeValue(of: "customModule"),
-                isMisplaced:                               xml.attributeValue(of: "misplaced"),
-                opaque:                                    xml.attributeValue(of: "opaque"),
-                rect:                                      try decodeValue(xml.byKey("rect")),
-                subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-                translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-                userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+            let container = xml.container(keys: CodingKeys.self)
+            let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+            return try TableViewContentView.init(
+                id:                                        container.attribute(of: .id),
+                autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+                clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+                constraints:                               constraintsContainer?.elementsIfPresent(of: .constraint),
+                contentMode:                               container.attributeIfPresent(of: .contentMode),
+                customClass:                               container.attributeIfPresent(of: .customClass),
+                customModule:                              container.attributeIfPresent(of: .customModule),
+                misplaced:                                 container.attributeIfPresent(of: .misplaced),
+                opaque:                                    container.attributeIfPresent(of: .opaque),
+                rect:                                      container.element(of: .rect),
+                subviews:                                  container.childrenIfPresent(of: .subviews),
+                translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+                userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
             )
         }
     }
 
+    enum ConstraintsCodingKeys: CodingKey { case constraint }
+
     static func decode(_ xml: XMLIndexer) throws -> TableViewCell {
-        return TableViewCell.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentView:                               try decodeValue(xml.byKey("tableViewCellContentView")),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            _subviews:                                 xml.byKey("subviews")?.children.flatMap(decodeValue),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        let contentView: TableViewContentView = try container.element(of: .tableViewCellContentView)
+        let subviews: [AnyView]? = container.childrenIfPresent(of: .subviews)
+        return try TableViewCell.init(
+            id:                                        container.attribute(of: .id),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elementsIfPresent(of: .constraint),
+            tableViewCellContentView:                  contentView,
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customModule),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            subviews:                                  (subviews ?? []) + [AnyView(contentView)],
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
 }

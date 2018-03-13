@@ -28,7 +28,7 @@ extension Rules {
 
         private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
             let violation: [Violation] = {
-                if view.isMisplaced ?? false {
+                if view.misplaced ?? false {
                     let message = "\(view.customClass ?? view.elementClass) is misplaced"
                     return [Violation(interfaceBuilderFile: file, message: message, level: .error)]
                 } else {

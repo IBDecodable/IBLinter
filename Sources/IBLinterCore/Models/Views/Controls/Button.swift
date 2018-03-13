@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct Button: XMLDecodable, ViewProtocol {
+public struct Button: XMLDecodable, ViewProtocol, KeyDecodable {
     public let id: String
     public let elementClass: String = "UIButton"
 
@@ -20,84 +20,58 @@ public struct Button: XMLDecodable, ViewProtocol {
     public let contentVerticalAlignment: String?
     public let customClass: String?
     public let customModule: String?
-    public let font: FontDescription?
+    public let fontDescription: FontDescription?
     public let lineBreakMode: String?
-    public let isMisplaced: Bool?
+    public let misplaced: Bool?
     public let opaque: Bool?
     public let rect: Rect
     public let subviews: [AnyView]?
-    public let textColor: TextColor
-    public let title: Title
+    public let state: [State]
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct Title: XMLDecodable {
-        public let disabled: String?
-        public let highlighted: String?
-        public let normal: String?
-        public let selected: String?
+    public struct State: XMLDecodable, KeyDecodable {
+        public let key: String
+        public let title: String
+        public let color: Color?
 
-        static func decode(_ xml: XMLIndexer) throws -> Button.Title {
-            let allState = try xml.byKey("state").all
-
-            func title(for key: String) -> String? {
-                guard let stateElement = try? allState.first(where: { try $0.attributeValue(of: "key") == key }) else { return nil }
-                return stateElement.flatMap { try? $0.attributeValue(of: "title") }
-            }
-
-            return Title.init(
-                disabled: title(for: "disabled"),
-                highlighted: title(for: "highlighted"),
-                normal: title(for: "normal"),
-                selected: title(for: "selected")
+        static func decode(_ xml: XMLIndexer) throws -> Button.State {
+            let container = xml.container(keys: CodingKeys.self)
+            return try State.init(
+                key: container.attribute(of: .key),
+                title: container.attribute(of: .title),
+                color: container.elementIfPresent(of: .color)
             )
         }
     }
 
-    public struct TextColor: XMLDecodable {
-        public let normal: Color?
-        public let disabled: Color?
-        public let selected: Color?
-        public let highlighted: Color?
-
-        static func decode(_ xml: XMLIndexer) throws -> Button.TextColor {
-            let allState = try xml.byKey("state").all
-
-            func color(for key: String) -> Color? {
-                guard let colorElement = try? allState.first(where: { try $0.attributeValue(of: "key") == key })?.byKey("color") else { return nil }
-                return colorElement.flatMap { try? Color.decode($0) }
-            }
-            return TextColor.init(
-                normal: color(for: "normal"),
-                disabled: color(for: "disabled"),
-                selected: color(for: "selected"),
-                highlighted: color(for: "highlighted")
-            )
-        }
+    enum ConstraintsCodingKeys: CodingKey {
+        case constraint
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Button {
-        return Button.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            buttonType:                                xml.attributeValue(of: "buttonType"),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            contentVerticalAlignment:                  xml.attributeValue(of: "contentVerticalAlignment"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
-            lineBreakMode:                             xml.attributeValue(of: "lineBreakMode"),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-            textColor:                                 try decodeValue(xml),
-            title:                                     try decodeValue(xml),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: ConstraintsCodingKeys.self)
+        return try Button.init(
+            id:                                        container.attribute(of: .id),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            buttonType:                                container.attributeIfPresent(of: .buttonType),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elements(of: .constraint),
+            contentHorizontalAlignment:                container.attributeIfPresent(of: .contentHorizontalAlignment),
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            contentVerticalAlignment:                  container.attributeIfPresent(of: .contentVerticalAlignment),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customClass),
+            fontDescription:                           container.elementIfPresent(of: .fontDescription),
+            lineBreakMode:                             container.attributeIfPresent(of: .lineBreakMode),
+            misplaced:                                 container.attributeIfPresent(of: .misplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            subviews:                                  container.childrenIfPresent(of: .subviews),
+            state:                                     container.elements(of: .state),
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
 }

@@ -21,7 +21,7 @@ public protocol ViewControllerProtocol {
 
 // MARK: - AnyViewController
 
-public struct AnyViewController: XMLDecodable {
+public struct AnyViewController: XMLDecodable, KeyDecodable {
 
     public let viewController: ViewControllerProtocol
 
@@ -39,18 +39,21 @@ public struct AnyViewController: XMLDecodable {
         default: throw IBError.unsupportedViewControllerClass(elementName)
         }
     }
+
+    public func encode(to encoder: Encoder) throws { fatalError() }
 }
 
 // MARK: - ViewControllerLayoutGuide
 
-public struct ViewControllerLayoutGuide: XMLDecodable {
+public struct ViewControllerLayoutGuide: XMLDecodable, KeyDecodable {
     public let id: String
     public let type: String
 
     static func decode(_ xml: XMLIndexer) throws -> ViewControllerLayoutGuide {
+        let container = xml.container(keys: CodingKeys.self)
         return try ViewControllerLayoutGuide.init(
-            id: xml.attributeValue(of: "id"),
-            type: xml.attributeValue(of: "type")
+            id: container.attribute(of: .id),
+            type: container.attribute(of: .type)
         )
     }
 }
