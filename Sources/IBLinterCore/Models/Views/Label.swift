@@ -65,16 +65,17 @@ public struct Label: XMLDecodable, ViewProtocol {
 
 // MARK: - FontDescription
 
-public struct FontDescription: XMLDecodable {
+public struct FontDescription: XMLDecodable, HasAutomaticCodingKeys {
     public let type: String
     public let pointSize: Float
     public let weight: String?
 
     static func decode(_ xml: XMLIndexer) throws -> FontDescription {
-        return FontDescription.init(
-            type:      try xml.attributeValue(of: "type"),
-            pointSize: try xml.attributeValue(of: "pointSize"),
-            weight:    xml.attributeValue(of: "weight")
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        return try FontDescription.init(
+            type:      container.attribute(of: .type),
+            pointSize: container.attribute(of: .pointSize),
+            weight:    container.attributeIfPresent(of: .weight)
         )
     }
 }

@@ -7,7 +7,7 @@
 
 import SWXMLHash
 
-public struct Button: XMLDecodable, ViewProtocol {
+public struct Button: XMLDecodable, ViewProtocol, HasAutomaticCodingKeys {
     public let id: String
     public let elementClass: String = "UIButton"
 
@@ -26,78 +26,75 @@ public struct Button: XMLDecodable, ViewProtocol {
     public let opaque: Bool?
     public let rect: Rect
     public let subviews: [AnyView]?
-    public let textColor: TextColor
-    public let title: Title
+    public let states: [State]
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-    public struct Title: XMLDecodable {
-        public let disabled: String?
-        public let highlighted: String?
-        public let normal: String?
-        public let selected: String?
+    public struct State: XMLDecodable, HasAutomaticCodingKeys {
+        public let key: String
+        public let title: String
+        public let color: Color?
 
-        static func decode(_ xml: XMLIndexer) throws -> Button.Title {
-            let allState = try xml.byKey("state").all
-
-            func title(for key: String) -> String? {
-                guard let stateElement = try? allState.first(where: { try $0.attributeValue(of: "key") == key }) else { return nil }
-                return stateElement.flatMap { try? $0.attributeValue(of: "title") }
-            }
-
-            return Title.init(
-                disabled: title(for: "disabled"),
-                highlighted: title(for: "highlighted"),
-                normal: title(for: "normal"),
-                selected: title(for: "selected")
+        static func decode(_ xml: XMLIndexer) throws -> Button.State {
+            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            return try State.init(
+                key: container.attribute(of: .key),
+                title: container.attribute(of: .title),
+                color: container.elementIfPresent(of: .color)
             )
         }
     }
 
-    public struct TextColor: XMLDecodable {
-        public let normal: Color?
-        public let disabled: Color?
-        public let selected: Color?
-        public let highlighted: Color?
+    enum CodingKeys: String, CodingKey {
+         case id
+         case elementClass
+         case autoresizingMask
+         case buttonType
+         case clipsSubviews
+         case constraints
+         case contentHorizontalAlignment
+         case contentMode
+         case contentVerticalAlignment
+         case customClass
+         case customModule
+         case font = "fontDescription"
+         case lineBreakMode
+         case isMisplaced = "misplaced"
+         case opaque
+         case rect
+         case subviews
+         case states = "state"
+         case translatesAutoresizingMaskIntoConstraints
+         case userInteractionEnabled
+    }
 
-        static func decode(_ xml: XMLIndexer) throws -> Button.TextColor {
-            let allState = try xml.byKey("state").all
-
-            func color(for key: String) -> Color? {
-                guard let colorElement = try? allState.first(where: { try $0.attributeValue(of: "key") == key })?.byKey("color") else { return nil }
-                return colorElement.flatMap { try? Color.decode($0) }
-            }
-            return TextColor.init(
-                normal: color(for: "normal"),
-                disabled: color(for: "disabled"),
-                selected: color(for: "selected"),
-                highlighted: color(for: "highlighted")
-            )
-        }
+    enum NestedCodingKeys: CodingKey {
+        case constraint
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Button {
-        return Button.init(
-            id:                                        try xml.attributeValue(of: "id"),
-            autoresizingMask:                          xml.byKey("autoresizingMask").flatMap(decodeValue),
-            buttonType:                                xml.attributeValue(of: "buttonType"),
-            clipsSubviews:                             xml.attributeValue(of: "clipsSubviews"),
-            constraints:                               xml.byKey("constraints")?.byKey("constraint")?.all.flatMap(decodeValue),
-            contentHorizontalAlignment:                xml.attributeValue(of: "contentHorizontalAlignment"),
-            contentMode:                               xml.attributeValue(of: "contentMode"),
-            contentVerticalAlignment:                  xml.attributeValue(of: "contentVerticalAlignment"),
-            customClass:                               xml.attributeValue(of: "customClass"),
-            customModule:                              xml.attributeValue(of: "customModule"),
-            font:                                      xml.byKey("fontDescription").flatMap(decodeValue),
-            lineBreakMode:                             xml.attributeValue(of: "lineBreakMode"),
-            isMisplaced:                               xml.attributeValue(of: "misplaced"),
-            opaque:                                    xml.attributeValue(of: "opaque"),
-            rect:                                      try decodeValue(xml.byKey("rect")),
-            subviews:                                  xml.byKey("subviews")?.children.flatMap(decodeValue),
-            textColor:                                 try decodeValue(xml),
-            title:                                     try decodeValue(xml),
-            translatesAutoresizingMaskIntoConstraints: xml.attributeValue(of: "translatesAutoresizingMaskIntoConstraints"),
-            userInteractionEnabled:                    xml.attributeValue(of: "userInteractionEnabled")
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+        let constraintsContainer = container.nestedContainerIfPresent(of: .constraints, keys: NestedCodingKeys.self)
+        return try Button.init(
+            id:                                        container.attribute(of: .id),
+            autoresizingMask:                          container.elementIfPresent(of: .autoresizingMask),
+            buttonType:                                container.attributeIfPresent(of: .buttonType),
+            clipsSubviews:                             container.attributeIfPresent(of: .clipsSubviews),
+            constraints:                               constraintsContainer?.elements(of: .constraint),
+            contentHorizontalAlignment:                container.attributeIfPresent(of: .contentHorizontalAlignment),
+            contentMode:                               container.attributeIfPresent(of: .contentMode),
+            contentVerticalAlignment:                  container.attributeIfPresent(of: .contentVerticalAlignment),
+            customClass:                               container.attributeIfPresent(of: .customClass),
+            customModule:                              container.attributeIfPresent(of: .customClass),
+            font:                                      container.elementIfPresent(of: .font),
+            lineBreakMode:                             container.attributeIfPresent(of: .lineBreakMode),
+            isMisplaced:                               container.attributeIfPresent(of: .isMisplaced),
+            opaque:                                    container.attributeIfPresent(of: .opaque),
+            rect:                                      container.element(of: .rect),
+            subviews:                                  container.elementsIfPresent(of: .subviews),
+            states:                                    container.elements(of: .states),
+            translatesAutoresizingMaskIntoConstraints: container.attributeIfPresent(of: .translatesAutoresizingMaskIntoConstraints),
+            userInteractionEnabled:                    container.attributeIfPresent(of: .userInteractionEnabled)
         )
     }
 }

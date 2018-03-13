@@ -30,14 +30,21 @@ class InterfaceBuilderParserTest: XCTestCase {
             }
             return button
         }()
-        XCTAssertEqual(button.title.normal, "Default Title")
-        XCTAssertEqual(button.title.selected, "Selected Title")
-        XCTAssertEqual(button.title.highlighted, "Highlighted Title")
-        XCTAssertEqual(button.title.disabled, "Disabled Title")
-        XCTAssertEqual(button.textColor.normal?.sRGB?.red, 0.97647058819999999)
-        XCTAssertEqual(button.textColor.normal?.sRGB?.green, 0.25882352939999997)
-        XCTAssertEqual(button.textColor.normal?.sRGB?.blue, 0.24313725489999999)
-        XCTAssertEqual(button.textColor.normal?.sRGB?.key, "titleColor")
+
+        func buttonState(for key: String) -> Button.State? {
+            return button.states.first(where: { $0.key == key })
+        }
+
+        let normalTextColor = buttonState(for: "normal")?.color?.sRGB
+
+        XCTAssertEqual(buttonState(for: "normal")?.title, "Default Title")
+        XCTAssertEqual(buttonState(for: "selected")?.title, "Selected Title")
+        XCTAssertEqual(buttonState(for: "highlighted")?.title, "Highlighted Title")
+        XCTAssertEqual(buttonState(for: "disabled")?.title, "Disabled Title")
+        XCTAssertEqual(normalTextColor?.red, 0.97647058819999999)
+        XCTAssertEqual(normalTextColor?.green, 0.25882352939999997)
+        XCTAssertEqual(normalTextColor?.blue, 0.24313725489999999)
+        XCTAssertEqual(normalTextColor?.key, "titleColor")
 
         let label: Label = {
             guard let label = view.subviews![1].view as? Label else {

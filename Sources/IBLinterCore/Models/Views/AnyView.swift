@@ -30,7 +30,7 @@ public protocol ViewProtocol {
 
 // MARK: - AnyView
 
-public struct AnyView: XMLDecodable {
+public struct AnyView: XMLDecodable, HasAutomaticCodingKeys {
 
     public let view: ViewProtocol
 
@@ -65,42 +65,48 @@ public struct AnyView: XMLDecodable {
         }
     }
 
+    public func encode(to encoder: Encoder) throws { fatalError() }
 }
 
 // MARK: - Rect
 
-public struct Rect: XMLDecodable {
+public struct Rect: XMLDecodable, HasAutomaticCodingKeys {
     public let x: Float
     public let y: Float
     public let width: Float
     public let height: Float
 
     static func decode(_ xml: XMLIndexer) throws -> Rect {
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+
         return Rect.init(
-            x:      try xml.attributeValue(of: "x"),
-            y:      try xml.attributeValue(of: "y"),
-            width:  try xml.attributeValue(of: "width"),
-            height: try xml.attributeValue(of: "height")
+            x:      try container.attribute(of: .x),
+            y:      try container.attribute(of: .y),
+            width:  try container.attribute(of: .width),
+            height: try container.attribute(of: .height)
         )
     }
 }
 
 // MARK: - AutoresizingMask
 
-public struct AutoresizingMask: XMLDecodable {
+public struct AutoresizingMask: XMLDecodable, HasAutomaticCodingKeys {
     public let widthSizable: Bool
     public let heightSizable: Bool
 
     static func decode(_ xml: XMLIndexer) throws -> AutoresizingMask {
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+
         return try AutoresizingMask.init(
-            widthSizable:  xml.attributeValue(of: "widthSizable"),
-            heightSizable: xml.attributeValue(of: "heightSizable"))
+            widthSizable:  container.attribute(of: .widthSizable),
+            heightSizable: container.attribute(of: .heightSizable)
+        )
     }
 }
 
 // MARK: - Constraint
 
-public struct Constraint: XMLDecodable {
+public struct Constraint: XMLDecodable, HasAutomaticCodingKeys {
     public let id: String
     public let constant: Int?
     public let multiplier: String?
@@ -109,7 +115,7 @@ public struct Constraint: XMLDecodable {
     public let secondItem: String?
     public let secondAttribute: LayoutAttribute?
 
-    public enum LayoutAttribute: XMLAttributeDecodable, Equatable {
+    public enum LayoutAttribute: XMLAttributeDecodable, Equatable, HasAutomaticCodingKeys {
         case left, right, top, bottom, leading, trailing,
         width, height, centerX, centerY
 
@@ -155,23 +161,55 @@ public struct Constraint: XMLDecodable {
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Constraint {
+        let container = xml.container(for: self.self, keys: CodingKeys.self)
+
         return Constraint.init(
-            id:              try xml.attributeValue(of: "id"),
-            constant:        xml.attributeValue(of: "constant"),
-            multiplier:      xml.attributeValue(of: "multiplier"),
-            firstItem:       xml.attributeValue(of: "firstItem"),
-            firstAttribute:  xml.attributeValue(of: "firstAttribute"),
-            secondItem:      xml.attributeValue(of: "secondItem"),
-            secondAttribute: xml.attributeValue(of: "secondAttribute")
+            id:              try container.attribute(of: .id),
+            constant:        container.attributeIfPresent(of: .constant),
+            multiplier:      container.attributeIfPresent(of: .multiplier),
+            firstItem:       container.attributeIfPresent(of: .firstItem),
+            firstAttribute:  container.attributeIfPresent(of: .firstAttribute),
+            secondItem:      container.attributeIfPresent(of: .secondItem),
+            secondAttribute: container.attributeIfPresent(of: .secondAttribute)
         )
     }
 }
 
 // MARK: - Color
 
-public enum Color: XMLDecodable {
-    public typealias CalibratedWhite = (key: String, white: Float, alpha: Float)
-    public typealias SRGB = (key: String, red: Float, blue: Float, green: Float, alpha: Float)
+public enum Color: XMLDecodable, HasAutomaticCodingKeys {
+    public struct CalibratedWhite: XMLDecodable, HasAutomaticCodingKeys {
+        public let key: String
+        public let white: Float
+        public let alpha: Float
+
+        static func decode(_ xml: XMLIndexer) throws -> Color.CalibratedWhite {
+            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            return try CalibratedWhite.init(
+                key: container.attribute(of: .key),
+                white: container.attribute(of: .white),
+                alpha: container.attribute(of: .alpha)
+            )
+        }
+    }
+    public struct SRGB: XMLDecodable, HasAutomaticCodingKeys {
+        public let key: String
+        public let red: Float
+        public let blue: Float
+        public let green: Float
+        public let alpha: Float
+
+        static func decode(_ xml: XMLIndexer) throws -> Color.SRGB {
+            let container = xml.container(for: self.self, keys: CodingKeys.self)
+            return try SRGB.init(
+                key: container.attribute(of: .key),
+                red: container.attribute(of: .red),
+                blue: container.attribute(of: .blue),
+                green: container.attribute(of: .green),
+                alpha: container.attribute(of: .alpha)
+            )
+        }
+    }
     case calibratedWhite(CalibratedWhite)
     case sRGB(SRGB)
 
@@ -192,23 +230,15 @@ public enum Color: XMLDecodable {
     }
 
     static func decode(_ xml: XMLIndexer) throws -> Color {
-        let key: String = try xml.attributeValue(of: "key")
         let colorSpace: String = try xml.attributeValue(of: "colorSpace")
         switch colorSpace {
         case "calibratedWhite":
-            return try .calibratedWhite((key:   key,
-                                         white: xml.attributeValue(of: "white"),
-                                         alpha: xml.attributeValue(of: "alpha")))
+            return try .calibratedWhite(decodeValue(xml))
         case "custom":
             let customColorSpace: String = try xml.attributeValue(of: "customColorSpace")
             switch customColorSpace {
             case "sRGB":
-                return try .sRGB((key:   key,
-                                  red:   xml.attributeValue(of: "red"),
-                                  blue:  xml.attributeValue(of: "blue"),
-                                  green: xml.attributeValue(of: "green"),
-                                  alpha: xml.attributeValue(of: "alpha")
-                ))
+                return try .sRGB(decodeValue(xml))
             default:
                 throw IBError.unsupportedColorSpace(customColorSpace)
             }
@@ -216,4 +246,6 @@ public enum Color: XMLDecodable {
             throw IBError.unsupportedColorSpace(colorSpace)
         }
     }
+
+    public func encode(to encoder: Encoder) throws { fatalError() }
 }
