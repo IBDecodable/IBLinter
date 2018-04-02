@@ -18,7 +18,7 @@ echo "Filename: '${filename}'"
 git tag $tag
 git push origin $tag
 
-curl -LOk "https://github.com/kateinoigakukun/IBLinter/archive/${filename}"
+curl -LOk "https://github.com/IBDecodable/IBLinter/archive/${filename}"
 sha256=$(shasum -a 256 $filename | cut -d ' ' -f 1)
 rm $filename
 
