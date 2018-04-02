@@ -11,7 +11,7 @@ A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/Sw
 ### Using [Homebrew](http://brew.sh/)
 
 ```sh
-$ brew install kateinoigakukun/homebrew-tap/iblinter
+$ brew install IBDecodable/homebrew-tap/iblinter
 ```
 
 ### Using [CocoaPods](https://cocoapods.org)
@@ -49,7 +49,7 @@ Add a `Run Script Phase` to integrate IBLinter with Xcode
 if which iblinter >/dev/null; then
   iblinter lint
 else
-  echo "warning: IBLinter not installed, download from https://github.com/kateinoigakukun/IBLinter"
+  echo "warning: IBLinter not installed, download from https://github.com/IBDecodable/IBLinter"
 fi
 ```
 
