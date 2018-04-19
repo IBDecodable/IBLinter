@@ -8,6 +8,7 @@ class ConfigTest: XCTestCase {
         XCTAssertEqual(config.disabledRules, ["custom_class_name"])
         XCTAssertEqual(config.enabledRules, ["relative_to_margin"])
         XCTAssertEqual(config.excluded, ["Carthage"])
+        XCTAssertEqual(config.reporter, "json")
     }
 
     func testNullableConfigFile() throws {
