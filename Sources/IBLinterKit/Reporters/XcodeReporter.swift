@@ -1,17 +1,18 @@
 //
-//  Reporter.swift
+//  XcodeReporter.swift
 //  IBLinterKit
 //
-//  Created by SaitoYuta on 2017/12/11.
+//  Created by SaitoYuta on 2018/04/19.
 //
 
-import Foundation
-
-protocol Reporter {
-    func report(violation: Violation) -> String
-}
-
 struct XcodeReporter: Reporter {
+
+    let identifier: String = "xcode"
+
+    func report(violations: [Violation]) {
+        violations.map(report).forEach { print($0) }
+    }
+
     func report(violation: Violation) -> String {
         return [
             "\(violation.interfaceBuilderFile.pathString):",

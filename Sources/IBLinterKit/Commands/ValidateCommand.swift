@@ -24,7 +24,7 @@ struct ValidateCommand: CommandProtocol {
         let violations = validate(workDirectory: workDirectory, config: config)
 
         let reporter = XcodeReporter.init()
-        violations.map(reporter.report).forEach { print($0) }
+        reporter.report(violations: violations)
 
         let numberOfSeriousViolations = violations.filter { $0.level == .error }.count
         if numberOfSeriousViolations > 0 {
