@@ -23,7 +23,7 @@ struct ValidateCommand: CommandProtocol {
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
         let violations = validate(workDirectory: workDirectory, config: config)
 
-        let reporter = XcodeReporter.init()
+        let reporter = Reporters.reporter(from: config)
         reporter.report(violations: violations)
 
         let numberOfSeriousViolations = violations.filter { $0.level == .error }.count

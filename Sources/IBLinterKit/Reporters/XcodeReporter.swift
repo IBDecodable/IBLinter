@@ -7,7 +7,7 @@
 
 struct XcodeReporter: Reporter {
 
-    let identifier: String = "xcode"
+    static let identifier: String = "xcode"
 
     func report(violations: [Violation]) {
         violations.map(report).forEach { print($0) }

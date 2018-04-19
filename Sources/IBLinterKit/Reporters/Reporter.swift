@@ -6,7 +6,21 @@
 //
 
 protocol Reporter {
-    var identifier: String { get }
+    static var identifier: String { get }
 
     func report(violations: [Violation])
+}
+
+struct Reporters {
+
+    static func reporter(from config: Config) -> Reporter {
+        switch config.reporter {
+        case XcodeReporter.identifier:
+            return XcodeReporter()
+        case JSONReporter.identifier:
+            return JSONReporter()
+        default:
+            fatalError("no reporter with identifier '\(config.reporter) available'")
+        }
+    }
 }
