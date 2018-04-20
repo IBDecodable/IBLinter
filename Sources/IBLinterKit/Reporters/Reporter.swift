@@ -8,19 +8,19 @@
 protocol Reporter {
     static var identifier: String { get }
 
-    func report(violations: [Violation])
+    static func generateReport(violations: [Violation]) -> String
 }
 
 struct Reporters {
 
-    static func reporter(from config: Config) -> Reporter {
-        switch config.reporter {
+    static func reporter(from reporter: String) -> Reporter.Type {
+        switch reporter {
         case XcodeReporter.identifier:
-            return XcodeReporter()
+            return XcodeReporter.self
         case JSONReporter.identifier:
-            return JSONReporter()
+            return JSONReporter.self
         default:
-            fatalError("no reporter with identifier '\(config.reporter) available'")
+            fatalError("no reporter with identifier '\(reporter) available'")
         }
     }
 }
