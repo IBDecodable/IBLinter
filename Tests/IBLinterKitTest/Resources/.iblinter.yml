@@ -4,3 +4,4 @@ enabled_rules:
   - relative_to_margin
 excluded:
   - Carthage
+reporter: json
