@@ -12,7 +12,7 @@ import XCTest
 class ReportersTest: XCTestCase {
 
     func testJSONReporter() {
-        let reporter = JSONReporter()
+        let reporter = JSONReporter.self
 
         let path = "Tests/IBLinterKitTest/Resources/ViewTest.xib"
         let violation = Violation(interfaceBuilderFile: try! XibFile(path: path),
