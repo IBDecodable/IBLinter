@@ -23,8 +23,9 @@ struct ValidateCommand: CommandProtocol {
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
         let violations = validate(workDirectory: workDirectory, config: config)
 
-        let reporter = Reporters.reporter(from: config)
-        reporter.report(violations: violations)
+        let reporter = Reporters.reporter(from: options.reporter ?? config.reporter)
+        let report = reporter.generateReport(violations: violations)
+        print(report)
 
         let numberOfSeriousViolations = violations.filter { $0.level == .error }.count
         if numberOfSeriousViolations > 0 {
@@ -97,9 +98,17 @@ struct ValidateOptions: OptionsProtocol {
     typealias ClientError = CommandantError<()>
 
     let path: String?
+    let reporter: String?
 
-    static func evaluate(_ m: CommandMode) -> Result<ValidateCommand.Options, CommandantError<ValidateOptions.ClientError>> {
-        return ValidateOptions.init
-            <*> m <| Option.init(key: "path", defaultValue: nil, usage: "validate project root directory")
+    static func create(_ path: String?) -> (_ reporter: String?) -> ValidateOptions {
+        return { reporter in
+            self.init(path: path, reporter: reporter)
+        }
+    }
+
+    static func evaluate(_ mode: CommandMode) -> Result<ValidateCommand.Options, CommandantError<ValidateOptions.ClientError>> {
+        return create
+            <*> mode <| Option(key: "path", defaultValue: nil, usage: "validate project root directory")
+            <*> mode <| Option(key: "reporter", defaultValue: nil, usage: "the reporter used to log errors and warnings")
     }
 }

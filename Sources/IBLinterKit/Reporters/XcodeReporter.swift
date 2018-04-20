@@ -9,11 +9,11 @@ struct XcodeReporter: Reporter {
 
     static let identifier: String = "xcode"
 
-    func report(violations: [Violation]) {
-        violations.map(report).forEach { print($0) }
+    static func generateReport(violations: [Violation]) -> String  {
+        return violations.map(report).joined(separator: "\n")
     }
 
-    func report(violation: Violation) -> String {
+    static func report(violation: Violation) -> String {
         return [
             "\(violation.interfaceBuilderFile.pathString):",
             ":: ",
