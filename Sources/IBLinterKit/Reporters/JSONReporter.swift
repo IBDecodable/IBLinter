@@ -13,8 +13,8 @@ struct JSONReporter: Reporter {
 
     static func generateReport(violations: [Violation]) -> String {
         let dictionary = violations.map(toJSON)
-        let json = try! JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
-        if let jsonString = String(data: json, encoding: .utf8) {
+        if let json = try? JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted),
+            let jsonString = String(data: json, encoding: .utf8) {
             return jsonString
         }
         return ""
@@ -28,4 +28,3 @@ struct JSONReporter: Reporter {
         ]
     }
 }
-

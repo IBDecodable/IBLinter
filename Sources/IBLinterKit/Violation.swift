@@ -13,8 +13,12 @@ public struct Violation {
     let message: String
     let level: Level
 
-    enum Level: String {
+    enum Level: String, Comparable {
         case warning
         case error
+
+        static func < (lhs: Violation.Level, rhs: Violation.Level) -> Bool {
+            return lhs == .warning && rhs == .error
+        }
     }
 }

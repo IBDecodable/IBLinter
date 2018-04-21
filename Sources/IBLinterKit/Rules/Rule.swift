@@ -39,7 +39,7 @@ public struct Rules {
         var identifiers = Set(defaultRules.map({ $0.identifier }))
         identifiers.subtract(config.disabledRules)
         identifiers.formUnion(config.enabledRules)
-        
+
         return allRules.filter { identifiers.contains($0.identifier) }.map { $0.init() }
     }
 }

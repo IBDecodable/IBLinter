@@ -25,7 +25,6 @@ public struct Toolbar: XMLDecodable, ViewProtocol, KeyDecodable {
     public let translatesAutoresizingMaskIntoConstraints: Bool?
     public let userInteractionEnabled: Bool?
 
-
     public struct BarButtonItem: XMLDecodable, KeyDecodable {
         public let id: String
         public let style: String?

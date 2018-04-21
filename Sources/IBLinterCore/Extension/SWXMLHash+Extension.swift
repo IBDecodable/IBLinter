@@ -38,4 +38,3 @@ extension String: XMLAttributeDecodable {}
 extension Int: XMLAttributeDecodable {}
 extension Float: XMLAttributeDecodable {}
 extension Bool: XMLAttributeDecodable {}
-

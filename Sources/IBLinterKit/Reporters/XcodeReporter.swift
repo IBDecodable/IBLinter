@@ -9,7 +9,7 @@ struct XcodeReporter: Reporter {
 
     static let identifier: String = "xcode"
 
-    static func generateReport(violations: [Violation]) -> String  {
+    static func generateReport(violations: [Violation]) -> String {
         return violations.map(report).joined(separator: "\n")
     }
 
@@ -18,7 +18,7 @@ struct XcodeReporter: Reporter {
             "\(violation.interfaceBuilderFile.pathString):",
             ":: ",
             "\(violation.level.rawValue): ",
-            violation.message,
+            violation.message
             ].joined()
 
     }
