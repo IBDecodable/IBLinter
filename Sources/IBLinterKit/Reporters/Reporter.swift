@@ -19,6 +19,8 @@ struct Reporters {
             return XcodeReporter.self
         case JSONReporter.identifier:
             return JSONReporter.self
+        case EmojiReporter.identifier:
+            return EmojiReporter.self
         default:
             fatalError("no reporter with identifier '\(reporter) available'")
         }

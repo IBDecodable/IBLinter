@@ -145,7 +145,7 @@ public struct Constraint: XMLDecodable, KeyDecodable {
             }
         }
 
-        public static func ==(lhs: LayoutAttribute, rhs: LayoutAttribute) -> Bool {
+        public static func == (lhs: LayoutAttribute, rhs: LayoutAttribute) -> Bool {
             switch (lhs, rhs) {
             case (.left, .left), (.right, .right), (.top, .top), (.bottom, .bottom),
                  (.leading, .leading), (.trailing, .trailing), (.width, .width),

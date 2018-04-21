@@ -30,7 +30,7 @@ public struct Config: Codable {
         excluded = []
         reporter = "xcode"
     }
-    
+
     init(disabledRules: [String], enabledRules: [String], excluded: [String], reporter: String) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules

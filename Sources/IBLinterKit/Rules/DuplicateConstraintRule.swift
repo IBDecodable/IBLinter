@@ -27,6 +27,7 @@ extension Rules {
 
         private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
             return duplicateConstraints(for: view.constraints ?? []).map {
+                // swiftlint:disable:next line_length
                 let message = "duplicate constraint \($0.id) (firstItem: \($0.firstItem ?? "nil") attribute: \($0.firstAttribute.map(String.init(describing: )) ?? "nil") secondItem: \($0.secondItem ?? "nil") attribute: \($0.secondAttribute.map(String.init(describing: )) ?? "nil"))"
                 return Violation(
                     interfaceBuilderFile: file,

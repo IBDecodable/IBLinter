@@ -73,7 +73,6 @@ public func glob(pattern: String) -> [URL] {
     return results.map(URL.init(fileURLWithPath: ))
 }
 
-
 private func executeGlob(pattern: UnsafePointer<CChar>, gt: UnsafeMutablePointer<glob_t>) -> Bool {
     return 0 == glob(pattern, globFlags, nil, gt)
 }
