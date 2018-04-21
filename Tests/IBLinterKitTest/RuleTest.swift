@@ -1,4 +1,4 @@
-import IBLinterCore
+import IBDecodable
 @testable import IBLinterKit
 import XCTest
 

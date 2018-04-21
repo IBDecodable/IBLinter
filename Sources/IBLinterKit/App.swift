@@ -5,7 +5,7 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-import IBLinterCore
+import IBDecodable
 import Commandant
 
 public struct App {

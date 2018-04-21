@@ -1,5 +1,5 @@
 import XCTest
-import IBLinterCore
+import IBDecodable
 import IBLinterKit
 import SWXMLHash
 
@@ -32,7 +32,7 @@ class InterfaceBuilderParserTest: XCTestCase {
         }()
 
         func buttonState(for key: String) -> Button.State? {
-            return button.state.first(where: { $0.key == key })
+            return button.state?.first(where: { $0.key == key })
         }
 
         let normalTextColor = buttonState(for: "normal")?.color?.sRGB
@@ -62,7 +62,7 @@ class InterfaceBuilderParserTest: XCTestCase {
             return control
         }()
         XCTAssertEqual(segmentedControl.segmentControlStyle, "plain")
-        XCTAssertEqual(segmentedControl.segments![0].title, "First")
+        XCTAssertEqual(segmentedControl.segments[0].title, "First")
 
         let textField: TextField = {
             guard let textField = view.subviews![3].view as? TextField else {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import IBLinterCore
+import IBDecodable
 
 private extension StoryboardFile {
     var fileExtension: String {

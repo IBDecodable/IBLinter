@@ -1,5 +1,5 @@
 import XCTest
-import IBLinterCore
+import IBDecodable
 
 class StoryboardFileTest: XCTestCase {
 

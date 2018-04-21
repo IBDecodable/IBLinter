@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "IBDecodable",
+        "repositoryURL": "https://github.com/IBDecodable/IBDecodable.git",
+        "state": {
+          "branch": "master",
+          "revision": "de4ecab057816154d805378fb8e50103cab22af9",
+          "version": null
+        }
+      },
+      {
         "package": "Nimble",
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {
