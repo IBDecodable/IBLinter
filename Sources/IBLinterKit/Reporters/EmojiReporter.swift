@@ -26,13 +26,6 @@ struct EmojiReporter: Reporter {
         return lines.joined(separator: "\n")
     }
 
-    fileprivate static func dictionary(for violation: Violation) -> [String: Any] {
-        return [
-            "file": violation.interfaceBuilderFile.pathString,
-            "level": violation.level.rawValue,
-            "message": violation.message
-        ]
-    }
 }
 
 extension Array {
