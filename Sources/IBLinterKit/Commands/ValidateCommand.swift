@@ -7,7 +7,7 @@
 
 import Result
 import Foundation
-import IBLinterCore
+import IBDecodable
 import Commandant
 
 struct ValidateCommand: CommandProtocol {

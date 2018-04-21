@@ -6,7 +6,7 @@
 //
 
 @testable import IBLinterKit
-import IBLinterCore
+import IBDecodable
 import XCTest
 
 class ReportersTest: XCTestCase {

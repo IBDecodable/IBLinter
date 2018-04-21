@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import IBLinterCore
+import IBDecodable
 
 extension Rules {
 

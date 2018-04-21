@@ -8,12 +8,11 @@ let package = Package(
     products: [
         .executable(name: "iblinter", targets: ["iblinter"]),
         .library(name: "IBLinterKit", targets: ["IBLinterKit"]),
-        .library(name: "IBLinterCore", targets: ["IBLinterCore"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/drmohundro/SWXMLHash.git", from: "4.0.0"),
+        .package(url: "https://github.com/IBDecodable/IBDecodable.git", .branch("master")),
         .package(url: "https://github.com/Carthage/Commandant.git", .branch("master")),
         .package(url: "https://github.com/jpsim/Yams.git", from: "0.4.1")
     ],
@@ -24,11 +23,8 @@ let package = Package(
             name: "iblinter",
             dependencies: ["IBLinterKit"]),
         .target(
-            name: "IBLinterCore",
-            dependencies: ["SWXMLHash"]),
-        .target(
             name: "IBLinterKit",
-            dependencies: ["IBLinterCore", "Commandant", "Yams"]),
+            dependencies: ["IBDecodable", "Commandant", "Yams"]),
         .testTarget(name: "IBLinterKitTest",
             dependencies: ["IBLinterKit"])
     ]

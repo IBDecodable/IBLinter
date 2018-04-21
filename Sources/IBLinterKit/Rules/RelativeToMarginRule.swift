@@ -5,7 +5,7 @@
 //  Created by SaitoYuta on 2017/12/12.
 //
 
-import IBLinterCore
+import IBDecodable
 
 public extension Rules {
 

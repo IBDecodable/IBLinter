@@ -5,7 +5,7 @@
 //  Created by SaitoYuta on 2017/12/15.
 //
 
-import IBLinterCore
+import IBDecodable
 
 extension Rules {
 
@@ -28,7 +28,7 @@ extension Rules {
 
         private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
             let violation: [Violation] = {
-                if view.misplaced ?? false {
+                if view.isMisplaced ?? false {
                     let message = "\(view.customClass ?? view.elementClass) is misplaced"
                     return [Violation(interfaceBuilderFile: file, message: message, level: .error)]
                 } else {
