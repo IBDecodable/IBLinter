@@ -9,13 +9,8 @@ class InterfaceBuilderParserTest: XCTestCase {
         return InterfaceBuilderParser()
     }()
 
-    private func xmlString(fileName: String) -> String {
-        let url = URL.init(fileURLWithPath: "Tests/IBLinterKitTest/Resources/\(fileName)")
-        return try! String.init(contentsOf: url)
-    }
-
     func testParseViewController() throws {
-        let document = try parser.parseStoryboard(xml: xmlString(fileName: "ViewControllerTest.storyboard"))
+        let document = try parser.parseStoryboard(xml: xmlString(forResource: "ViewControllerTest", withExtension: "storyboard"))
         let viewController = document.scenes![0].viewController!.viewController as! ViewController
         XCTAssertEqual(viewController.id, "uo8-pZ-S8b")
 
@@ -78,7 +73,7 @@ class InterfaceBuilderParserTest: XCTestCase {
 
     func testParseDocument() throws {
 
-        let document = try parser.parseStoryboard(xml: xmlString(fileName: "ViewControllerTest.storyboard"))
+        let document = try parser.parseStoryboard(xml: xmlString(forResource: "ViewControllerTest", withExtension: "storyboard"))
         XCTAssertEqual(document.type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB")
         XCTAssertEqual(document.version, "3.0")
         XCTAssertEqual(document.toolsVersion, "13196")
@@ -91,20 +86,20 @@ class InterfaceBuilderParserTest: XCTestCase {
     }
 
     func testParseDevice() throws {
-        let document = try parser.parseStoryboard(xml: xmlString(fileName: "ViewControllerTest.storyboard"))
+        let document = try parser.parseStoryboard(xml: xmlString(forResource: "ViewControllerTest", withExtension: "storyboard"))
         XCTAssertEqual(document.device?.id, "retina4_7")
         XCTAssertEqual(document.device?.orientation, "portrait")
         XCTAssertEqual(document.device?.adaptation, "fullscreen")
     }
 
     func testParseXib() throws {
-        let document = try parser.parseXib(xml: xmlString(fileName: "ViewTest.xib"))
+        let document = try parser.parseXib(xml: xmlString(forResource: "ViewTest", withExtension: "xib"))
         XCTAssertEqual(document.views?.count, 2)
         XCTAssertNotNil(document.views)
     }
 
     func testParseTableViewCell() throws {
-        let document = try parser.parseXib(xml: xmlString(fileName: "TableViewCell.xib"))
+        let document = try parser.parseXib(xml: xmlString(forResource: "TableViewCell", withExtension: "xib"))
         let cell: TableViewCell = {
             guard let cell = document.views![0].view as? TableViewCell else {
                 fatalError()
@@ -117,7 +112,7 @@ class InterfaceBuilderParserTest: XCTestCase {
 
     func testXMLFormatValidator() {
         do {
-            _ = try parser.parseXib(xml: xmlString(fileName: "MacXibTest.xib"))
+            _ = try parser.parseXib(xml: xmlString(forResource: "MacXibTest", withExtension: "xib"))
             XCTFail("should throw error")
         } catch _ as InterfaceBuilderParser.Error {
             XCTAssertTrue(true)
