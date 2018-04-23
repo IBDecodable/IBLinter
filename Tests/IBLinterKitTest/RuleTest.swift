@@ -5,23 +5,23 @@ import XCTest
 class RuleTest: XCTestCase {
 
     func testRelativeToMargin() {
-        let path = "Tests/IBLinterKitTest/Resources/ConstraintTest.storyboard"
-        let rule = Rules.RelativeToMarginRule.init()
-        let violations = try! rule.validate(storyboard: StoryboardFile.init(path: path))
+        let url = self.url(forResource: "ConstraintTest", withExtension: "storyboard")
+        let rule = Rules.RelativeToMarginRule()
+        let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
         XCTAssertEqual(violations.count, 4)
     }
 
     func testCustomClassName() {
-        let path = "Tests/IBLinterKitTest/Resources/ViewControllerTest.storyboard"
-        let rule = Rules.CustomClassNameRule.init()
-        let violations = try! rule.validate(storyboard: StoryboardFile.init(path: path))
+        let url = self.url(forResource: "ViewControllerTest", withExtension: "storyboard")
+        let rule = Rules.CustomClassNameRule()
+        let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
         XCTAssertEqual(violations.count, 1)
     }
 
     func testDuplicateConstraint() {
-        let path = "Tests/IBLinterKitTest/Resources/DuplicateConstraint.xib"
-        let rule = Rules.DuplicateConstraintRule.init()
-        let violations = try! rule.validate(xib: XibFile.init(path: path))
+        let url = self.url(forResource: "DuplicateConstraint", withExtension: "xib")
+        let rule = Rules.DuplicateConstraintRule()
+        let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 2)
     }
 
@@ -47,5 +47,25 @@ class RuleTest: XCTestCase {
         let rules = Rules.rules(config)
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(defaultEnabledRules))
         XCTAssertEqual(rules.count, defaultEnabledRules.count)
+    }
+
+}
+
+// MARK: resource utils
+
+extension XCTestCase {
+    var bundle: Bundle {
+        return Bundle(for: type(of: self))
+    }
+    func url(forResource resource: String, withExtension ext: String) -> URL {
+        if let url = bundle.url(forResource: resource, withExtension: ext) {
+            return url
+        }
+        return URL(fileURLWithPath: "Tests/IBLinterKitTest/Resources/\(resource).\(ext)")
+    }
+    
+    func xmlString(forResource resource: String, withExtension ext: String) -> String {
+        let url = self.url(forResource: resource, withExtension: ext)
+        return try! String.init(contentsOf: url)
     }
 }

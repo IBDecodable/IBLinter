@@ -14,13 +14,13 @@ class ReportersTest: XCTestCase {
     func testJSONReporter() {
         let reporter = JSONReporter.self
 
-        let path = "Tests/IBLinterKitTest/Resources/ViewTest.xib"
-        let violation = Violation(interfaceBuilderFile: try! XibFile(path: path),
+        let url = self.url(forResource: "ViewTest", withExtension: "xib")
+        let violation = Violation(interfaceBuilderFile: try! XibFile(url: url),
                                   message: "Violation Reason 1.", level: .error)
         let json = reporter.toJSON(violation: violation)
         let expectedJSON: [String: Any] = [
             "message": "Violation Reason 1.",
-            "file": path,
+            "file": url.absoluteString,
             "level": "error"
         ]
         XCTAssertEqual(json, expectedJSON)

@@ -4,8 +4,8 @@ import IBDecodable
 class StoryboardFileTest: XCTestCase {
 
     func testStoryboardFile() {
-        let url = "Tests/IBLinterKitTest/Resources/ViewControllerTest.storyboard"
-        let storyboardFile = try! StoryboardFile.init(path: url)
+        let url = self.url(forResource: "ViewControllerTest", withExtension: "storyboard")
+        let storyboardFile = try! StoryboardFile.init(url: url)
         XCTAssertEqual(storyboardFile.fileName, "ViewControllerTest.storyboard")
     }
 }

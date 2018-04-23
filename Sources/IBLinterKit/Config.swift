@@ -46,8 +46,12 @@ public struct Config: Codable {
         reporter = try container.decodeIfPresent(Optional<String>.self, forKey: .reporter).flatMap { $0 } ?? "xcode"
     }
 
+    public static func load(_ url: URL) throws -> Config {
+        return try YAMLDecoder.init().decode(from: String.init(contentsOf: url))
+    }
+
     public static func load(from configPath: String, fileName: String = fileName) throws -> Config {
-        let path = URL.init(fileURLWithPath: configPath).appendingPathComponent(fileName)
-        return try YAMLDecoder.init().decode(from: String.init(contentsOf: path))
+        let url = URL.init(fileURLWithPath: configPath).appendingPathComponent(fileName)
+        return try load(url)
     }
 }
