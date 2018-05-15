@@ -22,7 +22,7 @@ extension Rules {
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
-            let views = scenes.flatMap { $0.viewController?.viewController.rootView }
+            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
 

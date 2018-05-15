@@ -17,8 +17,8 @@ public extension Rules {
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             let scenes = storyboard.document.scenes
-            let viewControllers = scenes?.flatMap { $0.viewController }
-            return viewControllers?.flatMap { $0.viewController.rootView }
+            let viewControllers = scenes?.compactMap { $0.viewController }
+            return viewControllers?.compactMap { $0.viewController.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
 
@@ -31,7 +31,7 @@ public extension Rules {
             let relativeToMarginKeys: [Constraint.LayoutAttribute] = [
                 .leadingMargin, .trailingMargin, .topMargin, .bottomMargin
             ]
-            let attributes = constraints.flatMap { [$0.firstAttribute, $0.secondAttribute] }.flatMap { $0 }
+            let attributes = constraints.flatMap { [$0.firstAttribute, $0.secondAttribute] }.compactMap { $0 }
             let violations: [Violation] = attributes.filter { relativeToMarginKeys.contains($0) }
                 .map { at in
                     let message = " \(at) is deprecated in \(view.customClass ?? view.elementClass)"
