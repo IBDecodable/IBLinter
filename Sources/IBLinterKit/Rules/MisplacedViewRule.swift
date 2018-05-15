@@ -26,11 +26,11 @@ extension Rules {
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
-        private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
                 if view.isMisplaced ?? false {
                     let message = "\(view.customClass ?? view.elementClass) is misplaced"
-                    return [Violation(interfaceBuilderFile: file, message: message, level: .error)]
+                    return [Violation(pathString: file.pathString, message: message, level: .error)]
                 } else {
                     return []
                 }

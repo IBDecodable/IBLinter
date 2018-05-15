@@ -19,7 +19,7 @@ public extension Rules {
             let viewControllers = storyboard.document.scenes?.flatMap { $0.viewController }
             return viewControllers?.flatMap {
                 $0.viewController.customClass != $0.viewController.storyboardIdentifier ?
-                    Violation(interfaceBuilderFile: storyboard,
+                    Violation(pathString: storyboard.pathString,
                               message: "\(String(describing: $0.viewController.customClass)) should have the same Storyboard Id",
                         level: .error) : nil
                 } ?? []

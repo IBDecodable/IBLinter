@@ -12,7 +12,7 @@ struct EmojiReporter: Reporter {
 
     public static func generateReport(violations: [Violation]) -> String {
         return violations.group { violation in
-            violation.interfaceBuilderFile.pathString
+            violation.pathString
             }.map(report).joined(separator: "\n")
     }
 

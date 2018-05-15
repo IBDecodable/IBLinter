@@ -26,7 +26,7 @@ public extension Rules {
             return xib.document.views?.flatMap { validate(for: $0.view, file: xib) } ?? []
         }
 
-        private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             guard let constraints = view.constraints else { return view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [] }
             let relativeToMarginKeys: [Constraint.LayoutAttribute] = [
                 .leadingMargin, .trailingMargin, .topMargin, .bottomMargin
@@ -35,7 +35,7 @@ public extension Rules {
             let violations: [Violation] = attributes.filter { relativeToMarginKeys.contains($0) }
                 .map { at in
                     let message = " \(at) is deprecated in \(view.customClass ?? view.elementClass)"
-                    return Violation.init(interfaceBuilderFile: file, message: message, level: .warning)
+                    return Violation.init(pathString: file.pathString, message: message, level: .warning)
             }
             if let subviews = view.subviews {
                 return subviews.flatMap { validate(for: $0.view, file: file) } + violations

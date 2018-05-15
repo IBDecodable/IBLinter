@@ -9,7 +9,7 @@ import IBDecodable
 import Foundation
 
 public struct Violation {
-    let interfaceBuilderFile: InterfaceBuilderFile
+    let pathString: String
     let message: String
     let level: Level
 

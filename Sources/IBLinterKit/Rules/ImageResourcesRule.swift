@@ -43,13 +43,13 @@ extension Rules {
             )
         }
 
-        private func validate(for images: [Image], imageViews: [ImageView], file: InterfaceBuilderFile) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], file: T) -> [Violation] {
             let imageNames = images.map { $0.name }
             let assetNames = assetsCatalogs.flatMap { $0.names }
             return imageViews.filter { !(imageNames.contains($0.image) && assetNames.contains($0.image)) }
                 .map {
                     Violation(
-                        interfaceBuilderFile: file,
+                        pathString: file.pathString,
                         message: "\($0.image) not found",
                         level: .error)
             }

@@ -25,12 +25,12 @@ extension Rules {
             return xib.document.views?.flatMap { validate(for: $0.view, file: xib)} ?? []
         }
 
-        private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             return duplicateConstraints(for: view.constraints ?? []).map {
                 // swiftlint:disable:next line_length
                 let message = "duplicate constraint \($0.id) (firstItem: \($0.firstItem ?? "nil") attribute: \($0.firstAttribute.map(String.init(describing: )) ?? "nil") secondItem: \($0.secondItem ?? "nil") attribute: \($0.secondAttribute.map(String.init(describing: )) ?? "nil"))"
                 return Violation(
-                    interfaceBuilderFile: file,
+                    pathString: file.pathString,
                     message: message,
                     level: .warning)
             }

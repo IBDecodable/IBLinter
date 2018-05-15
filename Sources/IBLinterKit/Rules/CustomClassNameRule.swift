@@ -35,7 +35,7 @@ extension Rules {
             }
             if customClass == storyboard.fileNameWithoutExtension { return [] }
             let message = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
-            return [Violation.init(interfaceBuilderFile: storyboard, message: message, level: .error)]
+            return [Violation.init(pathString: storyboard.pathString, message: message, level: .error)]
         }
 
         public func validate(xib: XibFile) -> [Violation] { return [] }
