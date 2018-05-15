@@ -12,7 +12,7 @@ extension Rules {
 
     struct ImageResourcesRule: Rule {
 
-        static let identifier: String = "resources"
+        static let identifier: String = "image_resources"
 
         let assetsCatalogs: [AssetsCatalog]
 
@@ -57,13 +57,13 @@ extension Rules {
     }
 }
 
-extension AssetsCatalog {
+private extension AssetsCatalog {
     var names: [String] {
         return entries.flatMap { $0.names }
     }
 }
 
-extension AssetsCatalog.Entry {
+private extension AssetsCatalog.Entry {
     var names: [String] {
         switch self {
         case .group(_, let items):
