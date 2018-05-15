@@ -13,7 +13,7 @@ extension Rules {
 
         public static var identifier: String = "enable_autolayout"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let useAutolayout = storyboard.document.useAutolayout else { return [] }

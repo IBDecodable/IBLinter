@@ -13,7 +13,7 @@ public extension Rules {
 
         public static let identifier: String = "storyboard_viewcontroller_id"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             let viewControllers = storyboard.document.scenes?.flatMap { $0.viewController }

@@ -62,7 +62,8 @@ struct ValidateCommand: CommandProtocol {
                 fatalError("parse error \($0.relativePath): \(error)")
             }
         }
-        let violations = Rules.rules(config).flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
+        let context = Context(config: config, workDirectory: workDirectory)
+        let violations = Rules.rules(context).flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
         return violations
     }
 
@@ -89,7 +90,8 @@ struct ValidateCommand: CommandProtocol {
                 fatalError("parse error \($0.relativePath): \(error)")
             }
         }
-        let violations = Rules.rules(config).flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
+        let context = Context(config: config, workDirectory: workDirectory)
+        let violations = Rules.rules(context).flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
         return violations
     }
 }

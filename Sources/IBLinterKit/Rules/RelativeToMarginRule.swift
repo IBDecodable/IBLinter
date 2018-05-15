@@ -13,7 +13,7 @@ public extension Rules {
 
         public static let identifier: String = "relative_to_margin"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             let scenes = storyboard.document.scenes

@@ -14,7 +14,7 @@ extension Rules {
 
         public static let identifier: String = "duplicate_constraint"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             return storyboard.document.scenes?.flatMap { $0.viewController?.viewController.rootView }

@@ -23,7 +23,7 @@ extension Rules {
 
         public static let identifier: String = "custom_class_name"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let viewController = storyboard.document.scenes?.first?.viewController,

@@ -13,7 +13,7 @@ extension Rules {
 
         public static var identifier: String = "misplaced"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }

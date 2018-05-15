@@ -77,7 +77,7 @@ class InterfaceBuilderParserTest: XCTestCase {
         XCTAssertEqual(document.type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB")
         XCTAssertEqual(document.version, "3.0")
         XCTAssertEqual(document.toolsVersion, "13196")
-        XCTAssertEqual(document.targetRuntime, "iOS.CocoaTouch")
+        XCTAssertEqual(document.targetRuntime, .iOSCocoaTouch)
         XCTAssertEqual(document.propertyAccessControl, "none")
         XCTAssertEqual(document.useAutolayout, true)
         XCTAssertEqual(document.useTraitCollections, true)

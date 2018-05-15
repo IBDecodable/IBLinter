@@ -8,7 +8,7 @@
 import IBDecodable
 
 public protocol Rule {
-    init()
+    init(context: Context)
     static var identifier: String { get }
     func validate(storyboard: StoryboardFile) -> [Violation]
     func validate(xib: XibFile) -> [Violation]
@@ -23,7 +23,8 @@ public struct Rules {
             MisplacedViewRule.self,
             ForceToEnableAutoLayoutRule.self,
             DuplicateConstraintRule.self,
-            StoryboardViewControllerId.self
+            StoryboardViewControllerId.self,
+            ImageResourcesRule.self
         ]
     }
 
@@ -35,11 +36,11 @@ public struct Rules {
         ]
     }
 
-    static func rules(_ config: Config) -> [Rule] {
+    static func rules(_ context: Context) -> [Rule] {
         var identifiers = Set(defaultRules.map({ $0.identifier }))
-        identifiers.subtract(config.disabledRules)
-        identifiers.formUnion(config.enabledRules)
+        identifiers.subtract(context.config.disabledRules)
+        identifiers.formUnion(context.config.enabledRules)
 
-        return allRules.filter { identifiers.contains($0.identifier) }.map { $0.init() }
+        return allRules.filter { identifiers.contains($0.identifier) }.map { $0.init(context: context) }
     }
 }
