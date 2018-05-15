@@ -15,7 +15,7 @@ class ReportersTest: XCTestCase {
         let reporter = JSONReporter.self
 
         let url = self.url(forResource: "ViewTest", withExtension: "xib")
-        let violation = Violation(interfaceBuilderFile: try! XibFile(url: url),
+        let violation = Violation(pathString: url.absoluteString,
                                   message: "Violation Reason 1.", level: .error)
         let json = reporter.toJSON(violation: violation)
         let expectedJSON: [String: Any] = [

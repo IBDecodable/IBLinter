@@ -89,7 +89,7 @@ class InterfaceBuilderParserTest: XCTestCase {
         let document = try parser.parseStoryboard(xml: xmlString(forResource: "ViewControllerTest", withExtension: "storyboard"))
         XCTAssertEqual(document.device?.id, "retina4_7")
         XCTAssertEqual(document.device?.orientation, "portrait")
-        XCTAssertEqual(document.device?.adaptation, "fullscreen")
+        XCTAssertEqual(document.device?.adaptation?.id, "fullscreen")
     }
 
     func testParseXib() throws {
