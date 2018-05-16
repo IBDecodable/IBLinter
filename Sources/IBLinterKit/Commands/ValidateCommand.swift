@@ -43,7 +43,7 @@ struct ValidateCommand: CommandProtocol {
         let paths = glob(pattern: "\(workDirectory)/**/*.storyboard")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.storyboard") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
-        let storyboards: [StoryboardFile] = lintablePaths.flatMap {
+        let storyboards: [StoryboardFile] = lintablePaths.compactMap {
             do {
                 return try StoryboardFile.init(path: $0.relativePath)
             } catch let error as InterfaceBuilderParser.Error {
@@ -71,7 +71,7 @@ struct ValidateCommand: CommandProtocol {
         let paths = glob(pattern: "\(workDirectory)/**/*.xib")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.xib") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
-        let xibs: [XibFile] = lintablePaths.flatMap {
+        let xibs: [XibFile] = lintablePaths.compactMap {
             do {
                 return try XibFile.init(path: $0.relativePath)
             } catch let error as InterfaceBuilderParser.Error {

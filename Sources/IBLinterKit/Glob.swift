@@ -26,7 +26,7 @@ private func expandGlobstar(pattern: String) -> [String] {
     var directories: [String]
 
     do {
-        directories = try fileManager.subpathsOfDirectory(atPath: firstPart).flatMap { subpath in
+        directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in
             let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)
             guard fileManager.isDirectory(fullPath) else { return nil }
             return fullPath
