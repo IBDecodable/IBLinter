@@ -7,6 +7,7 @@
 
 import Foundation
 import IBDecodable
+import xcproj
 
 extension Rules {
 
@@ -15,6 +16,7 @@ extension Rules {
         static let identifier: String = "image_resources"
 
         let assetsCatalogs: [AssetsCatalog]
+        let xcodeproj: [XcodeProj]
 
         public init(context: Context) {
             let paths = glob(pattern: "\(context.workDirectory)/**/*.xcassets")
@@ -25,6 +27,9 @@ extension Rules {
 
         init(catalogs: [AssetsCatalog]) {
             self.assetsCatalogs = catalogs
+            self.xcodeproj = glob(pattern: "*.xcodeproj").compactMap {
+                try? XcodeProj.init(pathString: $0.path)
+            }
         }
 
         func validate(xib: XibFile) -> [Violation] {
@@ -45,7 +50,13 @@ extension Rules {
 
         private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], file: T) -> [Violation] {
             let imageNames = images.map { $0.name }
-            let assetNames = assetsCatalogs.flatMap { $0.names }
+            let catalogAssetNames = assetsCatalogs.flatMap { $0.names }
+            let xcodeprojAssetNames = xcodeproj.flatMap {
+                $0.pbxproj.objects.fileReferences.compactMap {
+                    $0.value.name
+                }
+            }
+            let assetNames = catalogAssetNames + xcodeprojAssetNames
             return imageViews.filter { !(imageNames.contains($0.image) && assetNames.contains($0.image)) }
                 .map {
                     Violation(
