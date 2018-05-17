@@ -77,7 +77,7 @@ class InterfaceBuilderParserTest: XCTestCase {
         XCTAssertEqual(document.type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB")
         XCTAssertEqual(document.version, "3.0")
         XCTAssertEqual(document.toolsVersion, "13196")
-        XCTAssertEqual(document.targetRuntime, "iOS.CocoaTouch")
+        XCTAssertEqual(document.targetRuntime, .iOSCocoaTouch)
         XCTAssertEqual(document.propertyAccessControl, "none")
         XCTAssertEqual(document.useAutolayout, true)
         XCTAssertEqual(document.useTraitCollections, true)
@@ -89,7 +89,7 @@ class InterfaceBuilderParserTest: XCTestCase {
         let document = try parser.parseStoryboard(xml: xmlString(forResource: "ViewControllerTest", withExtension: "storyboard"))
         XCTAssertEqual(document.device?.id, "retina4_7")
         XCTAssertEqual(document.device?.orientation, "portrait")
-        XCTAssertEqual(document.device?.adaptation, "fullscreen")
+        XCTAssertEqual(document.device?.adaptation?.id, "fullscreen")
     }
 
     func testParseXib() throws {

@@ -13,13 +13,13 @@ public extension Rules {
 
         public static let identifier: String = "storyboard_viewcontroller_id"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
-            let viewControllers = storyboard.document.scenes?.flatMap { $0.viewController }
-            return viewControllers?.flatMap {
+            let viewControllers = storyboard.document.scenes?.compactMap { $0.viewController }
+            return viewControllers?.compactMap {
                 $0.viewController.customClass != $0.viewController.storyboardIdentifier ?
-                    Violation(interfaceBuilderFile: storyboard,
+                    Violation(pathString: storyboard.pathString,
                               message: "\(String(describing: $0.viewController.customClass)) should have the same Storyboard Id",
                         level: .error) : nil
                 } ?? []

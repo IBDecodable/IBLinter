@@ -22,7 +22,7 @@ struct JSONReporter: Reporter {
 
     static func toJSON(violation: Violation) -> [String: Any] {
         return [
-            "file": violation.interfaceBuilderFile.pathString,
+            "file": violation.pathString,
             "level": violation.level.rawValue,
             "message": violation.message
         ]

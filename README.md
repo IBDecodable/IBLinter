@@ -61,14 +61,15 @@ Alternatively, if you've installed IBLinter via CocoaPods the script should look
 
 ## Rules
 
-| Rule id                | description                                                                    |
-|:-----------------------|:-------------------------------------------------------------------------------|
-| `custom_class_name`    | Custom class name of ViewController in storyboard should be same as file name. |
-| `relative_to_margin`   | Forbid to use `relative to margin` option.                                     |
-| `misplaced`            | Display error when views are misplaced.                                        |
-| `enable_autolayout`    | Force to use `useAutolayout` option                                            |
-| `duplicate_constraint` | Display warning when view has duplicated constraint.                           |
-| `storyboard_viewcontroller_id` | Check that Storyboard ID same as ViewController class name. |
+| Rule id                        | description                                                                    |
+|:-------------------------------|:-------------------------------------------------------------------------------|
+| `custom_class_name`            | Custom class name of ViewController in storyboard should be same as file name. |
+| `relative_to_margin`           | Forbid to use `relative to margin` option.                                     |
+| `misplaced`                    | Display error when views are misplaced.                                        |
+| `enable_autolayout`            | Force to use `useAutolayout` option                                            |
+| `duplicate_constraint`         | Display warning when view has duplicated constraint.                           |
+| `storyboard_viewcontroller_id` | Check that Storyboard ID same as ViewController class name.                    |
+| `image_resources`              | Check if image resouces are valid.                                           |
 
 
 Pull requests are encouraged.

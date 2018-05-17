@@ -13,7 +13,7 @@ extension Rules {
 
         public static var identifier: String = "enable_autolayout"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let useAutolayout = storyboard.document.useAutolayout else { return [] }
@@ -25,9 +25,9 @@ extension Rules {
             return violation(useAutolayout: useAutolayout, file: xib)
         }
 
-        private func violation(useAutolayout: Bool, file: InterfaceBuilderFile) -> [Violation] {
+        private func violation<T: InterfaceBuilderFile>(useAutolayout: Bool, file: T) -> [Violation] {
             let message = "\(file.fileName) is not enabled to use Autolayout."
-            return useAutolayout ? [] : [Violation(interfaceBuilderFile: file, message: message, level: .warning)]
+            return useAutolayout ? [] : [Violation(pathString: file.pathString, message: message, level: .warning)]
         }
     }
 }

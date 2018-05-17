@@ -13,7 +13,7 @@ extension Rules {
 
         public static var identifier: String = "misplaced"
 
-        public init() {}
+        public init(context: Context) {}
 
         public func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
@@ -22,15 +22,15 @@ extension Rules {
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
-            let views = scenes.flatMap { $0.viewController?.viewController.rootView }
+            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
-        private func validate(for view: ViewProtocol, file: InterfaceBuilderFile) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
                 if view.isMisplaced ?? false {
                     let message = "\(view.customClass ?? view.elementClass) is misplaced"
-                    return [Violation(interfaceBuilderFile: file, message: message, level: .error)]
+                    return [Violation(pathString: file.pathString, message: message, level: .error)]
                 } else {
                     return []
                 }

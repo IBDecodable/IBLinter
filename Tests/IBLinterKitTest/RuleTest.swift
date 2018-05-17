@@ -4,23 +4,27 @@ import XCTest
 
 class RuleTest: XCTestCase {
 
+    func context(from config: Config) -> Context {
+        return Context.init(config: config, workDirectory: FileManager.default.currentDirectoryPath)
+    }
+
     func testRelativeToMargin() {
         let url = self.url(forResource: "ConstraintTest", withExtension: "storyboard")
-        let rule = Rules.RelativeToMarginRule()
+        let rule = Rules.RelativeToMarginRule(context: context(from: .default))
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
         XCTAssertEqual(violations.count, 4)
     }
 
     func testCustomClassName() {
         let url = self.url(forResource: "ViewControllerTest", withExtension: "storyboard")
-        let rule = Rules.CustomClassNameRule()
+        let rule = Rules.CustomClassNameRule(context: context(from: .default))
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
         XCTAssertEqual(violations.count, 1)
     }
 
     func testDuplicateConstraint() {
         let url = self.url(forResource: "DuplicateConstraint", withExtension: "xib")
-        let rule = Rules.DuplicateConstraintRule()
+        let rule = Rules.DuplicateConstraintRule(context: context(from: .default))
         let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 2)
     }
@@ -28,7 +32,7 @@ class RuleTest: XCTestCase {
     func testDefaultEnabledRules() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
         let config = Config(disabledRules: [], enabledRules: [], excluded: [], reporter: "xcode")
-        let rules = Rules.rules(config)
+        let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(defaultEnabledRules))
         XCTAssertEqual(rules.count, defaultEnabledRules.count)
     }
@@ -36,7 +40,7 @@ class RuleTest: XCTestCase {
     func testDisableDefaultEnabledRules() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
         let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], reporter: "xcode")
-        let rules = Rules.rules(config)
+        let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set())
         XCTAssertEqual(rules.count, 0)
     }
@@ -44,11 +48,18 @@ class RuleTest: XCTestCase {
     func testDuplicatedEnabledRules() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
         let config = Config(disabledRules: [], enabledRules: defaultEnabledRules, excluded: [], reporter: "xcode")
-        let rules = Rules.rules(config)
+        let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(defaultEnabledRules))
         XCTAssertEqual(rules.count, defaultEnabledRules.count)
     }
 
+    func testImageResources() {
+        let url = self.url(forResource: "StoryboardAsset", withExtension: "storyboard")
+        let assetURL = self.url(forResource: "Media", withExtension: "xcassets")
+        let rule = Rules.ImageResourcesRule(catalogs: [.init(path: assetURL.path)])
+        let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
+        XCTAssertEqual(violations.count, 1)
+    }
 }
 
 // MARK: resource utils
