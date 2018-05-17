@@ -36,10 +36,12 @@ struct ValidateCommand: CommandProtocol {
     }
 
     private func validate(workDirectory: String, config: Config) -> [Violation] {
-        return validateXib(workDirectory: workDirectory, config: config) + validateStoryboard(workDirectory: workDirectory, config: config)
+        let context = Context(config: config, workDirectory: workDirectory)
+        let rules = Rules.rules(context)
+        return validateXib(workDirectory: workDirectory, rules: rules, config: config) + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
     }
 
-    public func validateStoryboard(workDirectory: String, config: Config) -> [Violation] {
+    public func validateStoryboard(workDirectory: String, rules: [Rule], config: Config) -> [Violation] {
         let paths = glob(pattern: "\(workDirectory)/**/*.storyboard")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.storyboard") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
@@ -62,12 +64,11 @@ struct ValidateCommand: CommandProtocol {
                 fatalError("parse error \($0.relativePath): \(error)")
             }
         }
-        let context = Context(config: config, workDirectory: workDirectory)
-        let violations = Rules.rules(context).flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
+        let violations = rules.flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
         return violations
     }
 
-    public func validateXib(workDirectory: String, config: Config) -> [Violation] {
+    public func validateXib(workDirectory: String, rules: [Rule], config: Config) -> [Violation] {
         let paths = glob(pattern: "\(workDirectory)/**/*.xib")
         let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.xib") }
         let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
@@ -90,8 +91,7 @@ struct ValidateCommand: CommandProtocol {
                 fatalError("parse error \($0.relativePath): \(error)")
             }
         }
-        let context = Context(config: config, workDirectory: workDirectory)
-        let violations = Rules.rules(context).flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
+        let violations = rules.flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
         return violations
     }
 }
