@@ -36,10 +36,14 @@ $ make install
 
 You can see all description by `iblinter help`
 
-- `lint` prints lint warnings and errors (default command)
-	- `--path` default is current directory.
+```
+$ iblinter help
+Available commands:
 
-
+   help      Display general or command-specific help
+   lint      Print lint warnings and errors (default command)
+   version   Display the current version of SwiftLint
+```
 
 ### Xcode
 
