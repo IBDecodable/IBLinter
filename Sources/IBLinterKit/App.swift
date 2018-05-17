@@ -16,6 +16,7 @@ public struct App {
         let registry = CommandRegistry<CommandantError<()>>()
         registry.register(ValidateCommand.init())
         registry.register(HelpCommand.init(registry: registry))
+        registry.register(VersionCommand.init())
 
         registry.main(defaultVerb: ValidateCommand.init().verb) { (error) in
             print(String.init(describing: error))
