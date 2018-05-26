@@ -7,7 +7,7 @@ let package = Package(
     name: "IBLinter",
     products: [
         .executable(name: "iblinter", targets: ["iblinter"]),
-        .library(name: "IBLinterKit", targets: ["IBLinterKit"]),
+        .library(name: "IBLinterKit", type: .dynamic, targets: ["IBLinterKit"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.

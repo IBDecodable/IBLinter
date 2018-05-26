@@ -1,8 +1,9 @@
 PREFIX?=/usr/local
-TEMPORARY_FOLDER=/tmp/IBLinter.dst
+SWIFT_LIB_FILES = .build/release/libIBLinterKit.dylib .build/release/*.swiftmodule
+C_LIB_DIRS = .build/release/CYaml.build
 
 build:
-		swift build --disable-sandbox -c release -Xswiftc -static-stdlib
+		swift build --disable-sandbox -c release --static-swift-stdlib
 
 clean_build:
 		rm -rf bin
@@ -13,7 +14,10 @@ clean_build:
 
 install: build
 		mkdir -p "$(PREFIX)/bin"
+		mkdir -p "$(PREFIX)/lib/iblinter"
 		cp -f ".build/release/iblinter" "$(PREFIX)/bin/iblinter"
+		cp -f $(SWIFT_LIB_FILES) "$(PREFIX)/lib/iblinter"
+		cp -rf $(C_LIB_DIRS) "$(PREFIX)/lib/iblinter"
 
 publish: clean_build
 		brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) iblinter

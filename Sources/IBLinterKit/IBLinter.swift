@@ -1,5 +1,5 @@
 //
-//  App.swift
+//  IBLinter.swift
 //  IBLinterKit
 //
 //  Created by SaitoYuta on 2017/12/11.
@@ -8,11 +8,11 @@
 import IBDecodable
 import Commandant
 
-public struct App {
+public struct IBLinter {
 
     public init() {}
 
-    public func main() {
+    public func run() {
         let registry = CommandRegistry<CommandantError<()>>()
         registry.register(ValidateCommand.init())
         registry.register(HelpCommand.init(registry: registry))
@@ -23,4 +23,11 @@ public struct App {
         }
     }
 
+}
+
+extension IBLinter {
+
+    public func addRule<R: Rule>(_ ruleType: R.Type) {
+        Rules.allRules.append(ruleType)
+    }
 }
