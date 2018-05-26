@@ -7,23 +7,13 @@
 
 import Foundation
 import PathKit
+import Files
+import IBLinterKit
 
 class IBLinterRunner {
-    let ibLinterFile: Path
-    init(ibLinterFile: Path) {
-        self.ibLinterFile = ibLinterFile
-    }
-
-    let potentialFolders = [
-        Path.current + "/Pods/IBLinter/lib",
-        Path("/usr/local/lib/iblinter")
-    ]
-
-    func dylibPath() -> Path? {
-        guard let libPath = potentialFolders.first(where: { ($0 + "libIBLinterKit.dylib").exists }) else {
-            return nil
-        }
-        return libPath
+    let ibLinterfile: Path
+    init(ibLinterfile: Path) {
+        self.ibLinterfile = ibLinterfile
     }
 
     func run() {
@@ -46,19 +36,36 @@ class IBLinterRunner {
             return Path.init(pathString)
         }
 
-        guard let dylib = dylibPath() else {
-            print("Could not find a libIBLinterKit to link against at any of: \(potentialFolders)")
+        guard let dylib = Runtime.dylibPath() else {
+            print("Could not find a libIBLinterKit to link against at any of: \(Runtime.potentialFolders)")
             exit(1)
         }
 
-        let process = Process()
-        let swift = which("swift")
-        let arguments = [
+        let marathonPath = try! Runtime.resolvePackages(ibLinterfile: ibLinterfile)
+        let artifactPaths = [".build/debug", ".build/release"]
+
+        var arguments = [
             "-L", dylib.string,
             "-I", dylib.string,
-            "-lIBLinterKit",
-            ibLinterFile.string
+            "-lIBLinterKit"
         ]
+        if let marathonLibPath = artifactPaths.map({ marathonPath + $0 }).first(where: { $0.exists }) {
+            arguments += [
+                "-L", marathonLibPath.string,
+                "-I", marathonLibPath.string,
+                "-lMarathonDependencies",
+            ]
+        }
+        arguments += [ibLinterfile.string]
+        arguments += Array(CommandLine.arguments.dropFirst())
+        let process = Process()
+        let swift = which("swift")
+        let inputPipe = Pipe()
+        FileHandle.standardInput.writeabilityHandler = {
+            inputPipe.fileHandleForWriting.write($0.availableData)
+        }
+        process.standardInput = inputPipe
+
         process.launchPath = swift.string
         process.arguments = arguments
 

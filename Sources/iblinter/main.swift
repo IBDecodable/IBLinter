@@ -1,10 +1,8 @@
 import IBLinterKit
 import PathKit
 
-let iblinterFile = Path("./IBLinterFile.swift")
-
-if iblinterFile.exists {
-    IBLinterRunner(ibLinterFile: iblinterFile).run()
+if Runtime.ibLinterfile.exists {
+    IBLinterRunner(ibLinterfile: Runtime.ibLinterfile).run()
 } else {
     let app = IBLinter()
     app.run()

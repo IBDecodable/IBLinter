@@ -15,6 +15,7 @@ public struct IBLinter {
     public func run() {
         let registry = CommandRegistry<CommandantError<()>>()
         registry.register(ValidateCommand.init())
+        registry.register(EditCommand.init())
         registry.register(HelpCommand.init(registry: registry))
         registry.register(VersionCommand.init())
 
