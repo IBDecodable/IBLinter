@@ -96,11 +96,11 @@ You can configure IBLinter by adding a `.iblinter.yml` file from project root di
 
 You can configure `custom_module` rule by `CustomModuleConfig` list.
 
-| key        | description                                            |
-|:-----------|:------------------------------------------------------ |
-| `module`   | Module name.                                           |
-| `included` | Path to `custom_module` lint of the module.            |
-| `excluded` | Path to ignore for `custom_module` lint of the module. |
+| key        | description                                                                  |
+|:-----------|:---------------------------------------------------------------------------- |
+| `module`   | Module name.                                                                 |
+| `included` | Path to `*.swift` classes of the module for `custom_module` lint.            |
+| `excluded` | Path to ignore for `*.swift` classes of the module for `custom_module` lint. |
 
 
 ```yaml
