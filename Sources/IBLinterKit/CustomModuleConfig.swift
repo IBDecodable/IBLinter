@@ -1,8 +1,8 @@
 //
-//  Config.swift
+//  CustomModuleConfig.swift
 //  IBLinterKit
 //
-//  Created by SaitoYuta on 2017/12/13.
+//  Created by FukagawaSatoru on 2018/7/3.
 //
 
 import Foundation
