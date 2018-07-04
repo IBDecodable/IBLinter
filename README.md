@@ -92,7 +92,7 @@ You can configure IBLinter by adding a `.iblinter.yml` file from project root di
 | `excluded`           | Path to ignore for lint.    |
 | `custom_module_rule` | Custom module rule configs. |
 
-## CustomModuleConfig
+### CustomModuleConfig
 
 You can configure `custom_module` rule by `CustomModuleConfig` list.
 
