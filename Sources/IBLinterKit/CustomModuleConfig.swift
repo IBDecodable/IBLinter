@@ -10,29 +10,34 @@ import Yams
 
 public struct CustomModuleConfig: Codable {
     public let module: String
-    public let classes: [String]
+    public let included: [String]
+    public let excluded: [String]
 
     enum CodingKeys: String, CodingKey {
         case module = "module"
-        case classes = "classes"
+        case included = "included"
+        case excluded = "excluded"
     }
 
     public static let `default` = CustomModuleConfig.init()
 
     private init() {
         module = ""
-        classes = []
+        included = []
+        excluded = []
     }
 
-    init(module: String, classes: [String]) {
+    init(module: String, included: [String], excluded: [String]) {
         self.module = module
-        self.classes = classes
+        self.included = included
+        self.excluded = excluded
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         module = try container.decodeIfPresent(Optional<String>.self, forKey: .module).flatMap { $0 } ?? ""
-        classes = try container.decodeIfPresent(Optional<[String]>.self, forKey: .classes).flatMap { $0 } ?? []
+        included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
+        excluded = try container.decodeIfPresent(Optional<[String]>.self, forKey: .excluded).flatMap { $0 } ?? []
     }
 
 }
