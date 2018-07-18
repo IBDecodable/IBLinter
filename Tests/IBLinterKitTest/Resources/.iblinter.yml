@@ -5,3 +5,10 @@ enabled_rules:
 excluded:
   - Carthage
 reporter: json
+custom_module_rule:
+  - module: UIComponents
+    included:
+      - UIComponents/Classes
+    excluded:
+      - UIComponents/Classes/Config/Generated
+

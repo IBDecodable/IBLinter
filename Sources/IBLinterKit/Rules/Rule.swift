@@ -24,7 +24,8 @@ public struct Rules {
             ForceToEnableAutoLayoutRule.self,
             DuplicateConstraintRule.self,
             StoryboardViewControllerId.self,
-            ImageResourcesRule.self
+            ImageResourcesRule.self,
+            CustomModuleRule.self
         ]
     }
 
