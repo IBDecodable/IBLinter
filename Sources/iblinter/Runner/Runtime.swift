@@ -13,7 +13,7 @@ import Files
 public struct Runtime {
 
     public static let potentialFolders = [
-        Path.current + "/Pods/IBLinter/lib",
+        Path.current + "Pods/IBLinter/lib",
         Path("/usr/local/lib/iblinter")
     ]
 
