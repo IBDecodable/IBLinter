@@ -8,4 +8,11 @@
 public struct Context {
     let config: Config
     let workDirectory: String
+    let externalRules: [Rule.Type]
+
+    public init(config: Config, workDirectory: String, externalRules: [Rule.Type]) {
+        self.config = config
+        self.workDirectory = workDirectory
+        self.externalRules = externalRules
+    }
 }

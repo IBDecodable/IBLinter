@@ -10,9 +10,9 @@ import Commandant
 
 struct VersionCommand: CommandProtocol {
     let verb = "version"
-    let function = "Display the current version of SwiftLint"
+    let function = "Display the current version of IBLinter"
 
-    let currentVersion: String = "0.3.0"
+    let currentVersion: String = "0.4.0"
 
     func run(_ options: NoOptions<CommandantError<()>>) -> Result<(), CommandantError<()>> {
         print(currentVersion)

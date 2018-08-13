@@ -9,15 +9,15 @@ import IBDecodable
 import Foundation
 
 public struct Violation {
-    let pathString: String
-    let message: String
-    let level: Level
+    public let pathString: String
+    public let message: String
+    public let level: Level
 
-    enum Level: String, Comparable {
+    public enum Level: String, Comparable {
         case warning
         case error
 
-        static func < (lhs: Violation.Level, rhs: Violation.Level) -> Bool {
+        public static func < (lhs: Violation.Level, rhs: Violation.Level) -> Bool {
             return lhs == .warning && rhs == .error
         }
     }

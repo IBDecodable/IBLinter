@@ -5,15 +5,15 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-protocol Reporter {
+public protocol Reporter {
     static var identifier: String { get }
 
     static func generateReport(violations: [Violation]) -> String
 }
 
-struct Reporters {
+public struct Reporters {
 
-    static func reporter(from reporter: String) -> Reporter.Type {
+    public static func reporter(from reporter: String) -> Reporter.Type {
         switch reporter {
         case XcodeReporter.identifier:
             return XcodeReporter.self
