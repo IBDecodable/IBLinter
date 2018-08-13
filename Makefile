@@ -1,6 +1,6 @@
 PREFIX?=/usr/local
 SWIFT_LIB_FILES = .build/release/libIBLinter.dylib .build/release/*.swiftmodule
-C_LIB_DIRS = .build/release/CYaml.build
+C_LIB_DIRS = .build/release/CYaml.build .build/release/Clang_C.build .build/release/SourceKit.build
 
 build:
 		swift build --disable-sandbox -c release --static-swift-stdlib
