@@ -1,5 +1,5 @@
 PREFIX?=/usr/local
-SWIFT_LIB_FILES = .build/release/libIBLinterKit.dylib .build/release/*.swiftmodule
+SWIFT_LIB_FILES = .build/release/libIBLinter.dylib .build/release/*.swiftmodule
 C_LIB_DIRS = .build/release/CYaml.build
 
 build:

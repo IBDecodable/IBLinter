@@ -21,7 +21,7 @@ public struct Runtime {
     static let tmpFolder = ".iblinter-tmp"
 
     public static func dylibPath() -> Path? {
-        guard let libPath = potentialFolders.first(where: { ($0 + "libIBLinterKit.dylib").exists }) else {
+        guard let libPath = potentialFolders.first(where: { ($0 + "libIBLinter.dylib").exists }) else {
             return nil
         }
         return libPath

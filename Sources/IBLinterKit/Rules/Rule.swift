@@ -37,11 +37,12 @@ public struct Rules {
         ]
     }
 
-    static func rules(_ context: Context) -> [Rule] {
+    public static func rules(_ context: Context) -> [Rule] {
         var identifiers = Set(defaultRules.map({ $0.identifier }))
         identifiers.subtract(context.config.disabledRules)
         identifiers.formUnion(context.config.enabledRules)
+        let rules = allRules + context.externalRules
 
-        return allRules.filter { identifiers.contains($0.identifier) }.map { $0.init(context: context) }
+        return rules.filter { identifiers.contains($0.identifier) }.map { $0.init(context: context) }
     }
 }

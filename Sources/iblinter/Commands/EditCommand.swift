@@ -20,7 +20,7 @@ struct EditCommand: CommandProtocol {
         let ibLinterfile = Runtime.ibLinterfile.exists ? Runtime.ibLinterfile : try! createIBLinterfile()
         try! Runtime.resolvePackages(ibLinterfile: ibLinterfile)
         guard let dylib = Runtime.dylibPath() else {
-            print("Could not find a libIBLinterKit to link against at any of: \(Runtime.potentialFolders)")
+            print("Could not find a libIBLinter to link against at any of: \(Runtime.potentialFolders)")
             return Result.failure(.commandError(()))
         }
         let arguments = CommandLine.arguments
@@ -44,7 +44,7 @@ struct EditCommand: CommandProtocol {
     }
 
     func createIBLinterfile() throws -> Path {
-        let template = "import IBLinterKit \nlet linter = IBLinter()"
+        let template = "import IBLinter \nlet linter = IBLinter()"
         let data = template.data(using: .utf8)!
         let pathString = try FileSystem().createFile(at: Runtime.ibLinterfile.string, contents: data).path
         return Path(pathString)

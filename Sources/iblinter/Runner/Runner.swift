@@ -5,6 +5,7 @@
 //  Created by SaitoYuta on 2018/05/22.
 //
 
+import Result
 import Foundation
 import PathKit
 import Files
@@ -16,7 +17,7 @@ class IBLinterRunner {
         self.ibLinterfile = ibLinterfile
     }
 
-    func run() {
+    func run() -> Result<(), ValidateCommand.ClientError> {
 
         func which(_ command: String) -> Path {
             let process = Process()
@@ -37,7 +38,7 @@ class IBLinterRunner {
         }
 
         guard let dylib = Runtime.dylibPath() else {
-            print("Could not find a libIBLinterKit to link against at any of: \(Runtime.potentialFolders)")
+            print("Could not find a libIBLinter to link against at any of: \(Runtime.potentialFolders)")
             exit(1)
         }
 
@@ -47,7 +48,7 @@ class IBLinterRunner {
         var arguments = [
             "-L", dylib.string,
             "-I", dylib.string,
-            "-lIBLinterKit"
+            "-lIBLinter"
         ]
         if let marathonLibPath = artifactPaths.map({ marathonPath + $0 }).first(where: { $0.exists }) {
             arguments += [
@@ -71,6 +72,10 @@ class IBLinterRunner {
 
         process.launch()
         process.waitUntilExit()
-        exit(process.terminationStatus)
+        if process.terminationStatus == 0 {
+            return .success(())
+        } else {
+            exit(process.terminationStatus)
+        }
     }
 }
