@@ -37,7 +37,7 @@ class IBLinterRunner {
             return Path.init(pathString)
         }
 
-        guard let dylib = Runtime.dylibPath() else {
+        guard let dylib = Runtime.libPath() else {
             print("Could not find a libIBLinter to link against at any of: \(Runtime.potentialFolders)")
             exit(1)
         }

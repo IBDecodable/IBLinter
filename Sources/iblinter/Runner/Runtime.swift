@@ -19,12 +19,17 @@ public struct Runtime {
 
     public static let ibLinterfile = Path("./IBLinterfile.swift")
     static let tmpFolder = ".iblinter-tmp"
+    static let dylibName = "libIBLinter.dylib"
 
-    public static func dylibPath() -> Path? {
-        guard let libPath = potentialFolders.first(where: { ($0 + "libIBLinter.dylib").exists }) else {
+    public static func libPath() -> Path? {
+        guard let libPath = potentialFolders.first(where: { ($0 + dylibName).exists }) else {
             return nil
         }
         return libPath
+    }
+
+    public static func dylibPath() -> Path? {
+        return libPath().map { $0 + dylibName }
     }
 
     @discardableResult
