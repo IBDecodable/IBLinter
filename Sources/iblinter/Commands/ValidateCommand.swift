@@ -21,7 +21,7 @@ struct ValidateCommand: CommandProtocol {
 
     let externalRules: [Rule.Type]
 
-    init(externalRules: [Rule.Type]) {
+    init(externalRules: [Rule.Type] = []) {
         self.externalRules = externalRules
     }
 
@@ -44,6 +44,10 @@ struct ValidateCommand: CommandProtocol {
             return IBLinterRunner(ibLinterfile: iblinterFilePath).run()
         }
 
+        return runInternal(options)
+    }
+
+    func runInternal(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
         let workDirectory = options.path ?? FileManager.default.currentDirectoryPath
         guard FileManager.default.isDirectory(workDirectory) else { fatalError("\(workDirectory) is not directory.") }
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
