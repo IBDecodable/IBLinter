@@ -14,10 +14,11 @@ portable_zip: build
 		mkdir portable_iblinter
 		mkdir portable_iblinter/lib
 		mkdir portable_iblinter/bin
-		cp -f .build/release/iblinter portable_iblinter/bin
+		cp -f .build/release/main portable_iblinter/bin/iblinter
 		cp -rf $(C_LIB_DIRS) $(SWIFT_LIB_FILES) "portable_iblinter/lib"
 		cp -f LICENSE portable_iblinter
-		zip -yr - portable_iblinter  > "./portable_iblinter.zip"
+		cd portable_iblinter
+		(cd portable_iblinter; zip -yr - "lib" "bin" "LICENSE") > "./portable_iblinter.zip"
 		rm -rf portable_iblinter
 
 install: build
