@@ -25,7 +25,6 @@ public struct Rules {
             DuplicateConstraintRule.self,
             StoryboardViewControllerId.self,
             ImageResourcesRule.self,
-            CustomModuleRule.self
         ]
     }()
 

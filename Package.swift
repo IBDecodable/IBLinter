@@ -15,9 +15,9 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", .branch("master")),
         .package(url: "https://github.com/Carthage/Commandant.git", .branch("master")),
-        .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.21.1"),
         .package(url: "https://github.com/xcodeswift/xcproj.git", from: "4.3.0"),
-        .package(url: "https://github.com/JohnSundell/Marathon.git", .branch("master"))
+        .package(url: "https://github.com/JohnSundell/Marathon.git", .branch("master")),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "0.4.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -30,7 +30,7 @@ let package = Package(
             dependencies: ["IBLinterKit"]),
         .target(
             name: "IBLinterKit",
-            dependencies: ["IBDecodable", "Commandant", "SourceKittenFramework", "xcproj", "MarathonCore"]),
+            dependencies: ["IBDecodable", "Commandant", "Yams", "xcproj", "MarathonCore"]),
         .testTarget(name: "IBLinterKitTest",
             dependencies: ["IBLinterKit"])
     ]
