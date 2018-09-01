@@ -41,9 +41,9 @@
         "package": "Marathon",
         "repositoryURL": "https://github.com/JohnSundell/Marathon.git",
         "state": {
-          "branch": null,
-          "revision": "959e82b044f7dbb2680c6e7cdaa80d70e9dfa4ca",
-          "version": "3.0.0"
+          "branch": "master",
+          "revision": "2f5bd16afe81012f1b16bede0b153dae1ff16fcb",
+          "version": null
         }
       },
       {
@@ -113,9 +113,9 @@
         "package": "SourceKitten",
         "repositoryURL": "https://github.com/jpsim/SourceKitten.git",
         "state": {
-          "branch": "master",
-          "revision": "8c293777af7ed710ecac6f1cae2335cdef2de317",
-          "version": null
+          "branch": null,
+          "revision": "4be914be6fa49cd30b1e7ef5d32d06c037d8f469",
+          "version": "0.21.2"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/JohnSundell/Unbox.git",
         "state": {
           "branch": null,
-          "revision": "17ad6aa1cc2f1efa27a0bbbdb66f79796708aa95",
-          "version": "2.5.0"
+          "revision": "e084f13aea85495b07d015e893845e097a5eaeb4",
+          "version": "3.0.0"
         }
       },
       {
@@ -168,8 +168,8 @@
         "repositoryURL": "https://github.com/jpsim/Yams.git",
         "state": {
           "branch": null,
-          "revision": "618582e09699b577fa183bab7d88e3ee7d9a1d19",
-          "version": "1.0.0"
+          "revision": "26ab35f50ea891e8edefcc9d975db2f6b67e1d68",
+          "version": "1.0.1"
         }
       }
     ]
