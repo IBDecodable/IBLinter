@@ -52,7 +52,7 @@ struct ValidateCommand: CommandProtocol {
 
     func runInternal(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
         let workDirectory = options.path ?? FileManager.default.currentDirectoryPath
-        let config: Result<Config, ClientError> = {
+        let config: Result<(Config, URL?), ClientError> = {
             let fileName = ".iblinter.yml"
             let fileManager = FileManager.default
             let configPath = URL(fileURLWithPath: workDirectory).appendingPathComponent(fileName)
@@ -61,17 +61,17 @@ struct ValidateCommand: CommandProtocol {
             }
             do {
                 if fileManager.fileExists(atPath: configPath.relativePath) {
-                    return .success(try Config.load(from: configPath))
+                    return .success((try Config.load(from: configPath), configPath))
                 } else {
-                    return .success(.default)
+                    return .success((.default, nil))
                 }
             } catch let error {
                 return .failure(.commandError(.readConfigFailed(error)))
             }
         }()
         switch config {
-        case .success(let config):
-            let violations = validate(workDirectory: workDirectory, config: config)
+        case .success(let (config, configPath)):
+            let violations = validate(workDirectory: workDirectory, config: config, configPath: configPath)
 
             let reporter = Reporters.reporter(from: options.reporter ?? config.reporter)
             let report = reporter.generateReport(violations: violations)
@@ -88,8 +88,8 @@ struct ValidateCommand: CommandProtocol {
         }
     }
 
-    private func validate(workDirectory: String, config: Config) -> [Violation] {
-        let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
+    private func validate(workDirectory: String, config: Config, configPath: URL?) -> [Violation] {
+        let context = Context(config: config, workDirectory: workDirectory, configPath: configPath, externalRules: externalRules)
         let rules = Rules.rules(context)
         return validateXib(workDirectory: workDirectory, rules: rules, config: config) + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
     }
