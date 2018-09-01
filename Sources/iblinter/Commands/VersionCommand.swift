@@ -13,7 +13,7 @@ struct VersionCommand: CommandProtocol {
     let verb = "version"
     let function = "Display the current version of IBLinter"
 
-    let currentVersion: String = "0.4.2"
+    let currentVersion: String = "0.4.3"
 
     func run(_ options: Options) -> Result<(), CommandantError<IBLinterError>> {
         print(currentVersion)
