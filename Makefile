@@ -9,6 +9,11 @@ clean_build:
 		rm -rf .build
 		make build
 
+test:
+		swift test
+		(cd ./Example; ./test)
+
+
 portable_zip: build
 		rm -rf portable_iblinter
 		mkdir portable_iblinter
@@ -17,7 +22,6 @@ portable_zip: build
 		cp -f .build/release/main portable_iblinter/bin/iblinter
 		cp -rf $(C_LIB_DIRS) $(SWIFT_LIB_FILES) "portable_iblinter/lib"
 		cp -f LICENSE portable_iblinter
-		cd portable_iblinter
 		(cd portable_iblinter; zip -yr - "lib" "bin" "LICENSE") > "./portable_iblinter.zip"
 		rm -rf portable_iblinter
 
