@@ -60,20 +60,6 @@ class RuleTest: XCTestCase {
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
         XCTAssertEqual(violations.count, 1)
     }
-
-    func testCustomModule() {
-        let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: defaultEnabledRules, enabledRules: ["custom_module"], excluded: [], customModuleRule: [CustomModuleConfig(module: "TestCustomModule", included: ["Tests/IBLinterKitTest/Resources/TestCustomModule"], excluded: ["Tests/IBLinterKitTest/Resources/TestCustomModule/CustomModuleExcluded"])], reporter: "xcode")
-        let rules = Rules.rules(context(from: config))
-        XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(["custom_module"]))
-        let rule = rules[0]
-        let ngUrl = self.url(forResource: "CustomModuleNGTest", withExtension: "xib")
-        let ngViolations = try! rule.validate(xib: XibFile(url: ngUrl))
-        XCTAssertEqual(ngViolations.count, 1)
-        let okUrl = self.url(forResource: "CustomModuleOKTest", withExtension: "xib")
-        let okViolations = try! rule.validate(xib: XibFile(url: okUrl))
-        XCTAssertEqual(okViolations.count, 0)
-    }
 }
 
 // MARK: resource utils
