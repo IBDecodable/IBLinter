@@ -65,7 +65,7 @@ public struct Runtime {
         let scriptFolder = try rootFolder.createSubfolderIfNeeded(withName: "Scripts")
 
         let packageManager = try PackageManager(folder: packageFolder, printer: printer)
-        let config = ScriptManager.Config(prefix: "package: ", file: "Dangerplugins")
+        let config = ScriptManager.Config(prefix: "package: ", file: "IBLinterplugins")
 
         return try ScriptManager(folder: scriptFolder, packageManager: packageManager, printer: printer, config: config)
     }

@@ -13,16 +13,16 @@ import PathKit
 import xcproj
 
 struct EditCommand: CommandProtocol {
+    typealias Options = NoOptions<CommandantError<IBLinterError>>
 
     let verb: String = "edit"
     let function: String = "Edit the IBLinterfile.swift"
 
-    func run(_ options: NoOptions<CommandantError<()>>) -> Result<(), CommandantError<()>> {
+    func run(_ options: Options) -> Result<(), CommandantError<IBLinterError>> {
         let ibLinterfile = Runtime.ibLinterfile.exists ? Runtime.ibLinterfile : try! createIBLinterfile()
         try! Runtime.resolvePackages(ibLinterfile: ibLinterfile)
         guard let libPath = Runtime.libPath() else {
-            print("Could not find a libIBLinter to link against at any of: \(Runtime.potentialFolders)")
-            return Result.failure(.commandError(()))
+            return .failure(.commandError(.dylibNotFound(potentialFolders: Runtime.potentialFolders)))
         }
         let arguments = CommandLine.arguments
         let scriptManager = try! Runtime.getScriptManager()

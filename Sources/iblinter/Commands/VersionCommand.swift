@@ -9,12 +9,13 @@ import Result
 import Commandant
 
 struct VersionCommand: CommandProtocol {
+    typealias Options = NoOptions<CommandantError<IBLinterError>>
     let verb = "version"
     let function = "Display the current version of IBLinter"
 
     let currentVersion: String = "0.4.2"
 
-    func run(_ options: NoOptions<CommandantError<()>>) -> Result<(), CommandantError<()>> {
+    func run(_ options: Options) -> Result<(), CommandantError<IBLinterError>> {
         print(currentVersion)
         return .success(())
     }

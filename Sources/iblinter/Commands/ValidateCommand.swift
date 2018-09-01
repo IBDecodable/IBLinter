@@ -14,7 +14,7 @@ import PathKit
 
 struct ValidateCommand: CommandProtocol {
     typealias Options = ValidateOptions
-    typealias ClientError = Options.ClientError
+    typealias ClientError = CommandantError<IBLinterError>
 
     let verb: String = "lint"
     var function: String = "Print lint warnings and errors (default command)"
@@ -27,41 +27,64 @@ struct ValidateCommand: CommandProtocol {
 
     func run(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
 
-        let iblinterFilePath: Path? = {
+        let iblinterFilePath: Result<Path?, ClientError> = {
             if let iblinterFilePathString = options.iblinterFilePath {
                 let iblinterFilePath = Path(iblinterFilePathString)
                 guard iblinterFilePath.exists else {
-                    fatalError("\(iblinterFilePath) not found")
+                    return .failure(.usageError(description: "\(iblinterFilePathString) not found"))
                 }
-                return iblinterFilePath
+                return .success(iblinterFilePath)
             } else {
                 let defaultFile = Path("./IBLinterfile.swift")
-                guard defaultFile.exists else { return nil }
-                return defaultFile
+                guard defaultFile.exists else { return .success(nil) }
+                return .success(defaultFile)
             }
         }()
-        if let iblinterFilePath = iblinterFilePath {
-            return IBLinterRunner(ibLinterfile: iblinterFilePath).run()
-        }
 
-        return runInternal(options)
+        return iblinterFilePath.flatMap { iblinterFilePath in
+            if let iblinterFilePath = iblinterFilePath {
+                return IBLinterRunner(ibLinterfile: iblinterFilePath).run()
+                    .mapError(CommandantError.commandError)
+            }
+            return runInternal(options)
+        }
     }
 
     func runInternal(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
         let workDirectory = options.path ?? FileManager.default.currentDirectoryPath
-        guard FileManager.default.isDirectory(workDirectory) else { fatalError("\(workDirectory) is not directory.") }
-        let config = (try? Config.load(from: workDirectory)) ?? Config.default
-        let violations = validate(workDirectory: workDirectory, config: config)
+        let config: Result<Config, ClientError> = {
+            let fileName = ".iblinter.yml"
+            let fileManager = FileManager.default
+            let configPath = URL(fileURLWithPath: workDirectory).appendingPathComponent(fileName)
+            guard fileManager.isDirectory(workDirectory) else {
+                return .failure(.usageError(description: "\(workDirectory) is not directory"))
+            }
+            do {
+                if fileManager.fileExists(atPath: configPath.relativePath) {
+                    return .success(try Config.load(from: configPath))
+                } else {
+                    return .success(.default)
+                }
+            } catch let error {
+                return .failure(.commandError(.readConfigFailed(error)))
+            }
+        }()
+        switch config {
+        case .success(let config):
+            let violations = validate(workDirectory: workDirectory, config: config)
 
-        let reporter = Reporters.reporter(from: options.reporter ?? config.reporter)
-        let report = reporter.generateReport(violations: violations)
-        print(report)
+            let reporter = Reporters.reporter(from: options.reporter ?? config.reporter)
+            let report = reporter.generateReport(violations: violations)
+            print(report)
 
-        let numberOfSeriousViolations = violations.filter { $0.level == .error }.count
-        if numberOfSeriousViolations > 0 {
-            exit(2)
-        } else {
-            return .success(())
+            let numberOfSeriousViolations = violations.filter { $0.level == .error }.count
+            if numberOfSeriousViolations > 0 {
+                exit(2)
+            } else {
+                return .success(())
+            }
+        case .failure(let error):
+            return .failure(error)
         }
     }
 
@@ -127,7 +150,7 @@ struct ValidateCommand: CommandProtocol {
 }
 
 struct ValidateOptions: OptionsProtocol {
-    typealias ClientError = CommandantError<()>
+    typealias ClientError = CommandantError<IBLinterError>
 
     let path: String?
     let reporter: String?
