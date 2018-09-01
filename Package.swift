@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/Carthage/Commandant.git", .branch("master")),
         .package(url: "https://github.com/xcodeswift/xcproj.git", from: "4.3.0"),
         .package(url: "https://github.com/JohnSundell/Marathon.git", .branch("master")),
-        .package(url: "https://github.com/jpsim/Yams.git", from: "0.4.1"),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "1.0.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
