@@ -13,6 +13,12 @@ public struct Violation {
     public let message: String
     public let level: Level
 
+    public init(pathString: String, message: String, level: Level) {
+        self.pathString = pathString
+        self.message = message
+        self.level = level
+    }
+
     public enum Level: String, Comparable {
         case warning
         case error
