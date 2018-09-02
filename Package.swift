@@ -13,10 +13,10 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/IBDecodable/IBDecodable.git", .branch("master")),
-        .package(url: "https://github.com/Carthage/Commandant.git", .branch("master")),
+        .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.0.2"),
+        .package(url: "https://github.com/Carthage/Commandant.git", from: "0.15.0"),
         .package(url: "https://github.com/xcodeswift/xcproj.git", from: "4.3.0"),
-        .package(url: "https://github.com/JohnSundell/Marathon.git", .branch("master")),
+        .package(url: "https://github.com/JohnSundell/Marathon.git", from: "3.0.0"),
         .package(url: "https://github.com/jpsim/Yams.git", from: "1.0.1"),
     ],
     targets: [
