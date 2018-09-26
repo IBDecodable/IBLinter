@@ -57,11 +57,13 @@ extension Rules {
                 }
             }
             let assetNames = catalogAssetNames + xcodeprojAssetNames
-            return imageViews.filter { !(imageNames.contains($0.image) && assetNames.contains($0.image)) }
+            return imageViews
+                .compactMap { $0.image }
+                .filter { !imageNames.contains($0) || !assetNames.contains($0) }
                 .map {
                     Violation(
                         pathString: file.pathString,
-                        message: "\($0.image) not found",
+                        message: "\($0) not found",
                         level: .error)
             }
         }
