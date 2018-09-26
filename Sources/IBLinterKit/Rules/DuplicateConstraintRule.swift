@@ -33,7 +33,7 @@ extension Rules {
                     pathString: file.pathString,
                     message: message,
                     level: .warning)
-            }
+            } + (view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [])
         }
 
         private func duplicateConstraints(for constraints: [Constraint]) -> [Constraint] {
