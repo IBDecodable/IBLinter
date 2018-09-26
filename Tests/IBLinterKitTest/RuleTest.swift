@@ -74,6 +74,13 @@ class RuleTest: XCTestCase {
         let okViolations = try! rule.validate(xib: XibFile(url: okUrl))
         XCTAssertEqual(okViolations.count, 0)
     }
+
+    func testAmbiguous() {
+        let url = self.url(forResource: "AmbiguousConstraint", withExtension: "storyboard")
+        let rule = Rules.AmbiguousViewRule(context: context(from: .default))
+        let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
+        XCTAssertEqual(violations.count, 2)
+    }
 }
 
 // MARK: resource utils

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="lF6-io-qve">
+            <objects>
+                <viewController id="7eN-ZX-YSU" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iGg-Eg-h0O">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tcQ-7v-A0S">
+                                <rect key="frame" x="67.5" y="233.5" width="240" height="200"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="First Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFH-X3-bqs">
+                                        <rect key="frame" x="80" y="50" width="80" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Second Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oHh-Kj-mCv">
+                                        <rect key="frame" x="67.5" y="121" width="104.5" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="oHh-Kj-mCv" firstAttribute="top" secondItem="SFH-X3-bqs" secondAttribute="bottom" constant="50" id="59C-C7-dEP"/>
+                                    <constraint firstItem="oHh-Kj-mCv" firstAttribute="centerX" secondItem="tcQ-7v-A0S" secondAttribute="centerX" id="690-kc-f1h"/>
+                                    <constraint firstItem="SFH-X3-bqs" firstAttribute="centerX" secondItem="tcQ-7v-A0S" secondAttribute="centerX" id="CD8-kl-bhK"/>
+                                    <constraint firstAttribute="width" constant="240" id="PPi-WS-Gad"/>
+                                    <constraint firstAttribute="bottom" secondItem="oHh-Kj-mCv" secondAttribute="bottom" constant="58" id="SRa-ab-hpx"/>
+                                    <constraint firstAttribute="height" constant="200" id="q9a-ar-Vzd"/>
+                                    <constraint firstItem="SFH-X3-bqs" firstAttribute="top" secondItem="tcQ-7v-A0S" secondAttribute="top" constant="50" id="ttS-3p-Ie2"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="tcQ-7v-A0S" firstAttribute="centerX" secondItem="iGg-Eg-h0O" secondAttribute="centerX" id="6Ab-se-mny"/>
+                            <constraint firstItem="tcQ-7v-A0S" firstAttribute="centerY" secondItem="iGg-Eg-h0O" secondAttribute="centerY" id="EgH-h3-ipS"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cVj-2N-wTn"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wcj-zd-5Mj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="70" y="154"/>
+        </scene>
+    </scenes>
+</document>
