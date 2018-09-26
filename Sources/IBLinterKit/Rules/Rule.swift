@@ -25,7 +25,8 @@ public struct Rules {
             DuplicateConstraintRule.self,
             StoryboardViewControllerId.self,
             ImageResourcesRule.self,
-            CustomModuleRule.self
+            CustomModuleRule.self,
+            AmbiguousViewRule.self,
         ]
     }()
 
@@ -33,7 +34,8 @@ public struct Rules {
         return [
             CustomClassNameRule.self,
             ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self
+            DuplicateConstraintRule.self,
+            AmbiguousViewRule.self,
         ]
     }
 
