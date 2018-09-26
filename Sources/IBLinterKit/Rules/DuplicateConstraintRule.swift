@@ -58,8 +58,11 @@ extension Rules {
             let reverseAttributes = (lhs.secondAttribute == rhs.firstAttribute && lhs.firstAttribute == rhs.secondAttribute)
             let sameConstant = lhs.constant == rhs.constant
             let reverseConstaint = lhs.constant == rhs.constant.map(-)
+            let samePriority = lhs.priority == rhs.priority
+            let sameRelation = lhs.relation == rhs.relation
 
-            return (sameItems && sameAttributes && sameConstant) || (reverseItems && reverseAttributes && reverseConstaint)
+            return (samePriority && sameRelation) && (sameItems && sameAttributes && sameConstant) ||
+                    (reverseItems && reverseAttributes && reverseConstaint)
         }
     }
 }
