@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/Carthage/Commandant.git",
         "state": {
           "branch": "master",
-          "revision": "d0d629095653f8e1f2933449fe25ff653191eaf9",
+          "revision": "d69a33a7c4fb7d6e389584106001963ae3db5209",
           "version": null
         }
       },
@@ -33,7 +33,7 @@
         "repositoryURL": "https://github.com/IBDecodable/IBDecodable.git",
         "state": {
           "branch": "master",
-          "revision": "ba46f8070ff2f72983a4ef0c6f3559419ec1e01e",
+          "revision": "eb8ebe5ec1ff87a07e4621510e23a5763525f014",
           "version": null
         }
       },
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/JohnSundell/Marathon.git",
         "state": {
           "branch": null,
-          "revision": "959e82b044f7dbb2680c6e7cdaa80d70e9dfa4ca",
-          "version": "3.0.0"
+          "revision": "a06df8de0b79c1a3b69228ec5368acd52956d8ec",
+          "version": "3.1.0"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/kylef/PathKit.git",
         "state": {
           "branch": null,
-          "revision": "fa81fa9e3a9f59645159c4ea45c0c46ee6558f71",
-          "version": "0.9.1"
+          "revision": "e2f5be30e4c8f531c9c1e8765aa7b71c0a45d7a0",
+          "version": "0.9.2"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {
           "branch": null,
-          "revision": "b060679e70d13c3c7dcd124201b5b1b34ce6f340",
-          "version": "1.3.1"
+          "revision": "5fbf13871d185526993130c3a1fad0b70bfe37ce",
+          "version": "1.3.2"
         }
       },
       {
@@ -113,9 +113,9 @@
         "package": "SourceKitten",
         "repositoryURL": "https://github.com/jpsim/SourceKitten.git",
         "state": {
-          "branch": "master",
-          "revision": "8c293777af7ed710ecac6f1cae2335cdef2de317",
-          "version": null
+          "branch": null,
+          "revision": "4be914be6fa49cd30b1e7ef5d32d06c037d8f469",
+          "version": "0.21.2"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/kylef/Spectre.git",
         "state": {
           "branch": null,
-          "revision": "e34d5687e1e9d865e3527dd58bc2f7464ef6d936",
-          "version": "0.8.0"
+          "revision": "f14ff47f45642aa5703900980b014c2e9394b6e5",
+          "version": "0.9.0"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/drmohundro/SWXMLHash.git",
         "state": {
           "branch": null,
-          "revision": "24698592b581aef2bdbfc86ce18695708038c624",
-          "version": "4.7.1"
+          "revision": "0ce63a93a455adb3cd5e4c55f78f1232a590a5a5",
+          "version": "4.7.2"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/JohnSundell/Unbox.git",
         "state": {
           "branch": null,
-          "revision": "17ad6aa1cc2f1efa27a0bbbdb66f79796708aa95",
-          "version": "2.5.0"
+          "revision": "e084f13aea85495b07d015e893845e097a5eaeb4",
+          "version": "3.0.0"
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/xcodeswift/xcproj.git",
         "state": {
           "branch": null,
-          "revision": "e787c68092e28fe2b34205fc1b62de431922c243",
-          "version": "4.3.0"
+          "revision": "5253c22f208558264e3a64a3a29f11537ca1b41a",
+          "version": "4.3.1"
         }
       },
       {
