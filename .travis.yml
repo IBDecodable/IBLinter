@@ -10,4 +10,4 @@ deploy:
   file: ./portable_iblinter.zip
   skip_cleanup: true
   on:
-    branch: master
+    tags: true
