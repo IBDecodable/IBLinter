@@ -34,7 +34,8 @@ bump_version:
 		$(eval NEW_VERSION := $(filter-out $@,$(MAKECMDGOALS)))
 		@echo $(NEW_VERSION) > .version
 		@sed 's/__VERSION__/$(NEW_VERSION)/g' script/Version.swift.template > Sources/IBLinter/Version.swift
-		git tag "$(shell cat .version)"
+		git commit -am"Bump version to $(NEW_VERSION)"
+		git tag "$(NEW_VERSION)"
 
 publish:
 		brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) iblinter
