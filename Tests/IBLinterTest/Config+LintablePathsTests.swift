@@ -11,7 +11,7 @@ class ConfigLintablePathsTests: XCTestCase {
             excluded: ["Level1"], included: ["Level1/Level2"],
             customModuleRule: [], reporter: ""
         )
-        let projectPath = bundlePath.appendingPathComponent("ProjectMock")
+        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
 
         XCTAssertEqual(
@@ -26,7 +26,10 @@ extension XCTestCase {
         return Bundle(for: type(of: self))
     }
 
-    var bundlePath: URL {
-        return bundle.resourceURL ?? URL(string: "./Tests/IBLinterTests/Resources")!
+    var bundleURL: URL {
+        if let url = bundle.resourceURL?.appendingPathComponent("Resources"), FileManager.default.isDirectory(url.path) {
+            return url
+        }
+        return URL(fileURLWithPath: "./Tests/IBLinterTest/Resources")
     }
 }
