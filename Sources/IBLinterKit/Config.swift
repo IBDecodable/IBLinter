@@ -60,8 +60,8 @@ public struct Config: Codable {
         return try YAMLDecoder.init().decode(from: String.init(contentsOf: url))
     }
 
-    public static func load(from configPath: String, fileName: String = fileName) throws -> Config {
-        let url = URL.init(fileURLWithPath: configPath).appendingPathComponent(fileName)
+    public static func load(from configPath: URL, fileName: String = fileName) throws -> Config {
+        let url = configPath.appendingPathComponent(fileName)
         return try load(url)
     }
 }

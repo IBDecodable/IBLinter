@@ -5,7 +5,7 @@ import XCTest
 class RuleTest: XCTestCase {
 
     func context(from config: Config) -> Context {
-        return Context.init(config: config, workDirectory: FileManager.default.currentDirectoryPath, externalRules: [])
+        return Context.init(config: config, workDirectory: URL(string: FileManager.default.currentDirectoryPath)!, externalRules: [])
     }
 
     func testRelativeToMargin() {

@@ -48,8 +48,11 @@ struct ValidateCommand: CommandProtocol {
     }
 
     func runInternal(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
-        let workDirectory = options.path ?? FileManager.default.currentDirectoryPath
-        guard FileManager.default.isDirectory(workDirectory) else { fatalError("\(workDirectory) is not directory.") }
+        let workDirectoryString = options.path ?? FileManager.default.currentDirectoryPath
+        guard let workDirectory = URL(string: workDirectoryString),
+            FileManager.default.isDirectory(workDirectory.path) else {
+                fatalError("\(workDirectoryString) is not directory.")
+        }
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
         let violations = validate(workDirectory: workDirectory, config: config)
 
@@ -65,13 +68,13 @@ struct ValidateCommand: CommandProtocol {
         }
     }
 
-    private func validate(workDirectory: String, config: Config) -> [Violation] {
+    private func validate(workDirectory: URL, config: Config) -> [Violation] {
         let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
         let rules = Rules.rules(context)
         return validateXib(workDirectory: workDirectory, rules: rules, config: config) + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
     }
 
-    public func validateStoryboard(workDirectory: String, rules: [Rule], config: Config) -> [Violation] {
+    public func validateStoryboard(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
         let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "storyboard")
         let storyboards: [StoryboardFile] = lintablePaths.compactMap {
             do {
@@ -96,7 +99,7 @@ struct ValidateCommand: CommandProtocol {
         return violations
     }
 
-    public func validateXib(workDirectory: String, rules: [Rule], config: Config) -> [Violation] {
+    public func validateXib(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
         let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "xib")
         let xibs: [XibFile] = lintablePaths.compactMap {
             do {

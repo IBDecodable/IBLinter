@@ -5,7 +5,7 @@ class ConfigTest: XCTestCase {
 
     func testConfigFile() throws {
         let url = self.url(forResource: ".iblinter", withExtension: "yml")
-        let workingDirectory = url.deletingLastPathComponent().absoluteString
+        let workingDirectory = url.deletingLastPathComponent()
         let config = try Config.load(from: workingDirectory)
         XCTAssertEqual(config.disabledRules, ["custom_class_name"])
         XCTAssertEqual(config.enabledRules, ["relative_to_margin"])
@@ -15,7 +15,7 @@ class ConfigTest: XCTestCase {
 
     func testNullableConfigFile() throws {
         let url = self.url(forResource: ".iblinter_nullable", withExtension: "yml")
-        let workingDirectory = url.deletingLastPathComponent().absoluteString
+        let workingDirectory = url.deletingLastPathComponent()
         let config = try Config.load(from: workingDirectory, fileName: url.lastPathComponent)
         XCTAssertEqual(config.disabledRules, ["custom_class_name"])
         XCTAssertEqual(config.enabledRules, [])
