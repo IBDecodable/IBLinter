@@ -28,7 +28,7 @@ install: build
 		cp -rf $(C_LIB_DIRS) $(SWIFT_LIB_FILES) "$(PREFIX)/lib/iblinter"
 
 current_version:
-		@echo .version
+		@cat .version
 
 bump_version:
 		$(eval NEW_VERSION := $(filter-out $@,$(MAKECMDGOALS)))
