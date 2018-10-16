@@ -72,9 +72,7 @@ struct ValidateCommand: CommandProtocol {
     }
 
     public func validateStoryboard(workDirectory: String, rules: [Rule], config: Config) -> [Violation] {
-        let paths = glob(pattern: "\(workDirectory)/**/*.storyboard")
-        let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.storyboard") }
-        let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
+        let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "storyboard")
         let storyboards: [StoryboardFile] = lintablePaths.compactMap {
             do {
                 return try StoryboardFile.init(path: $0.relativePath)
@@ -99,9 +97,7 @@ struct ValidateCommand: CommandProtocol {
     }
 
     public func validateXib(workDirectory: String, rules: [Rule], config: Config) -> [Violation] {
-        let paths = glob(pattern: "\(workDirectory)/**/*.xib")
-        let excluded = config.excluded.flatMap { glob(pattern: "\($0)/**/*.xib") }
-        let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
+        let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "xib")
         let xibs: [XibFile] = lintablePaths.compactMap {
             do {
                 return try XibFile.init(path: $0.relativePath)

@@ -10,7 +10,7 @@ import Foundation
 
 extension Config {
     func lintablePaths(workDirectory: URL, fileExtension: String) -> [URL] {
-        let paths = glob(pattern: "\(workDirectory.path)/**/*.xib")
+        let paths = glob(pattern: "\(workDirectory.path)/**/*.\(fileExtension)")
         let excluded = self.excluded.flatMap { glob(pattern: workDirectory.appendingPathComponent("\($0)/**/*.\(fileExtension)").path) }.map { $0.absoluteString }
         let included = self.included.flatMap { glob(pattern: workDirectory.appendingPathComponent("\($0)/**/*.\(fileExtension)").path) }.map { $0.absoluteString }
         let lintablePaths = paths.filter {
