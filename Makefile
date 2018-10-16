@@ -27,6 +27,18 @@ install: build
 		cp -f ".build/release/main" "$(PREFIX)/bin/iblinter"
 		cp -rf $(C_LIB_DIRS) $(SWIFT_LIB_FILES) "$(PREFIX)/lib/iblinter"
 
-publish: clean_build
+current_version:
+		@echo .version
+
+bump_version:
+		$(eval NEW_VERSION := $(filter-out $@,$(MAKECMDGOALS)))
+		@echo $(NEW_VERSION) > .version
+		@sed 's/__VERSION__/$(NEW_VERSION)/g' script/Version.swift.template > Sources/IBLinter/Version.swift
+		git tag "$(shell cat .version)"
+
+publish:
 		brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) iblinter
-		pod trunk push IBLinter.podspec
+		COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push IBLinter.podspec
+
+%:
+	@:
