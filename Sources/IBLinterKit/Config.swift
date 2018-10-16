@@ -12,6 +12,7 @@ public struct Config: Codable {
     public let disabledRules: [String]
     public let enabledRules: [String]
     public let excluded: [String]
+    public let included: [String]
     public let customModuleRule: [CustomModuleConfig]
     public let reporter: String
 
@@ -19,6 +20,7 @@ public struct Config: Codable {
         case disabledRules = "disabled_rules"
         case enabledRules = "enabled_rules"
         case excluded = "excluded"
+        case included = "included"
         case customModuleRule = "custom_module_rule"
         case reporter = "reporter"
     }
@@ -30,14 +32,16 @@ public struct Config: Codable {
         disabledRules = []
         enabledRules = []
         excluded = []
+        included = []
         customModuleRule = []
         reporter = "xcode"
     }
 
-    init(disabledRules: [String], enabledRules: [String], excluded: [String], customModuleRule: [CustomModuleConfig], reporter: String) {
+    init(disabledRules: [String], enabledRules: [String], excluded: [String], included: [String], customModuleRule: [CustomModuleConfig], reporter: String) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules
         self.excluded = excluded
+        self.included = included
         self.customModuleRule = customModuleRule
         self.reporter = reporter
     }
@@ -47,6 +51,7 @@ public struct Config: Codable {
         disabledRules = try container.decodeIfPresent(Optional<[String]>.self, forKey: .disabledRules).flatMap { $0 } ?? []
         enabledRules = try container.decodeIfPresent(Optional<[String]>.self, forKey: .enabledRules).flatMap { $0 } ?? []
         excluded = try container.decodeIfPresent(Optional<[String]>.self, forKey: .excluded).flatMap { $0 } ?? []
+        included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
         customModuleRule = try container.decodeIfPresent(Optional<[CustomModuleConfig]>.self, forKey: .customModuleRule).flatMap { $0 } ?? []
         reporter = try container.decodeIfPresent(Optional<String>.self, forKey: .reporter).flatMap { $0 } ?? "xcode"
     }
