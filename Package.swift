@@ -32,6 +32,8 @@ let package = Package(
             name: "IBLinterKit",
             dependencies: ["IBDecodable", "Commandant", "SourceKittenFramework", "xcproj", "MarathonCore"]),
         .testTarget(name: "IBLinterKitTest",
-            dependencies: ["IBLinterKit"])
+            dependencies: ["IBLinterKit"]),
+        .testTarget(name: "IBLinterTest",
+            dependencies: ["IBLinter"]),
     ]
 )
