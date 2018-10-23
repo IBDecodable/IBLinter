@@ -91,6 +91,7 @@ You can configure IBLinter by adding a `.iblinter.yml` file from project root di
 | `enabled_rules`      | Enabled rules id.           |
 | `disabled_rules`     | Disabled rules id.          |
 | `excluded`           | Path to ignore for lint.    |
+| `included`           | Path to include for lint.    |
 | `custom_module_rule` | Custom module rule configs. |
 
 ### CustomModuleConfig
@@ -111,6 +112,9 @@ disabled_rules:
   - custom_class_name
 excluded:
   - Carthage
+  - App
+included:
+  - App/Views
 custom_module_rule:
   - module: UIComponents
     included:
