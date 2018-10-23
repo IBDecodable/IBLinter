@@ -14,7 +14,10 @@ extension Config {
         let excluded = self.excluded.flatMap { glob(pattern: workDirectory.appendingPathComponent("\($0)/**/*.\(fileExtension)").path) }.map { $0.absoluteString }
         let included = self.included.flatMap { glob(pattern: workDirectory.appendingPathComponent("\($0)/**/*.\(fileExtension)").path) }.map { $0.absoluteString }
         let lintablePaths = paths.filter {
-            excluded.contains($0.absoluteString) == included.contains($0.absoluteString)
+            if excluded.contains($0.absoluteString) {
+                return included.contains($0.absoluteString)
+            }
+            return true
         }
         return lintablePaths
     }
