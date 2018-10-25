@@ -19,7 +19,7 @@ extension Rules {
         let xcodeproj: [XcodeProj]
 
         public init(context: Context) {
-            let paths = glob(pattern: "\(context.workDirectory)/**/*.xcassets")
+            let paths = glob(pattern: context.workDirectory.appendingPathComponent("**/*.xcassets").path)
             let excluded = context.config.excluded.flatMap { glob(pattern: "\($0)/**/*.xcassets") }
             let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
             self.init(catalogs: lintablePaths.map { AssetsCatalog.init(path: $0.relativePath) })
