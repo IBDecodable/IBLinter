@@ -13,9 +13,27 @@ class AssetsCatalogTest: XCTestCase {
                 .image(name: "Apple", value: "Apple"),
                 .image(name: "Empty", value: "Empty"),
                 .group(
-                    name: "SubFolder",
+                    name: "Folder",
                     items: [
-                        .image(name: "Orange", value: "SubFolder/Orange")
+                        .image(name: "AppleNonNamespaced", value: "AppleNonNamespaced")
+                    ]
+                ),
+                .group(
+                    name: "Namespace",
+                    items: [
+                        .image(name: "AppleNamespaced", value: "Namespace/AppleNamespaced"),
+                        .group(
+                            name: "Nested",
+                            items: [
+                                .image(name: "EmptyNested", value: "Namespace/EmptyNested"),
+                                ]
+                        ),
+                        .group(
+                            name: "NestedNamespace",
+                            items: [
+                                .image(name: "EmptyNamespaced", value: "Namespace/NestedNamespace/EmptyNamespaced"),
+                            ]
+                        ),
                     ]
                 )
             ]
