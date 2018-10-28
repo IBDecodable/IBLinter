@@ -58,7 +58,7 @@ class RuleTest: XCTestCase {
         let assetURL = self.url(forResource: "Media", withExtension: "xcassets")
         let rule = Rules.ImageResourcesRule(catalogs: [.init(path: assetURL.path)])
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
-        XCTAssertEqual(violations.count, 1)
+        XCTAssertEqual(violations.count, 3)
     }
 
     func testCustomModule() {
