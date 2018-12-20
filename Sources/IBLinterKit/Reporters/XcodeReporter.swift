@@ -16,7 +16,7 @@ struct XcodeReporter: Reporter {
     static func report(violation: Violation) -> String {
         return [
             "\(violation.pathString):",
-            ":: ",
+            "0:0: ",
             "\(violation.level.rawValue): ",
             violation.message
             ].joined()
