@@ -74,7 +74,7 @@ Alternatively, if you've installed IBLinter via CocoaPods the script should look
 | `enable_autolayout`            | Force to use `useAutolayout` option                                            |
 | `duplicate_constraint`         | Display warning when view has duplicated constraint.                           |
 | `storyboard_viewcontroller_id` | Check that Storyboard ID same as ViewController class name.                    |
-| `image_resources`              | Check if image resouces are valid.                                             |
+| `image_resources`              | Check if image resources are valid.                                             |
 | `custom_module`                | Check if custom class match custom module by `custom_module_rule` config.      |
 
 
