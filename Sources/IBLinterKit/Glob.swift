@@ -36,7 +36,7 @@ public class Glob {
     }
 
     private let globFlags = GLOB_TILDE | GLOB_BRACE | GLOB_MARK
-    public func glob(pattern: String) -> [URL] {
+    public func glob(pattern: String) -> Set<URL> {
         var gt = glob_t.init()
         defer { globfree(&gt) }
 
@@ -56,14 +56,14 @@ public class Glob {
                 }
             }
         }
-        return results.map(URL.init(fileURLWithPath: ))
+        return Set(results.map(URL.init(fileURLWithPath: )))
     }
 
     private func executeGlob(pattern: UnsafePointer<CChar>, gt: UnsafeMutablePointer<glob_t>) -> Bool {
         return 0 == system_glob(pattern, globFlags, nil, gt)
     }
 
-    func expandRecursiveStars(pattern: String) -> [String] {
+    func expandRecursiveStars(pattern: String) -> Set<String> {
         func splitFirstStar(pattern: String) -> (head: String, tail: String?)? {
             let components = pattern.components(separatedBy: "**")
             guard let head = components.first, !head.isEmpty else { return nil }
@@ -71,7 +71,7 @@ public class Glob {
             guard !tailComponents.isEmpty else { return (head, nil) }
             var tail = tailComponents.joined(separator: "**")
             tail = tail.first == "/" ? String(tail.dropFirst()) : tail
-            return (head, tail.isEmpty ? nil : tail)
+            return (head, tail)
 
         }
         guard let (head, tail) = splitFirstStar(pattern: pattern) else { return [] }
@@ -88,7 +88,8 @@ public class Glob {
                 return []
             }
         }
-        guard let tailComponent = tail else {
+        guard let tailComponent = tail else { return [head] }
+        guard !tailComponent.isEmpty else {
             if fileManager.isDirectory(head) {
                 return [URL(fileURLWithPath: head).appendingPathComponent("*").path]
             } else {
@@ -96,16 +97,17 @@ public class Glob {
             }
         }
         let children = recursiveChildren(current: head)
-        return children.map { URL(fileURLWithPath: $0).appendingPathComponent(tailComponent).path }
+        let result = children.map { URL(fileURLWithPath: $0).appendingPathComponent(tailComponent).path }
             .flatMap { expandRecursiveStars(pattern: $0) }
+        return Set(result)
     }
 }
 
 @available(*, deprecated)
-func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.default) -> [String] {
+func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.default) -> Set<String> {
     return Glob(fileManager: fileManager).expandRecursiveStars(pattern: pattern)
 }
 
-public func glob(pattern: String, fileManager: GlobFileManager = FileManager.default) -> [URL] {
+public func glob(pattern: String, fileManager: GlobFileManager = FileManager.default) -> Set<URL> {
     return Glob(fileManager: fileManager).glob(pattern: pattern)
 }

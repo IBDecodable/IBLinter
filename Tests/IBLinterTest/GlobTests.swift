@@ -24,7 +24,7 @@ class GlobTests: XCTestCase {
     func testSubPaths() {
         let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         XCTAssertEqual(
-            glob(pattern: projectPath.appendingPathComponent("*").path).map { $0.path },
+            Set(glob(pattern: projectPath.appendingPathComponent("*").path).map { $0.path }),
             [
                 projectPath.appendingPathComponent("Level1_1").path,
                 projectPath.appendingPathComponent("Level1_2").path
@@ -35,27 +35,19 @@ class GlobTests: XCTestCase {
     func testRecursiveSubPaths() {
         let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         XCTAssertEqual(
-            glob(pattern: projectPath.appendingPathComponent("**").path).map { $0.path }.sorted(),
+            Set(glob(pattern: projectPath.appendingPathComponent("**").path).map { $0.path }),
             [
-                projectPath.path,
                 projectPath.appendingPathComponent("Level1_1").path,
-                projectPath.appendingPathComponent("Level1_1/Level1_1.xib").path,
-                projectPath.appendingPathComponent("Level1_1/Level2_1").path,
-                projectPath.appendingPathComponent("Level1_1/Level2_1/Level2_1.xib").path,
-                projectPath.appendingPathComponent("Level1_1/Level2_2").path,
-                projectPath.appendingPathComponent("Level1_1/Level2_2/Level2_2.xib").path,
                 projectPath.appendingPathComponent("Level1_2").path,
-                projectPath.appendingPathComponent("Level1_2/Level1_2.xib").path,
-            ].sorted()
+            ]
         )
     }
 
     func testMultiRecursiveSubPaths() {
         let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         XCTAssertEqual(
-            glob(pattern: projectPath.appendingPathComponent("**/Level2_1/**").path).map { $0.path },
+            Set(glob(pattern: projectPath.appendingPathComponent("**/Level2_1/**").path).map { $0.path }),
             [
-                projectPath.appendingPathComponent("Level1_1/Level2_1").path,
                 projectPath.appendingPathComponent("Level1_1/Level2_1/Level2_1.xib").path
             ]
         )
