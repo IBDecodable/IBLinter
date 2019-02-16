@@ -48,7 +48,7 @@ func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.
     }
     for directory in directories {
         let partiallyResolvedPattern = NSString(string: directory).appendingPathComponent(lastPart)
-        results.append(contentsOf: expandGlobstar(pattern: partiallyResolvedPattern))
+        results.append(contentsOf: expandGlobstar(pattern: partiallyResolvedPattern, fileManager: fileManager))
     }
 
     return results
