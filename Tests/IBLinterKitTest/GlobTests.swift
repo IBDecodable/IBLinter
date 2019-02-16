@@ -168,3 +168,12 @@ class GlobTests: XCTestCase {
         }
     }
 }
+
+extension XCTestCase {
+    var bundleURL: URL {
+        if let url = bundle.resourceURL?.appendingPathComponent("Resources"), FileManager.default.isDirectory(url.path) {
+            return url
+        }
+        return URL(fileURLWithPath: "./Tests/IBLinterTest/Resources")
+    }
+}
