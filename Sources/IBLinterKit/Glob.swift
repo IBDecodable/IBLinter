@@ -18,40 +18,53 @@ extension FileManager {
     }
 }
 
-func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.default) -> [String] {
-    guard pattern.contains("**") else {
-        return [pattern]
+class Glob {
+    let fileManager: GlobFileManager
+    init(fileManager: GlobFileManager) {
+        self.fileManager = fileManager
     }
 
-    var results = [String]()
-    var parts = pattern.components(separatedBy: "**")
-    let firstPart = parts.removeFirst()
-    var lastPart = parts.joined(separator: "**")
+    func expandRecursiveStars(pattern: String) -> [String] {
+        func splitFirstStar(pattern: String) -> (head: String, tail: String?)? {
+            let components = pattern.components(separatedBy: "**")
+            guard let head = components.first, !head.isEmpty else { return nil }
+            let tailComponents = components.dropFirst()
+            guard !tailComponents.isEmpty else { return (head, nil) }
+            var tail = tailComponents.joined(separator: "**")
+            tail = tail.first == "/" ? String(tail.dropFirst()) : tail
+            return (head, tail.isEmpty ? nil : tail)
 
-    var directories: [String]
-
-    do {
-        directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in
-            let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)
-            guard fileManager.isDirectory(fullPath) else { return nil }
-            return fullPath
         }
-    } catch {
-        return []
+        guard let (head, tail) = splitFirstStar(pattern: pattern) else { return [] }
+        func recursiveChildren(current: String) -> [String] {
+            do {
+                return try fileManager.subpathsOfDirectory(atPath: current)
+                    .compactMap {
+                        let path = URL(fileURLWithPath: current).appendingPathComponent($0).path
+                        guard fileManager.isDirectory(path) else { return nil }
+                        return path
+                    }
+                    .flatMap { recursiveChildren(current: $0) } + [current]
+            } catch {
+                return []
+            }
+        }
+        guard let tailComponent = tail else {
+            if fileManager.isDirectory(head) {
+                return [URL(fileURLWithPath: head).appendingPathComponent("*").path]
+            } else {
+                return []
+            }
+        }
+        let children = recursiveChildren(current: head)
+        return children.map { URL(fileURLWithPath: $0).appendingPathComponent(tailComponent).path }
+            .flatMap { expandRecursiveStars(pattern: $0) }
     }
+}
 
-    directories.insert(firstPart, at: 0)
-
-    if lastPart.isEmpty {
-        results.append(firstPart)
-        lastPart = "*"
-    }
-    for directory in directories {
-        let partiallyResolvedPattern = NSString(string: directory).appendingPathComponent(lastPart)
-        results.append(contentsOf: expandGlobstar(pattern: partiallyResolvedPattern, fileManager: fileManager))
-    }
-
-    return results
+@available(*, deprecated)
+func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.default) -> [String] {
+    return Glob(fileManager: fileManager).expandRecursiveStars(pattern: pattern)
 }
 
 private let globFlags = GLOB_TILDE | GLOB_BRACE | GLOB_MARK

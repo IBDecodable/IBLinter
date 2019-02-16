@@ -145,31 +145,36 @@ class GlobTests: XCTestCase {
 
     func testExpandGlobstar() {
         let projectPath = URL(fileURLWithPath: "./Project")
-        do {
-            let multiRecursivePath = projectPath.appendingPathComponent("**/Level2_1/**")
+        empty: do {
+            let fileManager = MockFileManager(projectPath: projectPath, tree: .root([]))
+            let expended = Glob(fileManager: fileManager).expandRecursiveStars(pattern: "")
+            XCTAssertEqual(expended, [])
+        }
+        recursive: do {
+            let multiRecursivePath = projectPath.appendingPathComponent("**/foo/**")
             let fileManager = MockFileManager(
                 projectPath: projectPath,
-                tree: .root(
-                    [
-                        .directory(
-                            "Level1_1",
-                            [
-                                .file("Level1_1.xib"),
-                                .directory("Level2_1", [.file("Level2_1.xib")]),
-                                .directory("Level2_2", [.file("Level2_2.xib")])
-                            ]
-                        ),
-                        .directory("Level1_2", [.file("Level1_2.xib")])
+                tree: .root([
+                    .directory("foo", [
+                        .file("bar_1"),
+                        .directory("bar_2", [
+                            .file("baz")]),
+                        .directory("bar_3", [
+                            .file("baz")])]),
+                    .directory("baz", [
+                        .directory("bar", [
+                            .directory("foo", [
+                                .file("xxx")])])])
                     ]
                 )
             )
-            let expanded = expandGlobstar(pattern: multiRecursivePath.path, fileManager: fileManager)
+            let expanded = Glob(fileManager: fileManager).expandRecursiveStars(pattern: multiRecursivePath.path)
             XCTAssertEqual(
-                expanded.map { URL(fileURLWithPath: $0).path }.sorted(),
-                [
-                    projectPath.appendingPathComponent("Level1_1/Level2_1").path,
-                    projectPath.appendingPathComponent("Level1_1/Level2_1/*").path
-                ]
+                Set(expanded.map { URL(fileURLWithPath: $0).path }),
+                Set([
+                    projectPath.appendingPathComponent("foo/*").path,
+                    projectPath.appendingPathComponent("baz/bar/foo/*").path,
+                ])
             )
         }
     }
