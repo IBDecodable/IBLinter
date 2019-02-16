@@ -1,5 +1,4 @@
 @testable import IBLinterKit
-@testable import IBLinter
 import XCTest
 
 
