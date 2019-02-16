@@ -1,6 +1,6 @@
 import Foundation
 
-protocol GlobFileManager {
+public protocol GlobFileManager {
     func subpathsOfDirectory(atPath path: String) throws -> [String]
     func isDirectory(_ url: String) -> Bool
 }
@@ -18,10 +18,49 @@ extension FileManager {
     }
 }
 
-class Glob {
+
+#if os(Linux)
+import Glibc
+
+let system_glob = Glibc.glob
+#else
+import Darwin
+
+let system_glob = Darwin.glob
+#endif
+
+public class Glob {
     let fileManager: GlobFileManager
     init(fileManager: GlobFileManager) {
         self.fileManager = fileManager
+    }
+
+    private let globFlags = GLOB_TILDE | GLOB_BRACE | GLOB_MARK
+    public func glob(pattern: String) -> [URL] {
+        var gt = glob_t.init()
+        defer { globfree(&gt) }
+
+        let patterns = expandRecursiveStars(pattern: pattern)
+        var results: [String] = []
+
+        for pattern in patterns {
+            if executeGlob(pattern: pattern, gt: &gt) {
+                #if os(Linux)
+                let matchCount = Int(gt.gl_pathc)
+                #else
+                let matchCount = Int(gt.gl_matchc)
+                #endif
+                for i in 0..<matchCount {
+                    let path = String.init(cString: gt.gl_pathv[i]!)
+                    results.append(path)
+                }
+            }
+        }
+        return results.map(URL.init(fileURLWithPath: ))
+    }
+
+    private func executeGlob(pattern: UnsafePointer<CChar>, gt: UnsafeMutablePointer<glob_t>) -> Bool {
+        return 0 == system_glob(pattern, globFlags, nil, gt)
     }
 
     func expandRecursiveStars(pattern: String) -> [String] {
@@ -67,26 +106,6 @@ func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.
     return Glob(fileManager: fileManager).expandRecursiveStars(pattern: pattern)
 }
 
-private let globFlags = GLOB_TILDE | GLOB_BRACE | GLOB_MARK
-public func glob(pattern: String) -> [URL] {
-    var gt = glob_t.init()
-    defer { globfree(&gt) }
-
-    let patterns = expandGlobstar(pattern: pattern)
-    var results: [String] = []
-
-    for pattern in patterns {
-        if executeGlob(pattern: pattern, gt: &gt) {
-            let matchCount = Int(gt.gl_matchc)
-            for i in 0..<matchCount {
-                let path = String.init(cString: gt.gl_pathv[i]!)
-                results.append(path)
-            }
-        }
-    }
-    return results.map(URL.init(fileURLWithPath: ))
-}
-
-private func executeGlob(pattern: UnsafePointer<CChar>, gt: UnsafeMutablePointer<glob_t>) -> Bool {
-    return 0 == glob(pattern, globFlags, nil, gt)
+public func glob(pattern: String, fileManager: GlobFileManager = FileManager.default) -> [URL] {
+    return Glob(fileManager: fileManager).glob(pattern: pattern)
 }

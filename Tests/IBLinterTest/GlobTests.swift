@@ -76,9 +76,7 @@ class GlobTests: XCTestCase {
             case root(Set<Path>)
             case directory(String, Set<Path>)
             case file(String)
-            func hash(into hasher: inout Hasher) {
-                name.hash(into: &hasher)
-            }
+            var hashValue: Int { return name.hashValue }
             var name: String {
                 switch self {
                 case .directory(let name, _), .file(let name): return name
