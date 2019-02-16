@@ -70,4 +70,19 @@ class GlobTests: XCTestCase {
             ]
         )
     }
+
+    func testExpandGlobstar() {
+        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        do {
+            let multiRecursivePath = projectPath.appendingPathComponent("**/Level2_1/**")
+            let expanded = expandGlobstar(pattern: multiRecursivePath.path)
+            XCTAssertEqual(
+                expanded.map { URL(fileURLWithPath: $0).path }.sorted(),
+                [
+                    projectPath.appendingPathComponent("Level1_1/Level2_1").path,
+                    projectPath.appendingPathComponent("Level1_1/Level2_1/*").path
+                ]
+            )
+        }
+    }
 }

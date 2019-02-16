@@ -1,5 +1,12 @@
 import Foundation
 
+protocol GlobFileManager {
+    func subpathsOfDirectory(atPath path: String) throws -> [String]
+    func isDirectory(_ url: String) -> Bool
+}
+
+extension FileManager: GlobFileManager {}
+
 extension FileManager {
     public func isDirectory(_ url: String) -> Bool {
         var isDirectory: ObjCBool = false
@@ -11,7 +18,7 @@ extension FileManager {
     }
 }
 
-private func expandGlobstar(pattern: String) -> [String] {
+func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.default) -> [String] {
     guard pattern.contains("**") else {
         return [pattern]
     }
@@ -20,8 +27,6 @@ private func expandGlobstar(pattern: String) -> [String] {
     var parts = pattern.components(separatedBy: "**")
     let firstPart = parts.removeFirst()
     var lastPart = parts.joined(separator: "**")
-
-    let fileManager = FileManager.default
 
     var directories: [String]
 
@@ -32,17 +37,13 @@ private func expandGlobstar(pattern: String) -> [String] {
             return fullPath
         }
     } catch {
-        directories = []
-        print("Error parsing file system item: \(error)")
+        return []
     }
 
     directories.insert(firstPart, at: 0)
 
     if lastPart.isEmpty {
         results.append(firstPart)
-    }
-
-    if lastPart.isEmpty {
         lastPart = "*"
     }
     for directory in directories {
