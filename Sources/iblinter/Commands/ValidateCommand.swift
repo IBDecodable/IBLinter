@@ -54,6 +54,10 @@ struct ValidateCommand: CommandProtocol {
             fatalError("\(workDirectoryString) is not directory.")
         }
         let config = (try? Config.load(from: workDirectory)) ?? Config.default
+        if config.disableWhileBuildingForIB &&
+            ProcessInfo.processInfo.compiledForInterfaceBuilder {
+            return .success(())
+        }
         let violations = validate(workDirectory: workDirectory, config: config)
 
         let reporter = Reporters.reporter(from: options.reporter ?? config.reporter)
@@ -145,5 +149,11 @@ struct ValidateOptions: OptionsProtocol {
             <*> mode <| Option(key: "path", defaultValue: nil, usage: "validate project root directory")
             <*> mode <| Option(key: "reporter", defaultValue: nil, usage: "the reporter used to log errors and warnings")
             <*> mode <| Option(key: "script", defaultValue: nil, usage: "custom IBLinterfile.swift")
+    }
+}
+
+extension ProcessInfo {
+    var compiledForInterfaceBuilder: Bool {
+        return environment["COMPILED_FOR_INTERFACE_BUILDER"] != nil
     }
 }
