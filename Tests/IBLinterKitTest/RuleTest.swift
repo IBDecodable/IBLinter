@@ -85,7 +85,7 @@ class RuleTest: XCTestCase {
     func testUseBaseClass() {
         let url = self.url(forResource: "UseBaseClassTest", withExtension: "xib")
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], baseClassRule: [BaseClassConfig(elementClass: "UILabel", baseClasses: ["PrimaryLabel", "SecondaryLabel"])], reporter: "xcode")
+        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], baseClassRule: [UseBaseClassConfig(elementClass: "UILabel", baseClasses: ["PrimaryLabel", "SecondaryLabel"])], reporter: "xcode")
         let rule = Rules.UseBaseClassRule(context: context(from: config))
         let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 1)

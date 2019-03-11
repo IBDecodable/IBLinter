@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct BaseClassConfig: Codable {
+public struct UseBaseClassConfig: Codable {
     public let elementClass: String
     public let baseClasses: [String]
 
@@ -16,7 +16,7 @@ public struct BaseClassConfig: Codable {
         case baseClasses = "base_classes"
     }
 
-    public static let `default` = BaseClassConfig.init()
+    public static let `default` = UseBaseClassConfig.init()
 
     private init() {
         elementClass = ""
