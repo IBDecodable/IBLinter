@@ -31,7 +31,7 @@ class RuleTest: XCTestCase {
 
     func testDefaultEnabledRules() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: [], enabledRules: [], excluded: [], included: [], customModuleRule: [], reporter: "xcode")
+        let config = Config(disabledRules: [], enabledRules: [], excluded: [], included: [], customModuleRule: [], baseClassRule: [], reporter: "xcode")
         let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(defaultEnabledRules))
         XCTAssertEqual(rules.count, defaultEnabledRules.count)
@@ -39,7 +39,7 @@ class RuleTest: XCTestCase {
 
     func testDisableDefaultEnabledRules() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], reporter: "xcode")
+        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], baseClassRule: [], reporter: "xcode")
         let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set())
         XCTAssertEqual(rules.count, 0)
@@ -47,7 +47,7 @@ class RuleTest: XCTestCase {
 
     func testDuplicatedEnabledRules() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: [], enabledRules: defaultEnabledRules, excluded: [], included: [], customModuleRule: [], reporter: "xcode")
+        let config = Config(disabledRules: [], enabledRules: defaultEnabledRules, excluded: [], included: [], customModuleRule: [], baseClassRule: [], reporter: "xcode")
         let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(defaultEnabledRules))
         XCTAssertEqual(rules.count, defaultEnabledRules.count)
@@ -63,7 +63,7 @@ class RuleTest: XCTestCase {
 
     func testCustomModule() {
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: defaultEnabledRules, enabledRules: ["custom_module"], excluded: [], included: [], customModuleRule: [CustomModuleConfig(module: "TestCustomModule", included: ["Tests/IBLinterKitTest/Resources/TestCustomModule"], excluded: ["Tests/IBLinterKitTest/Resources/TestCustomModule/CustomModuleExcluded"])], reporter: "xcode")
+        let config = Config(disabledRules: defaultEnabledRules, enabledRules: ["custom_module"], excluded: [], included: [], customModuleRule: [CustomModuleConfig(module: "TestCustomModule", included: ["Tests/IBLinterKitTest/Resources/TestCustomModule"], excluded: ["Tests/IBLinterKitTest/Resources/TestCustomModule/CustomModuleExcluded"])], baseClassRule: [], reporter: "xcode")
         let rules = Rules.rules(context(from: config))
         XCTAssertEqual(Set(rules.map({ type(of:$0).identifier })), Set(["custom_module"]))
         let rule = rules[0]
@@ -80,6 +80,15 @@ class RuleTest: XCTestCase {
         let rule = Rules.AmbiguousViewRule(context: context(from: .default))
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
         XCTAssertEqual(violations.count, 2)
+    }
+
+    func testUseBaseClass() {
+        let url = self.url(forResource: "UseBaseClassTest", withExtension: "xib")
+        let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
+        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], baseClassRule: [BaseClassConfig(elementClass: "UILabel", baseClasses: ["PrimaryLabel", "SecondaryLabel"])], reporter: "xcode")
+        let rule = Rules.UseBaseClassRule(context: context(from: config))
+        let violations = try! rule.validate(xib: XibFile(url: url))
+        XCTAssertEqual(violations.count, 1)
     }
 }
 

@@ -28,9 +28,16 @@ private extension StoryboardFile {
 
 extension Rules {
     public struct UseBaseClassRule: Rule {
-        public init(context: Context) {}
 
         public static var identifier: String = "use_base_class"
+
+        private var baseClasses: [String: [String]] = [:]
+
+        public init(context: Context) {
+            for baseClassConfig in context.config.baseClassRule {
+                self.baseClasses[baseClassConfig.elementClass] = baseClassConfig.baseClasses
+            }
+        }
 
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
@@ -44,7 +51,20 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T, fileNameWithoutExtension: String) -> [Violation] {
-            return []
+            let violation: [Violation] = {
+                guard let baseClassesForElement = baseClasses[view.elementClass] else { return [] }
+                guard let customClass = view.customClass else {
+                    let message = "CustomClass is not set to this view"
+                    return [Violation(pathString: file.pathString, message: message, level: .warning)]
+                }
+
+                if !baseClassesForElement.contains(customClass) {
+                    let message = "CustomClass is not equal to the BaseClass"
+                    return [Violation(pathString: file.pathString, message: message, level: .warning)]
+                }
+                return []
+            }()
+            return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file, fileNameWithoutExtension: fileNameWithoutExtension) } ?? [])
         }
     }
 }
