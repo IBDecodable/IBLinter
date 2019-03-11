@@ -14,7 +14,7 @@ public struct Config: Codable {
     public let excluded: [String]
     public let included: [String]
     public let customModuleRule: [CustomModuleConfig]
-    public let baseClassRule: [UseBaseClassConfig]
+    public let useBaseClassRule: [UseBaseClassConfig]
     public let reporter: String
 
     enum CodingKeys: String, CodingKey {
@@ -23,7 +23,7 @@ public struct Config: Codable {
         case excluded = "excluded"
         case included = "included"
         case customModuleRule = "custom_module_rule"
-        case baseClassRule = "use_base_class_rule"
+        case useBaseClassRule = "use_base_class_rule"
         case reporter = "reporter"
     }
 
@@ -36,7 +36,7 @@ public struct Config: Codable {
         excluded = []
         included = []
         customModuleRule = []
-        baseClassRule = []
+        useBaseClassRule = []
         reporter = "xcode"
     }
 
@@ -46,7 +46,7 @@ public struct Config: Codable {
         self.excluded = excluded
         self.included = included
         self.customModuleRule = customModuleRule
-        self.baseClassRule = baseClassRule
+        self.useBaseClassRule = baseClassRule
         self.reporter = reporter
     }
 
@@ -57,7 +57,7 @@ public struct Config: Codable {
         excluded = try container.decodeIfPresent(Optional<[String]>.self, forKey: .excluded).flatMap { $0 } ?? []
         included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
         customModuleRule = try container.decodeIfPresent(Optional<[CustomModuleConfig]>.self, forKey: .customModuleRule).flatMap { $0 } ?? []
-        baseClassRule = try container.decodeIfPresent(Optional<[UseBaseClassConfig]>.self, forKey: .baseClassRule)?.flatMap { $0 } ?? []
+        useBaseClassRule = try container.decodeIfPresent(Optional<[UseBaseClassConfig]>.self, forKey: .useBaseClassRule)?.flatMap { $0 } ?? []
         reporter = try container.decodeIfPresent(Optional<String>.self, forKey: .reporter).flatMap { $0 } ?? "xcode"
     }
 

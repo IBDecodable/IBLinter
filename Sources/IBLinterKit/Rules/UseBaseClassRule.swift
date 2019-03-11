@@ -34,7 +34,7 @@ extension Rules {
         private var baseClasses: [String: [String]] = [:]
 
         public init(context: Context) {
-            for baseClassConfig in context.config.baseClassRule {
+            for baseClassConfig in context.config.useBaseClassRule {
                 self.baseClasses[baseClassConfig.elementClass] = baseClassConfig.baseClasses
             }
         }
