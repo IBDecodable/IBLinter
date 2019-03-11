@@ -74,8 +74,9 @@ Alternatively, if you've installed IBLinter via CocoaPods the script should look
 | `enable_autolayout`            | Force to use `useAutolayout` option                                            |
 | `duplicate_constraint`         | Display warning when view has duplicated constraint.                           |
 | `storyboard_viewcontroller_id` | Check that Storyboard ID same as ViewController class name.                    |
-| `image_resources`              | Check if image resources are valid.                                             |
+| `image_resources`              | Check if image resources are valid.                                            |
 | `custom_module`                | Check if custom class match custom module by `custom_module_rule` config.      |
+| `use_base_class`               | Check if custom class is in base classes by `use_base_class_rule` config.      |
 
 
 Pull requests are encouraged.
@@ -91,8 +92,9 @@ You can configure IBLinter by adding a `.iblinter.yml` file from project root di
 | `enabled_rules`      | Enabled rules id.           |
 | `disabled_rules`     | Disabled rules id.          |
 | `excluded`           | Path to ignore for lint.    |
-| `included`           | Path to include for lint.    |
+| `included`           | Path to include for lint.   |
 | `custom_module_rule` | Custom module rule configs. |
+| `use_base_class_rule`| Use base class rule configs.|
 
 ### CustomModuleConfig
 
@@ -103,6 +105,15 @@ You can configure `custom_module` rule by `CustomModuleConfig` list.
 | `module`   | Module name.                                                                 |
 | `included` | Path to `*.swift` classes of the module for `custom_module` lint.            |
 | `excluded` | Path to ignore for `*.swift` classes of the module for `custom_module` lint. |
+
+### UseBaseClassConfig
+
+You can configure `use_base_class` rule by `UseBaseClassConfig` list.
+
+| key               | description                        |
+|:------------------|:---------------------------------- |
+| `element_class`   | Element class name.                |
+| `base_classes`    | Base classes of the element class. |
 
 
 ```yaml
@@ -121,4 +132,9 @@ custom_module_rule:
       - UIComponents/Classes
     excluded:
       - UIComponents/Classes/Config/Generated
+use_base_class_rule:
+  - element_class: UILabel
+    base_classes:
+      - PrimaryLabel
+      - SecondaryLabel
 ```
