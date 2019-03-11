@@ -75,15 +75,14 @@ public class Glob {
 
         }
         guard let (head, tail) = splitFirstStar(pattern: pattern) else { return [] }
-        func recursiveChildren(current: String) -> [String] {
+        func childDirectories(current: String) -> [String] {
             do {
                 return try fileManager.subpathsOfDirectory(atPath: current)
                     .compactMap {
                         let path = URL(fileURLWithPath: current).appendingPathComponent($0).path
                         guard fileManager.isDirectory(path) else { return nil }
                         return path
-                    }
-                    .flatMap { recursiveChildren(current: $0) } + [current]
+                    } + [current]
             } catch {
                 return []
             }
@@ -96,16 +95,11 @@ public class Glob {
                 return []
             }
         }
-        let children = recursiveChildren(current: head)
+        let children = childDirectories(current: head)
         let result = children.map { URL(fileURLWithPath: $0).appendingPathComponent(tailComponent).path }
             .flatMap { expandRecursiveStars(pattern: $0) }
         return Set(result)
     }
-}
-
-@available(*, deprecated)
-func expandGlobstar(pattern: String, fileManager: GlobFileManager = FileManager.default) -> Set<String> {
-    return Glob(fileManager: fileManager).expandRecursiveStars(pattern: pattern)
 }
 
 public func glob(pattern: String, fileManager: GlobFileManager = FileManager.default) -> Set<URL> {
