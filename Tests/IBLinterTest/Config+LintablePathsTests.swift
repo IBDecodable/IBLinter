@@ -9,7 +9,7 @@ class ConfigLintablePathsTests: XCTestCase {
         let config = Config(
             disabledRules: [], enabledRules: [],
             excluded: ["Level1_1"], included: [],
-            customModuleRule: [], reporter: ""
+            customModuleRule: [], baseClassRule: [], reporter: ""
         )
         let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
@@ -24,7 +24,7 @@ class ConfigLintablePathsTests: XCTestCase {
         let config = Config(
             disabledRules: [], enabledRules: [],
             excluded: [], included: ["Level1_2"],
-            customModuleRule: [], reporter: ""
+            customModuleRule: [], baseClassRule: [], reporter: ""
         )
         let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
@@ -39,7 +39,7 @@ class ConfigLintablePathsTests: XCTestCase {
         let config = Config(
             disabledRules: [], enabledRules: [],
             excluded: ["Level1_1"], included: ["Level1_1/Level2_1"],
-            customModuleRule: [], reporter: ""
+            customModuleRule: [], baseClassRule: [], reporter: ""
         )
         let projectPath = bundleURL.appendingPathComponent("ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
