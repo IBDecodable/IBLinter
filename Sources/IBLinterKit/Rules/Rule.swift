@@ -26,6 +26,7 @@ public struct Rules {
             StoryboardViewControllerId.self,
             ImageResourcesRule.self,
             CustomModuleRule.self,
+            UseBaseClassRule.self,
             AmbiguousViewRule.self,
         ]
     }()

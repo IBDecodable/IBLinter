@@ -11,4 +11,8 @@ custom_module_rule:
       - UIComponents/Classes
     excluded:
       - UIComponents/Classes/Config/Generated
-
+use_base_class_rule:
+  - element_class: UILabel
+    base_classes:
+    - PrimaryLabel
+    - SecondaryLabel
