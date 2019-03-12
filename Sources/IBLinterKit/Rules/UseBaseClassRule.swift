@@ -8,24 +8,6 @@
 import Foundation
 import IBDecodable
 
-private extension XibFile {
-    var fileExtension: String {
-        return URL.init(fileURLWithPath: pathString).pathExtension
-    }
-    var fileNameWithoutExtension: String {
-        return fileName.replacingOccurrences(of: ".\(fileExtension)", with: "")
-    }
-}
-
-private extension StoryboardFile {
-    var fileExtension: String {
-        return URL.init(fileURLWithPath: pathString).pathExtension
-    }
-    var fileNameWithoutExtension: String {
-        return fileName.replacingOccurrences(of: ".\(fileExtension)", with: "")
-    }
-}
-
 extension Rules {
     public struct UseBaseClassRule: Rule {
 
@@ -42,15 +24,15 @@ extension Rules {
         public func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let views = scenes.compactMap { $0.viewController?.viewController.rootView }
-            return views.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
+            return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
         public func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
-            return views.flatMap { validate(for: $0.view, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
+            return views.flatMap { validate(for: $0.view, file: xib) }
         }
 
-        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T, fileNameWithoutExtension: String) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
                 guard let baseClassesForElement = baseClasses[view.elementClass] else { return [] }
                 guard let customClass = view.customClass else {
@@ -64,7 +46,7 @@ extension Rules {
                 }
                 return []
             }()
-            return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file, fileNameWithoutExtension: fileNameWithoutExtension) } ?? [])
+            return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [])
         }
     }
 }
