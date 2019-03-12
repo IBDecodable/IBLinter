@@ -140,7 +140,7 @@ class GlobTests: XCTestCase {
             XCTAssertEqual(expended, [])
         }
         recursive: do {
-            let multiRecursivePath = projectPath.appendingPathComponent("**/foo/**")
+            let recursivePath = projectPath.appendingPathComponent("foo/**")
             let fileManager = MockFileManager(
                 projectPath: projectPath,
                 tree: .root([
@@ -150,19 +150,14 @@ class GlobTests: XCTestCase {
                             .file("baz")]),
                         .directory("bar_3", [
                             .file("baz")])]),
-                    .directory("baz", [
-                        .directory("bar", [
-                            .directory("foo", [
-                                .file("xxx")])])])
                     ]
                 )
             )
-            let expanded = Glob(fileManager: fileManager).expandRecursiveStars(pattern: multiRecursivePath.path)
+            let expanded = Glob(fileManager: fileManager).expandRecursiveStars(pattern: recursivePath.path)
             XCTAssertEqual(
                 Set(expanded.map { URL(fileURLWithPath: $0).path }),
                 Set([
                     projectPath.appendingPathComponent("foo/*").path,
-                    projectPath.appendingPathComponent("baz/bar/foo/*").path,
                 ])
             )
         }

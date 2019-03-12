@@ -16,6 +16,7 @@ public struct Config: Codable {
     public let customModuleRule: [CustomModuleConfig]
     public let useBaseClassRule: [UseBaseClassConfig]
     public let reporter: String
+    public let disableWhileBuildingForIB: Bool
 
     enum CodingKeys: String, CodingKey {
         case disabledRules = "disabled_rules"
@@ -25,6 +26,7 @@ public struct Config: Codable {
         case customModuleRule = "custom_module_rule"
         case useBaseClassRule = "use_base_class_rule"
         case reporter = "reporter"
+        case disableWhileBuildingForIB = "disable_while_building_for_ib"
     }
 
     public static let fileName = ".iblinter.yml"
@@ -38,9 +40,10 @@ public struct Config: Codable {
         customModuleRule = []
         useBaseClassRule = []
         reporter = "xcode"
+        disableWhileBuildingForIB = true
     }
 
-    init(disabledRules: [String], enabledRules: [String], excluded: [String], included: [String], customModuleRule: [CustomModuleConfig], baseClassRule: [UseBaseClassConfig], reporter: String) {
+    init(disabledRules: [String], enabledRules: [String], excluded: [String], included: [String], customModuleRule: [CustomModuleConfig], baseClassRule: [UseBaseClassConfig], reporter: String, disableWhileBuildingForIB: Bool = true) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules
         self.excluded = excluded
@@ -48,6 +51,7 @@ public struct Config: Codable {
         self.customModuleRule = customModuleRule
         self.useBaseClassRule = baseClassRule
         self.reporter = reporter
+        self.disableWhileBuildingForIB = disableWhileBuildingForIB
     }
 
     public init(from decoder: Decoder) throws {
@@ -58,7 +62,8 @@ public struct Config: Codable {
         included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
         customModuleRule = try container.decodeIfPresent(Optional<[CustomModuleConfig]>.self, forKey: .customModuleRule).flatMap { $0 } ?? []
         useBaseClassRule = try container.decodeIfPresent(Optional<[UseBaseClassConfig]>.self, forKey: .useBaseClassRule)?.flatMap { $0 } ?? []
-        reporter = try container.decodeIfPresent(Optional<String>.self, forKey: .reporter).flatMap { $0 } ?? "xcode"
+        reporter = try container.decodeIfPresent(String.self, forKey: .reporter) ?? "xcode"
+        disableWhileBuildingForIB = try container.decodeIfPresent(Bool.self, forKey: .disableWhileBuildingForIB) ?? true
     }
 
     public static func load(_ url: URL) throws -> Config {
