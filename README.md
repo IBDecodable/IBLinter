@@ -110,12 +110,12 @@ You can configure `custom_module` rule by `CustomModuleConfig` list.
 
 You can configure `use_base_class` rule by `UseBaseClassConfig` list.
 
-| key               | description                            |
-|:------------------|:-------------------------------------- |
-| `element_class`   | Element class name.                    |
-| `base_classes`    | Base classes of the element class[^1]. |
+| key               | description                        |
+|:------------------|:---------------------------------- |
+| `element_class`   | Element class name.                |
+| `base_classes`    | Base classes of the element class. |
 
-[^1]: UseBaseClassRule does not work for classes that inherit base class. You need to add all classes to `base_classes` to check.
+**Note:** UseBaseClassRule does not work for classes that inherit base class. You need to add all classes to `base_classes` to check.
 
 
 ```yaml
