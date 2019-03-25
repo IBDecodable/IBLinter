@@ -15,6 +15,7 @@ public struct Config: Codable {
     public let included: [String]
     public let customModuleRule: [CustomModuleConfig]
     public let useBaseClassRule: [UseBaseClassConfig]
+    public let viewAsDeviceRule: ViewAsDeviceConfig?
     public let reporter: String
     public let disableWhileBuildingForIB: Bool
 
@@ -25,6 +26,7 @@ public struct Config: Codable {
         case included = "included"
         case customModuleRule = "custom_module_rule"
         case useBaseClassRule = "use_base_class_rule"
+        case viewAsDeviceRule = "view_as_device_rule"
         case reporter = "reporter"
         case disableWhileBuildingForIB = "disable_while_building_for_ib"
     }
@@ -39,17 +41,22 @@ public struct Config: Codable {
         included = []
         customModuleRule = []
         useBaseClassRule = []
+        viewAsDeviceRule = nil
         reporter = "xcode"
         disableWhileBuildingForIB = true
     }
 
-    init(disabledRules: [String], enabledRules: [String], excluded: [String], included: [String], customModuleRule: [CustomModuleConfig], baseClassRule: [UseBaseClassConfig], reporter: String, disableWhileBuildingForIB: Bool = true) {
+    init(disabledRules: [String] = [], enabledRules: [String] = [],
+        excluded: [String] = [], included: [String] = [],
+        customModuleRule: [CustomModuleConfig] = [], baseClassRule: [UseBaseClassConfig] = [], viewAsDeviceRule: ViewAsDeviceConfig? = nil,
+        reporter: String = "", disableWhileBuildingForIB: Bool = true) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules
         self.excluded = excluded
         self.included = included
         self.customModuleRule = customModuleRule
         self.useBaseClassRule = baseClassRule
+        self.viewAsDeviceRule = viewAsDeviceRule
         self.reporter = reporter
         self.disableWhileBuildingForIB = disableWhileBuildingForIB
     }
@@ -62,6 +69,7 @@ public struct Config: Codable {
         included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
         customModuleRule = try container.decodeIfPresent(Optional<[CustomModuleConfig]>.self, forKey: .customModuleRule).flatMap { $0 } ?? []
         useBaseClassRule = try container.decodeIfPresent(Optional<[UseBaseClassConfig]>.self, forKey: .useBaseClassRule)?.flatMap { $0 } ?? []
+        viewAsDeviceRule = try container.decodeIfPresent(Optional<ViewAsDeviceConfig>.self, forKey: .viewAsDeviceRule) ?? nil
         reporter = try container.decodeIfPresent(String.self, forKey: .reporter) ?? "xcode"
         disableWhileBuildingForIB = try container.decodeIfPresent(Bool.self, forKey: .disableWhileBuildingForIB) ?? true
     }

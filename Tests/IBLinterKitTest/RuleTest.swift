@@ -90,6 +90,29 @@ class RuleTest: XCTestCase {
         let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 1)
     }
+
+    func testViewAsDeviceWithNoConfig() {
+        let ngUrl = self.url(forResource: "ViewAsRetina6_5Test", withExtension: "storyboard")
+        let ngRule = Rules.ViewAsDeviceRule(context: context(from: .default))
+        let ngViolations = try! ngRule.validate(xib: XibFile(url: ngUrl))
+        XCTAssertEqual(ngViolations.count, 1)
+        let okUrl = self.url(forResource: "ViewAsRetina4_7Test", withExtension: "storyboard")
+        let okRule = Rules.ViewAsDeviceRule(context: context(from: .default))
+        let okViolations = try! okRule.validate(xib: XibFile(url: okUrl))
+        XCTAssertEqual(okViolations.count, 0)
+    }
+
+    func testViewAsDeviceWithConfig() {
+        let config = Config(viewAsDeviceRule: ViewAsDeviceConfig(deviceId: "retina4_0"))
+        let ngUrl = self.url(forResource: "ViewAsRetina6_5Test", withExtension: "storyboard")
+        let ngRule = Rules.ViewAsDeviceRule(context: context(from: config))
+        let ngViolations = try! ngRule.validate(xib: XibFile(url: ngUrl))
+        XCTAssertEqual(ngViolations.count, 1)
+        let okUrl = self.url(forResource: "ViewAsRetina4_0Test", withExtension: "storyboard")
+        let okRule = Rules.ViewAsDeviceRule(context: context(from: config))
+        let okViolations = try! okRule.validate(xib: XibFile(url: okUrl))
+        XCTAssertEqual(okViolations.count, 0)
+    }
 }
 
 // MARK: resource utils

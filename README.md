@@ -77,6 +77,7 @@ Alternatively, if you've installed IBLinter via CocoaPods the script should look
 | `image_resources`              | Check if image resources are valid.                                            |
 | `custom_module`                | Check if custom class match custom module by `custom_module_rule` config.      |
 | `use_base_class`               | Check if custom class is in base classes by `use_base_class_rule` config.      |
+| `view_as_device`               | Check `View as:` set as a device specified by `view_as_device_rule` config.    |
 
 
 Pull requests are encouraged.
@@ -95,6 +96,7 @@ You can configure IBLinter by adding a `.iblinter.yml` file from project root di
 | `included`           | Path to include for lint.   |
 | `custom_module_rule` | Custom module rule configs. |
 | `use_base_class_rule`| Use base class rule configs.|
+| `view_as_device_rule`| View as device rule configs.|
 
 ### CustomModuleConfig
 
@@ -116,6 +118,26 @@ You can configure `use_base_class` rule by `UseBaseClassConfig` list.
 | `base_classes`    | Base classes of the element class. |
 
 **Note:** UseBaseClassRule does not work for classes that inherit base class. You need to add all classes to `base_classes` to check.
+
+### ViewAsDeviceConfig
+
+You can configure `view_as_device` rule by `ViewAsDeviceConfig`. If there are no config, `device_id` is set as `retina4_7`.  
+
+| key               | description                        |
+|:------------------|:---------------------------------- |
+| `device_id`       | Device id for device.              |
+
+**appx.** Table of mapping device name to `device_id` (on `XCode 10.2`) 
+
+| device name       | device id            |
+|:------------------|:-------------------- |
+| `iPhone 4s`       | `retina3_5`          |
+| `iPhone SE`       | `retina4_0`          |
+| `iPhone 8`        | `retina4_7`          |
+| `iPhone 8 Plus`   | `retina5_5`          |
+| `iPhone XS`       | `retina5_9`          |
+| `iPhone XR`       | `retina6_1`          |
+| `iPhone XS Max`   | `retina6_5`          |
 
 
 ```yaml
@@ -139,4 +161,6 @@ use_base_class_rule:
     base_classes:
       - PrimaryLabel
       - SecondaryLabel
+view_as_device_rule:
+  device_id: retina4_0
 ```
