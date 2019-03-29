@@ -127,7 +127,7 @@ You can configure `view_as_device` rule by `ViewAsDeviceConfig`. If there are no
 |:------------------|:---------------------------------- |
 | `device_id`       | Device id for device.              |
 
-**appx.** Table of mapping device name to `device_id` (on `XCode 10.2`) 
+**appx.** Table of mapping device name to `device_id` (on `Xcode 10.2`) 
 
 | device name       | device id            |
 |:------------------|:-------------------- |
