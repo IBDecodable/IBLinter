@@ -1,0 +1,7 @@
+disabled_rules:
+  - custom_class_name
+enabled_rules: 
+excluded:
+  - Carthage
+view_as_device_rule:
+  device_id: retina3_5
