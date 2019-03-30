@@ -30,7 +30,7 @@ let package = Package(
             dependencies: ["IBLinterKit"],
             path: "Tests/IBLinterKitTest",
             exclude: ["Tests/IBLinterKitTest/Resources"]
-            ),
+        ),
         .testTarget(name: "IBLinterTest",
             dependencies: ["IBLinter"]),
     ]
