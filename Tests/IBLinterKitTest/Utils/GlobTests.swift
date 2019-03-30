@@ -69,7 +69,6 @@ class GlobTests: XCTestCase {
             case root(Set<Path>)
             case directory(String, Set<Path>)
             case file(String)
-            var hashValue: Int { return name.hashValue }
             var name: String {
                 switch self {
                 case .directory(let name, _), .file(let name): return name
