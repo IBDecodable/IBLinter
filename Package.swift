@@ -12,7 +12,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", .branch("master")),
         .package(url: "https://github.com/Carthage/Commandant.git", from: "0.15.0"),
-        .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.21.1"),
+        .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.22.0"),
         .package(url: "https://github.com/xcodeswift/xcproj.git", from: "6.6.0"),
     ],
     targets: [
