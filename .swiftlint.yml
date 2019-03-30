@@ -11,3 +11,4 @@ disabled_rules:
   - type_name
   - cyclomatic_complexity
   - pattern_matching_keywords
+  - nesting

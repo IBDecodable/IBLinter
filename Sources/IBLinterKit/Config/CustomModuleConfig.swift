@@ -13,12 +13,6 @@ public struct CustomModuleConfig: Codable {
     public let included: [String]
     public let excluded: [String]
 
-    enum CodingKeys: String, CodingKey {
-        case module = "module"
-        case included = "included"
-        case excluded = "excluded"
-    }
-
     public static let `default` = CustomModuleConfig.init()
 
     private init() {

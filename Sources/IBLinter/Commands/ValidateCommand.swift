@@ -53,7 +53,8 @@ struct ValidateCommand: CommandProtocol {
     private func validate(workDirectory: URL, config: Config) -> [Violation] {
         let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
         let rules = Rules.rules(context)
-        return validateXib(workDirectory: workDirectory, rules: rules, config: config) + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
+        return validateXib(workDirectory: workDirectory, rules: rules, config: config)
+            + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
     }
 
     public func validateStoryboard(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
