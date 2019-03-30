@@ -3,8 +3,10 @@ import XCTest
 
 class ConfigTest: XCTestCase {
 
+    let fixture = Fixture()
+
     func testConfigFile() throws {
-        let url = self.url(forResource: ".iblinter", withExtension: "yml")
+        let url = fixture.path("Resources/Config/.iblinter.yml")
         let workingDirectory = url.deletingLastPathComponent()
         let config = try Config.load(from: workingDirectory)
         XCTAssertEqual(config.disabledRules, ["custom_class_name"])
@@ -14,7 +16,7 @@ class ConfigTest: XCTestCase {
     }
 
     func testNullableConfigFile() throws {
-        let url = self.url(forResource: ".iblinter_nullable", withExtension: "yml")
+        let url = fixture.path("Resources/Config/.iblinter_nullable.yml")
         let workingDirectory = url.deletingLastPathComponent()
         let config = try Config.load(from: workingDirectory, fileName: url.lastPathComponent)
         XCTAssertEqual(config.disabledRules, ["custom_class_name"])
@@ -23,7 +25,7 @@ class ConfigTest: XCTestCase {
     }
 
     func testViewAsDeviceConfigFile() throws {
-        let url = self.url(forResource: ".iblinter_view_as_device", withExtension: "yml")
+        let url = fixture.path("Resources/Config/.iblinter_view_as_device.yml")
         let workingDirectory = url.deletingLastPathComponent()
         let config = try Config.load(from: workingDirectory, fileName: url.lastPathComponent)
         XCTAssertNotNil(config.viewAsDeviceRule)

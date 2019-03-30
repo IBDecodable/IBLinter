@@ -25,8 +25,12 @@ let package = Package(
         .target(
             name: "IBLinterKit",
             dependencies: ["IBDecodable", "Commandant", "SourceKittenFramework", "xcproj"]),
-        .testTarget(name: "IBLinterKitTest",
-            dependencies: ["IBLinterKit"]),
+        .testTarget(
+            name: "IBLinterKitTest",
+            dependencies: ["IBLinterKit"],
+            path: "Tests/IBLinterKitTest",
+            exclude: ["Tests/IBLinterKitTest/Resources"]
+            ),
         .testTarget(name: "IBLinterTest",
             dependencies: ["IBLinter"]),
     ]

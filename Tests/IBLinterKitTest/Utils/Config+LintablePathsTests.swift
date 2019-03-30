@@ -1,9 +1,10 @@
 @testable import IBLinterKit
-@testable import IBLinter
 import XCTest
 
 
 class ConfigLintablePathsTests: XCTestCase {
+
+    let fixture = Fixture()
 
     func testIncluded() {
         let config = Config(
@@ -11,7 +12,7 @@ class ConfigLintablePathsTests: XCTestCase {
             excluded: ["Level1_1"], included: [],
             customModuleRule: [], baseClassRule: [], reporter: ""
         )
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
 
         XCTAssertEqual(
@@ -26,7 +27,7 @@ class ConfigLintablePathsTests: XCTestCase {
             excluded: [], included: ["Level1_2"],
             customModuleRule: [], baseClassRule: [], reporter: ""
         )
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
 
         XCTAssertEqual(
@@ -41,22 +42,9 @@ class ConfigLintablePathsTests: XCTestCase {
             excluded: ["Level1_1"], included: ["Level1_1/Level2_1"],
             customModuleRule: [], baseClassRule: [], reporter: ""
         )
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
 
         XCTAssertEqual(lintablePaths, [])
-    }
-}
-
-extension XCTestCase {
-    var bundle: Bundle {
-        return Bundle(for: type(of: self))
-    }
-
-    var bundleURL: URL {
-        if let url = bundle.resourceURL?.appendingPathComponent("Resources"), FileManager.default.isDirectory(url.path) {
-            return url
-        }
-        return URL(fileURLWithPath: "./Tests/IBLinterTest/Resources")
     }
 }

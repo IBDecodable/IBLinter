@@ -4,8 +4,10 @@ import XCTest
 
 class GlobTests: XCTestCase {
 
+    let fixture = Fixture()
+
     func testSimplePath() {
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         XCTAssertEqual(
             glob(pattern: projectPath.path).map { $0.path },
             [projectPath.path]
@@ -13,7 +15,7 @@ class GlobTests: XCTestCase {
     }
 
     func testSimpleFile() {
-        let filePath = bundleURL.appendingPathComponent("ProjectMock/Level1_1/Level1_1.xib")
+        let filePath = fixture.path("Resources/Utils/Glob/ProjectMock/Level1_1/Level1_1.xib")
         XCTAssertEqual(
             glob(pattern: filePath.path).map { $0.path },
             [filePath.path]
@@ -21,7 +23,7 @@ class GlobTests: XCTestCase {
     }
 
     func testSubPaths() {
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         XCTAssertEqual(
             Set(glob(pattern: projectPath.appendingPathComponent("*").path).map { $0.path }),
             [
@@ -32,7 +34,7 @@ class GlobTests: XCTestCase {
     }
 
     func testRecursiveSubPaths() {
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         XCTAssertEqual(
             Set(glob(pattern: projectPath.appendingPathComponent("**").path).map { $0.path }),
             [
@@ -43,7 +45,7 @@ class GlobTests: XCTestCase {
     }
 
     func testMultiRecursiveSubPaths() {
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         XCTAssertEqual(
             Set(glob(pattern: projectPath.appendingPathComponent("**/Level2_1/**").path).map { $0.path }),
             [
@@ -53,7 +55,7 @@ class GlobTests: XCTestCase {
     }
 
     func testMultiRecursivePaths() {
-        let projectPath = bundleURL.appendingPathComponent("ProjectMock")
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
         XCTAssertEqual(
             glob(pattern: projectPath.appendingPathComponent("**/Level2_1/*.xib").path).map { $0.path },
             [
@@ -166,7 +168,7 @@ class GlobTests: XCTestCase {
 
 extension XCTestCase {
     var bundleURL: URL {
-        if let url = bundle.resourceURL?.appendingPathComponent("Resources"), FileManager.default.isDirectory(url.path) {
+        if let url = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent("Resources"), FileManager.default.isDirectory(url.path) {
             return url
         }
         return URL(fileURLWithPath: "./Tests/IBLinterTest/Resources")
