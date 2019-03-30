@@ -5,9 +5,16 @@ import PackageDescription
 let package = Package(
     name: "IBLinter",
     products: [
-        .executable(name: "main", targets: ["main"]),
-        .library(name: "IBLinter", type: .dynamic, targets: ["IBLinter"]),
-        .library(name: "IBLinterKit", targets: ["IBLinterKit"]),
+        .executable(
+            name: "iblinter", targets: ["IBLinter"]
+        ),
+        .library(
+            name: "IBLinterFrontend",
+            type: .dynamic, targets: ["IBLinterFrontend"]
+        ),
+        .library(
+            name: "IBLinterKit", targets: ["IBLinterKit"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", .branch("master")),
@@ -17,11 +24,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "main",
-            dependencies: ["IBLinter"]
+            name: "IBLinter",
+            dependencies: ["IBLinterFrontend"]
         ),
         .target(
-            name: "IBLinter",
+            name: "IBLinterFrontend",
             dependencies: ["IBLinterKit"]
         ),
         .target(
@@ -33,12 +40,7 @@ let package = Package(
         ),
         .testTarget(
             name: "IBLinterKitTest",
-            dependencies: ["IBLinterKit"],
-            path: "Tests/IBLinterKitTest"
-        ),
-        .testTarget(
-            name: "IBLinterTest",
-            dependencies: ["IBLinter"]
+            dependencies: ["IBLinterKit"]
         ),
     ]
 )
