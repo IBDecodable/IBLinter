@@ -9,18 +9,19 @@ import IBDecodable
 
 extension Rules {
 
-    public struct ForceToEnableAutoLayoutRule: Rule {
+    struct ForceToEnableAutoLayoutRule: Rule {
 
-        public static var identifier: String = "enable_autolayout"
+        static let identifier: String = "enable_autolayout"
+        static let description = "Force to use useAutolayout option"
 
-        public init(context: Context) {}
+        init(context: Context) {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let useAutolayout = storyboard.document.useAutolayout else { return [] }
             return violation(useAutolayout: useAutolayout, file: storyboard)
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             guard let useAutolayout = xib.document.useAutolayout else { return [] }
             return violation(useAutolayout: useAutolayout, file: xib)
         }

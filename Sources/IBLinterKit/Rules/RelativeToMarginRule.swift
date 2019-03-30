@@ -9,20 +9,21 @@ import IBDecodable
 
 extension Rules {
 
-    public struct RelativeToMarginRule: Rule {
+    struct RelativeToMarginRule: Rule {
 
-        public static let identifier: String = "relative_to_margin"
+        static let identifier: String = "relative_to_margin"
+        static let description = "Forbid to use relative to margin option."
 
-        public init(context: Context) {}
+        init(context: Context) {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             let scenes = storyboard.document.scenes
             let viewControllers = scenes?.compactMap { $0.viewController }
             return viewControllers?.compactMap { $0.viewController.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             return xib.document.views?.flatMap { validate(for: $0.view, file: xib) } ?? []
         }
 

@@ -14,6 +14,7 @@ extension Rules {
     struct ImageResourcesRule: Rule {
 
         static let identifier: String = "image_resources"
+        static let description = "Check if image resources are valid."
 
         let assetsCatalogs: [AssetsCatalog]
         let xcodeproj: [XcodeProj]

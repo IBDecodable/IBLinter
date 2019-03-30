@@ -9,13 +9,14 @@ import IBDecodable
 
 extension Rules {
 
-    public struct StoryboardViewControllerId: Rule {
+    struct StoryboardViewControllerId: Rule {
 
-        public static let identifier: String = "storyboard_viewcontroller_id"
+        static let identifier: String = "storyboard_viewcontroller_id"
+        static let description = "Check that Storyboard ID same as ViewController class name."
 
-        public init(context: Context) {}
+        init(context: Context) {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             let viewControllers = storyboard.document.scenes?.compactMap { $0.viewController }
             return viewControllers?.compactMap {
                 $0.viewController.customClass != $0.viewController.storyboardIdentifier ?
@@ -25,7 +26,7 @@ extension Rules {
                 } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             return []
         }
     }

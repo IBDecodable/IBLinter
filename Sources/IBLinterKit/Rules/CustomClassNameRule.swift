@@ -19,13 +19,14 @@ private extension StoryboardFile {
 
 extension Rules {
 
-    public struct CustomClassNameRule: Rule {
+    struct CustomClassNameRule: Rule {
 
-        public static let identifier: String = "custom_class_name"
+        static let identifier: String = "custom_class_name"
+        static let description = "Custom class name of ViewController in storyboard should be same as file name."
 
-        public init(context: Context) {}
+        init(context: Context) {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let viewController = storyboard.document.scenes?.first?.viewController,
                 let customClass = viewController.viewController.customClass,
                 storyboard.document.scenes?.count == 1,
@@ -38,6 +39,6 @@ extension Rules {
             return [Violation.init(pathString: storyboard.pathString, message: message, level: .error)]
         }
 
-        public func validate(xib: XibFile) -> [Violation] { return [] }
+        func validate(xib: XibFile) -> [Violation] { return [] }
     }
 }

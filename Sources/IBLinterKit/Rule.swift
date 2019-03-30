@@ -10,6 +10,7 @@ import IBDecodable
 public protocol Rule {
     init(context: Context)
     static var identifier: String { get }
+    static var description: String { get }
     func validate(storyboard: StoryboardFile) -> [Violation]
     func validate(xib: XibFile) -> [Violation]
 }

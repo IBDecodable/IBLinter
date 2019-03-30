@@ -30,13 +30,14 @@ private extension StoryboardFile {
 
 extension Rules {
 
-    public struct CustomModuleRule: Rule {
+    struct CustomModuleRule: Rule {
 
-        public static let identifier: String = "custom_module"
+        static let identifier: String = "custom_module"
+        static let description = "Check if custom class match custom module by custom_module_rule config."
 
         private var moduleClasses: [String:[String]] = [:]
 
-        public init(context: Context) {
+        init(context: Context) {
 
             func classes(from path: URL) -> [String] {
                 guard let file = SourceKittenFramework.File(path: path.relativePath),
@@ -57,12 +58,12 @@ extension Rules {
             }
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
             return views.flatMap { validate(for: $0.view, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
         }
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let views = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
