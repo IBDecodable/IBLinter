@@ -3,8 +3,10 @@ import XCTest
 
 class AssetsCatalogTest: XCTestCase {
 
+    let fixture = Fixture()
+
     func testImageAssets() {
-        let url = self.url(forResource: "Media", withExtension: "xcassets")
+        let url = fixture.path("Resources/Rules/ImageResourcesRule/Media.xcassets")
         let asset = AssetsCatalog.init(path: url.path)
         XCTAssertEqual(asset.name, "Media")
         XCTAssertEqual(

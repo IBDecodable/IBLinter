@@ -11,10 +11,12 @@ import XCTest
 
 class ReportersTest: XCTestCase {
 
+    let fixture = Fixture()
+
     func testJSONReporter() {
         let reporter = JSONReporter.self
 
-        let url = self.url(forResource: "ViewTest", withExtension: "xib")
+        let url = fixture.path("ViewTest.xib")
         let violation = Violation(pathString: url.absoluteString,
                                   message: "Violation Reason 1.", level: .error)
         let json = reporter.toJSON(violation: violation)

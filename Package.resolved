@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/tadija/AEXML.git",
         "state": {
           "branch": null,
-          "revision": "54bb8ea6fb693dd3f92a89e5fcc19e199fdeedd0",
-          "version": "4.3.3"
+          "revision": "6eea665515d079c338690147082a8084a36484b0",
+          "version": "4.3.0"
         }
       },
       {
@@ -20,30 +20,12 @@
         }
       },
       {
-        "package": "Files",
-        "repositoryURL": "https://github.com/JohnSundell/Files.git",
-        "state": {
-          "branch": null,
-          "revision": "a84615f4558151fab52ac38df697ce2442991f93",
-          "version": "2.3.0"
-        }
-      },
-      {
         "package": "IBDecodable",
         "repositoryURL": "https://github.com/IBDecodable/IBDecodable.git",
         "state": {
           "branch": "master",
           "revision": "eb8ebe5ec1ff87a07e4621510e23a5763525f014",
           "version": null
-        }
-      },
-      {
-        "package": "Marathon",
-        "repositoryURL": "https://github.com/JohnSundell/Marathon.git",
-        "state": {
-          "branch": null,
-          "revision": "a06df8de0b79c1a3b69228ec5368acd52956d8ec",
-          "version": "3.1.0"
         }
       },
       {
@@ -74,24 +56,6 @@
         }
       },
       {
-        "package": "Releases",
-        "repositoryURL": "https://github.com/JohnSundell/Releases.git",
-        "state": {
-          "branch": null,
-          "revision": "e74f0895855b56147cb96f2d45aba3ec37da64fb",
-          "version": "3.0.0"
-        }
-      },
-      {
-        "package": "Require",
-        "repositoryURL": "https://github.com/JohnSundell/Require.git",
-        "state": {
-          "branch": null,
-          "revision": "7cfbd0d8a2dede0e01f6f0d8ab2c7acef1df112e",
-          "version": "2.0.1"
-        }
-      },
-      {
         "package": "Result",
         "repositoryURL": "https://github.com/antitypical/Result.git",
         "state": {
@@ -105,8 +69,8 @@
         "repositoryURL": "https://github.com/JohnSundell/ShellOut.git",
         "state": {
           "branch": null,
-          "revision": "d3d54ce662dfee7fef619330b71d251b8d4869f9",
-          "version": "2.2.0"
+          "revision": "f1c253a34a40df4bfd268b09fdb101b059f6d52d",
+          "version": "2.1.0"
         }
       },
       {
@@ -132,26 +96,8 @@
         "repositoryURL": "https://github.com/drmohundro/SWXMLHash.git",
         "state": {
           "branch": null,
-          "revision": "0d6bb315528888edde0dafe93564f074669c44e9",
-          "version": "4.8.0"
-        }
-      },
-      {
-        "package": "Unbox",
-        "repositoryURL": "https://github.com/JohnSundell/Unbox.git",
-        "state": {
-          "branch": null,
-          "revision": "9575afeb61597fdea9070ca07effede5fb37c2c8",
-          "version": "3.1.0"
-        }
-      },
-      {
-        "package": "Wrap",
-        "repositoryURL": "https://github.com/JohnSundell/Wrap.git",
-        "state": {
-          "branch": null,
-          "revision": "8085c925060b84a1fc0caef444c130da2c8154c3",
-          "version": "3.0.1"
+          "revision": "f43166a8e18fdd0857f29e303b1bb79a5428bca0",
+          "version": "4.9.0"
         }
       },
       {
