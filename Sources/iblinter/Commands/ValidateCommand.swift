@@ -26,28 +26,6 @@ struct ValidateCommand: CommandProtocol {
     }
 
     func run(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
-
-        let iblinterFilePath: Path? = {
-            if let iblinterFilePathString = options.iblinterFilePath {
-                let iblinterFilePath = Path(iblinterFilePathString)
-                guard iblinterFilePath.exists else {
-                    fatalError("\(iblinterFilePath) not found")
-                }
-                return iblinterFilePath
-            } else {
-                let defaultFile = Path("./IBLinterfile.swift")
-                guard defaultFile.exists else { return nil }
-                return defaultFile
-            }
-        }()
-        if let iblinterFilePath = iblinterFilePath {
-            return IBLinterRunner(ibLinterfile: iblinterFilePath).run()
-        }
-
-        return runInternal(options)
-    }
-
-    func runInternal(_ options: ValidateCommand.Options) -> Result<(), ValidateCommand.ClientError> {
         let workDirectoryString = options.path ?? FileManager.default.currentDirectoryPath
         let workDirectory = URL(fileURLWithPath: workDirectoryString)
         guard FileManager.default.isDirectory(workDirectory.path) else {
