@@ -9,7 +9,6 @@ import Foundation
 import IBDecodable
 import xcodeproj
 
-
 extension Rules {
 
     struct ImageResourcesRule: Rule {

@@ -28,7 +28,7 @@ public struct Rules {
             CustomModuleRule.self,
             UseBaseClassRule.self,
             AmbiguousViewRule.self,
-            ViewAsDeviceRule.self,
+            ViewAsDeviceRule.self
         ]
     }()
 
@@ -37,7 +37,7 @@ public struct Rules {
             CustomClassNameRule.self,
             ForceToEnableAutoLayoutRule.self,
             DuplicateConstraintRule.self,
-            AmbiguousViewRule.self,
+            AmbiguousViewRule.self
         ]
     }
 

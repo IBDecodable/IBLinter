@@ -7,7 +7,7 @@
 
 import IBDecodable
 
-fileprivate func deviceName(from deviceId: String) -> String {
+private func deviceName(from deviceId: String) -> String {
     switch deviceId {
     case "retina3_5": return "iPhone 4s"
     case "retina4_0": return "iPhone SE"
@@ -19,7 +19,6 @@ fileprivate func deviceName(from deviceId: String) -> String {
     default: return "Unknown device"
     }
 }
-
 
 extension Rules {
     fileprivate static func violation<T: InterfaceBuilderFile>(deviceIdToFit: String, file: T) -> [Violation] {

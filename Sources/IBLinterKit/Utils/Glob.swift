@@ -18,7 +18,6 @@ extension FileManager {
     }
 }
 
-
 #if os(Linux)
 import Glibc
 
