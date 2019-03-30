@@ -13,6 +13,7 @@ extension Rules {
 
         static let identifier: String = "enable_autolayout"
         static let description = "Force to use useAutolayout option"
+        static let isDefault = true
 
         init(context: Context) {}
 

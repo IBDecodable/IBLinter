@@ -34,6 +34,7 @@ extension Rules {
 
         static let identifier: String = "custom_module"
         static let description = "Check if custom class match custom module by custom_module_rule config."
+        static let isDefault = true
 
         private var moduleClasses: [String:[String]] = [:]
 

@@ -14,6 +14,7 @@ extension Rules {
 
         static let identifier: String = "duplicate_constraint"
         static let description = "Display warning when view has duplicated constraint."
+        static let isDefault = true
 
         init(context: Context) {}
 

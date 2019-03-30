@@ -13,6 +13,7 @@ extension Rules {
 
         static let identifier: String = "ambiguous"
         static let description = "Display error when views are ambiguous."
+        static let isDefault = true
 
         init(context: Context) {}
 
