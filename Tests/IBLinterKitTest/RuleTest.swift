@@ -2,21 +2,6 @@ import IBDecodable
 @testable import IBLinterKit
 import XCTest
 
-extension Context {
-    static func mock(from config: Config) -> Context {
-        let workDirectory = URL(fileURLWithPath: #file)
-            .deletingLastPathComponent() // ./Tests/IBLinterKitTests/Rules
-            .deletingLastPathComponent() // ./Tests/IBLinterKitTests
-            .deletingLastPathComponent() // ./Tests
-            .deletingLastPathComponent() // ./
-        return Context(
-            config: config,
-            workDirectory: workDirectory,
-            externalRules: []
-        )
-    }
-}
-
 class RuleTests: XCTestCase {
 
     func context(from config: Config) -> Context {
