@@ -8,7 +8,7 @@
 import Foundation
 import IBDecodable
 import SourceKittenFramework
-import xcproj
+import xcodeproj
 
 private extension XibFile {
   var fileExtension: String {
@@ -30,38 +30,40 @@ private extension StoryboardFile {
 
 extension Rules {
 
-    public struct CustomModuleRule: Rule {
+    struct CustomModuleRule: Rule {
 
-        public static let identifier: String = "custom_module"
+        static let identifier: String = "custom_module"
+        static let description = "Check if custom class match custom module by custom_module_rule config."
 
         private var moduleClasses: [String:[String]] = [:]
 
-        public init(context: Context) {
-            for customModuleConfig in context.config.customModuleRule {
+        init(context: Context) {
+
+            func classes(from path: URL) -> [String] {
+                guard let file = SourceKittenFramework.File(path: path.relativePath),
+                    let structure = try? Structure(file: file) else { return [] }
+                return structure.dictionary.substructure.compactMap { dictionary in
+                    guard let kind = dictionary.kind,
+                        SwiftDeclarationKind(rawValue: kind) == .class else { return nil }
+                    return dictionary.name
+                }
+            }
+
+            moduleClasses = context.config.customModuleRule.reduce(into: [:]) { moduleClasses, customModuleConfig in
                 let paths = customModuleConfig.included.flatMap { glob(pattern: "\($0)/**/*.swift") }
                 let excluded = customModuleConfig.excluded.flatMap { glob(pattern: "\($0)/**/*.swift") }
                 let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
-                var classes: [String] = []
-                for path in lintablePaths {
-                    let file = SourceKittenFramework.File(path: path.relativePath)
-                    let fileClasses: [String] = file?.structure.dictionary.substructure.compactMap { dictionary in
-                        if let kind = dictionary.kind, SwiftDeclarationKind(rawValue: kind) == .class {
-                            return dictionary.name
-                        }
-                        return nil
-                    } ?? []
-                    classes += fileClasses
-                }
-                self.moduleClasses[customModuleConfig.module] = classes
+                let classes: [String] = lintablePaths.flatMap(classes(from: ))
+                moduleClasses[customModuleConfig.module] = classes
             }
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
             return views.flatMap { validate(for: $0.view, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
         }
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let views = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
@@ -70,23 +72,31 @@ extension Rules {
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T, fileNameWithoutExtension: String) -> [Violation] {
             let violation: [Violation] = {
                 guard let customClass = view.customClass else { return [] }
-                for moduleName in moduleClasses.keys {
-                    if let classes = moduleClasses[moduleName] {
-                        if classes.contains(customClass) {
-                            if let customModule = view.customModule {
-                                if moduleName == customModule {
-                                    return []
-                                }
-                            }
-                            let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(moduleName)"
-                            return [Violation(pathString: file.pathString, message: message, level: .error)]
-                        }
-                    }
+                guard let expectedModule = moduleClasses.first(where: { $0.value.contains(customClass) }) else {
+                    return []
+                }
+                let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(expectedModule.key)"
+                let violation = Violation(pathString: file.pathString, message: message, level: .error)
+                guard let customModule = view.customModule, expectedModule.key == customModule else {
+                    return [violation]
                 }
                 return []
             }()
             return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file, fileNameWithoutExtension: fileNameWithoutExtension) } ?? [])
         }
 
+    }
+}
+
+fileprivate extension Dictionary where Key: ExpressibleByStringLiteral {
+    var substructure: [[String: SourceKitRepresentable]] {
+        let substructure = self["key.substructure"] as? [SourceKitRepresentable] ?? []
+        return substructure.compactMap { $0 as? [String: SourceKitRepresentable] }
+    }
+    var kind: String? {
+        return self["key.kind"] as? String
+    }
+    var name: String? {
+        return self["key.name"] as? String
     }
 }

@@ -7,7 +7,7 @@
 
 import IBDecodable
 
-fileprivate func deviceName(from deviceId: String) -> String {
+private func deviceName(from deviceId: String) -> String {
     switch deviceId {
     case "retina3_5": return "iPhone 4s"
     case "retina4_0": return "iPhone SE"
@@ -20,7 +20,6 @@ fileprivate func deviceName(from deviceId: String) -> String {
     }
 }
 
-
 extension Rules {
     fileprivate static func violation<T: InterfaceBuilderFile>(deviceIdToFit: String, file: T) -> [Violation] {
         guard let document = file.document as? InterfaceBuilderDocument,
@@ -32,17 +31,18 @@ extension Rules {
         return deviceId == deviceIdToFit ? [] : [Violation(pathString: file.pathString, message: message, level: .warning)]
     }
 
-    public struct ViewAsDeviceRule: Rule {
-        public static var identifier: String = "view_as_device"
+    struct ViewAsDeviceRule: Rule {
+        static let identifier: String = "view_as_device"
+        static let description = "Check View as: set as a device specified by view_as_device_rule config."
 
-        public let deviceIdToFit: String
-        public init(context: Context) {
+        let deviceIdToFit: String
+        init(context: Context) {
             deviceIdToFit = context.config.viewAsDeviceRule?.deviceId ?? "retina4_7"
         }
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             return Rules.violation(deviceIdToFit: deviceIdToFit, file: storyboard)
         }
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             return Rules.violation(deviceIdToFit: deviceIdToFit, file: xib)
         }
     }

@@ -9,25 +9,26 @@ import Foundation
 import IBDecodable
 
 extension Rules {
-    public struct UseBaseClassRule: Rule {
+    struct UseBaseClassRule: Rule {
 
-        public static var identifier: String = "use_base_class"
+        static let identifier: String = "use_base_class"
+        static let description = "Check if custom class is in base classes by use_base_class_rule config."
 
         private var baseClasses: [String: [String]] = [:]
 
-        public init(context: Context) {
+        init(context: Context) {
             for baseClassConfig in context.config.useBaseClassRule {
                 self.baseClasses[baseClassConfig.elementClass] = baseClassConfig.baseClasses
             }
         }
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let views = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
             return views.flatMap { validate(for: $0.view, file: xib) }
         }

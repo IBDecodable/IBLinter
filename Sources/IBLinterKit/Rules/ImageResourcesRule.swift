@@ -7,13 +7,14 @@
 
 import Foundation
 import IBDecodable
-import xcproj
+import xcodeproj
 
 extension Rules {
 
     struct ImageResourcesRule: Rule {
 
         static let identifier: String = "image_resources"
+        static let description = "Check if image resources are valid."
 
         let assetsCatalogs: [AssetsCatalog]
         let xcodeproj: [XcodeProj]
@@ -51,8 +52,8 @@ extension Rules {
         private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], file: T) -> [Violation] {
             let catalogAssetNames = assetsCatalogs.flatMap { $0.values }
             let xcodeprojAssetNames = xcodeproj.flatMap {
-                $0.pbxproj.objects.fileReferences.compactMap {
-                    $0.value.name
+                $0.pbxproj.fileReferences.compactMap {
+                    $0.name
                 }
             }
             let assetNames = catalogAssetNames + xcodeprojAssetNames

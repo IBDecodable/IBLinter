@@ -47,9 +47,11 @@ public struct Config: Codable {
     }
 
     init(disabledRules: [String] = [], enabledRules: [String] = [],
-        excluded: [String] = [], included: [String] = [],
-        customModuleRule: [CustomModuleConfig] = [], baseClassRule: [UseBaseClassConfig] = [], viewAsDeviceRule: ViewAsDeviceConfig? = nil,
-        reporter: String = "xcode", disableWhileBuildingForIB: Bool = true) {
+         excluded: [String] = [], included: [String] = [],
+         customModuleRule: [CustomModuleConfig] = [],
+         baseClassRule: [UseBaseClassConfig] = [],
+         viewAsDeviceRule: ViewAsDeviceConfig? = nil,
+         reporter: String = "xcode", disableWhileBuildingForIB: Bool = true) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules
         self.excluded = excluded

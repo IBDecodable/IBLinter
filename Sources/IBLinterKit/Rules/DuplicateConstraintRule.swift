@@ -10,18 +10,19 @@ import IBDecodable
 
 extension Rules {
 
-    public struct DuplicateConstraintRule: Rule {
+    struct DuplicateConstraintRule: Rule {
 
-        public static let identifier: String = "duplicate_constraint"
+        static let identifier: String = "duplicate_constraint"
+        static let description = "Display warning when view has duplicated constraint."
 
-        public init(context: Context) {}
+        init(context: Context) {}
 
-        public func validate(storyboard: StoryboardFile) -> [Violation] {
+        func validate(storyboard: StoryboardFile) -> [Violation] {
             return storyboard.document.scenes?.compactMap { $0.viewController?.viewController.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
 
-        public func validate(xib: XibFile) -> [Violation] {
+        func validate(xib: XibFile) -> [Violation] {
             return xib.document.views?.flatMap { validate(for: $0.view, file: xib)} ?? []
         }
 
