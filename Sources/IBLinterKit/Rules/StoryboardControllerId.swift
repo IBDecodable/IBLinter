@@ -7,7 +7,7 @@
 
 import IBDecodable
 
-public extension Rules {
+extension Rules {
 
     public struct StoryboardViewControllerId: Rule {
 
