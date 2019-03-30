@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - Add this `CHANGELOG.md`
+### Removed
+- Remove `IBLinterfile` feature until module ABI stability
 ## [0.4.13] - 2019-3-30
 ### Added
 - Add `view_as_device` rule [#86](https://github.com/IBDecodable/IBLinter/pull/86)
