@@ -1,4 +1,5 @@
 @testable import IBLinterKit
+import Foundation
 
 extension Context {
     static func mock(from config: Config) -> Context {
