@@ -59,52 +59,34 @@ struct ValidateCommand: CommandProtocol {
 
     public func validateStoryboard(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
         let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "storyboard")
-        let storyboards: [StoryboardFile] = lintablePaths.compactMap {
-            do {
-                return try StoryboardFile.init(path: $0.relativePath)
-            } catch let error as InterfaceBuilderParser.Error {
-                switch error {
-                case .invalidFormatFile:
-                    print("\($0.relativePath) is invalid format and skipped")
-                    return nil
-                case .legacyFormat:
-                    print("\($0.relativePath) is legacy format. Please open with latest Xcode to migrate.")
-                    return nil
-                case .parsingError(let error):
-                    print("\($0.relativePath):\(error.line):\(error.column): error: Parse error")
-                    return nil
+        return rules.flatMap { rule in
+            return lintablePaths.flatMap { path -> [Violation] in
+                do {
+                    let file = try StoryboardFile.init(path: path.relativePath)
+                    return rule.validate(storyboard: file)
+                } catch let error as InterfaceBuilderParser.Error {
+                    return [error.asViolation(filePath: path)]
+                } catch let error {
+                    fatalError("parse error \(path.relativePath): \(error)")
                 }
-            } catch let error {
-                fatalError("parse error \($0.relativePath): \(error)")
             }
         }
-        let violations = rules.flatMap { rule in storyboards.flatMap { rule.validate(storyboard: $0) } }
-        return violations
     }
 
     public func validateXib(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
         let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "xib")
-        let xibs: [XibFile] = lintablePaths.compactMap {
-            do {
-                return try XibFile.init(path: $0.relativePath)
-            } catch let error as InterfaceBuilderParser.Error {
-                switch error {
-                case .invalidFormatFile:
-                    print("\($0.relativePath) is invalid format and skipped")
-                    return nil
-                case .legacyFormat:
-                    print("\($0.relativePath) is legacy format. Please open with latest Xcode to migrate.")
-                    return nil
-                case .parsingError(let error):
-                    print("\($0.relativePath):\(error.line):\(error.column): error: Parse error")
-                    return nil
+        return rules.flatMap { rule in
+            return lintablePaths.flatMap { path -> [Violation] in
+                do {
+                    let file = try StoryboardFile.init(path: path.relativePath)
+                    return rule.validate(storyboard: file)
+                } catch let error as InterfaceBuilderParser.Error {
+                    return [error.asViolation(filePath: path)]
+                } catch let error {
+                    fatalError("parse error \(path.relativePath): \(error)")
                 }
-            } catch let error {
-                fatalError("parse error \($0.relativePath): \(error)")
             }
         }
-        let violations = rules.flatMap { rule in xibs.flatMap { rule.validate(xib: $0) } }
-        return violations
     }
 }
 
@@ -134,5 +116,30 @@ struct ValidateOptions: OptionsProtocol {
 extension ProcessInfo {
     var compiledForInterfaceBuilder: Bool {
         return environment["COMPILED_FOR_INTERFACE_BUILDER"] != nil
+    }
+}
+
+extension InterfaceBuilderParser.Error {
+    func asViolation(filePath path: URL) -> Violation {
+        switch self {
+        case .invalidFormatFile:
+            return Violation(
+                pathString: path.relativePath,
+                message: "invalid format and skipped",
+                level: .warning
+            )
+        case .legacyFormat:
+            return Violation(
+                pathString: path.relativePath,
+                message: "\(path.relativePath) is legacy format. Please open with latest Xcode to migrate.",
+                level: .warning
+            )
+        case .parsingError(let error):
+            return Violation(
+                pathString: path.relativePath,
+                message: "Parse error \(error)",
+                level: .warning
+            )
+        }
     }
 }
