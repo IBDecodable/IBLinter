@@ -11,7 +11,7 @@ extension Rules {
 
     struct RelativeToMarginRule: Rule {
 
-        static let identifier: String = "relative_to_margin"
+        static let identifier = "relative_to_margin"
         static let description = "Forbid to use relative to margin option."
 
         init(context: Context) {}

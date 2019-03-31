@@ -11,13 +11,18 @@ public protocol Rule {
     init(context: Context)
     static var identifier: String { get }
     static var description: String { get }
+    static var isDefault: Bool { get }
     func validate(storyboard: StoryboardFile) -> [Violation]
     func validate(xib: XibFile) -> [Violation]
 }
 
+extension Rule {
+    public static var isDefault: Bool { return false }
+}
+
 public struct Rules {
 
-    static var allRules: [Rule.Type] = {
+    public private(set) static var allRules: [Rule.Type] = {
         return [
             CustomClassNameRule.self,
             RelativeToMarginRule.self,
@@ -34,12 +39,7 @@ public struct Rules {
     }()
 
     static var defaultRules: [Rule.Type] {
-        return [
-            CustomClassNameRule.self,
-            ForceToEnableAutoLayoutRule.self,
-            DuplicateConstraintRule.self,
-            AmbiguousViewRule.self
-        ]
+        return allRules.filter { $0.isDefault }
     }
 
     public static func rules(_ context: Context) -> [Rule] {

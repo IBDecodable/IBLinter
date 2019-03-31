@@ -5,7 +5,6 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-import IBLinterKit
 import Commandant
 
 public struct IBLinter {
