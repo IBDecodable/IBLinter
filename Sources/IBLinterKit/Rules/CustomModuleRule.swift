@@ -32,7 +32,7 @@ extension Rules {
 
     struct CustomModuleRule: Rule {
 
-        static let identifier: String = "custom_module"
+        static let identifier = "custom_module"
         static let description = "Check if custom class match custom module by custom_module_rule config."
         static let isDefault = true
 

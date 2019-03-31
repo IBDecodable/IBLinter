@@ -11,7 +11,7 @@ extension Rules {
 
     struct AmbiguousViewRule: Rule {
 
-        static let identifier: String = "ambiguous"
+        static let identifier = "ambiguous"
         static let description = "Display error when views are ambiguous."
         static let isDefault = true
 

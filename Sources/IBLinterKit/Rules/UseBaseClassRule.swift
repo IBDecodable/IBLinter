@@ -11,7 +11,7 @@ import IBDecodable
 extension Rules {
     struct UseBaseClassRule: Rule {
 
-        static let identifier: String = "use_base_class"
+        static let identifier = "use_base_class"
         static let description = "Check if custom class is in base classes by use_base_class_rule config."
 
         private var baseClasses: [String: [String]] = [:]

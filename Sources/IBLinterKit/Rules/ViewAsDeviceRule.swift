@@ -32,7 +32,7 @@ extension Rules {
     }
 
     struct ViewAsDeviceRule: Rule {
-        static let identifier: String = "view_as_device"
+        static let identifier = "view_as_device"
         static let description = "Check View as: set as a device specified by view_as_device_rule config."
 
         let deviceIdToFit: String

@@ -22,7 +22,7 @@ extension Rule {
 
 public struct Rules {
 
-    static var allRules: [Rule.Type] = {
+    public private(set) static var allRules: [Rule.Type] = {
         return [
             CustomClassNameRule.self,
             RelativeToMarginRule.self,

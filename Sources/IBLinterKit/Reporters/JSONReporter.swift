@@ -9,7 +9,7 @@ import Foundation
 
 struct JSONReporter: Reporter {
 
-    static let identifier: String = "json"
+    static let identifier = "json"
 
     static func generateReport(violations: [Violation]) -> String {
         let dictionary = violations.map(toJSON)

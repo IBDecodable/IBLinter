@@ -11,7 +11,7 @@ extension Rules {
 
     struct StoryboardViewControllerId: Rule {
 
-        static let identifier: String = "storyboard_viewcontroller_id"
+        static let identifier = "storyboard_viewcontroller_id"
         static let description = "Check that Storyboard ID same as ViewController class name."
 
         init(context: Context) {}

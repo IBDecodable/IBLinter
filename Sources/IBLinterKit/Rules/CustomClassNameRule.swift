@@ -21,7 +21,7 @@ extension Rules {
 
     struct CustomClassNameRule: Rule {
 
-        static let identifier: String = "custom_class_name"
+        static let identifier = "custom_class_name"
         static let description = "Custom class name of ViewController in storyboard should be same as file name."
 
         init(context: Context) {}

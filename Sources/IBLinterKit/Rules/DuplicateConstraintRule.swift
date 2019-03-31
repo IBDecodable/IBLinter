@@ -12,7 +12,7 @@ extension Rules {
 
     struct DuplicateConstraintRule: Rule {
 
-        static let identifier: String = "duplicate_constraint"
+        static let identifier = "duplicate_constraint"
         static let description = "Display warning when view has duplicated constraint."
         static let isDefault = true
 

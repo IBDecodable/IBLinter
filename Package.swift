@@ -15,6 +15,9 @@ let package = Package(
         .library(
             name: "IBLinterKit", targets: ["IBLinterKit"]
         ),
+        .executable(
+            name: "iblinter-tools", targets: ["Tools"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", .branch("master")),
@@ -37,6 +40,10 @@ let package = Package(
                 "IBDecodable", "Commandant",
                 "SourceKittenFramework", "xcodeproj"
             ]
+        ),
+        .target(
+            name: "Tools",
+            dependencies: ["IBLinterKit", "Commandant"]
         ),
         .testTarget(
             name: "IBLinterKitTest",

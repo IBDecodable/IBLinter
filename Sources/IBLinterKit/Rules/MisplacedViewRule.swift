@@ -11,7 +11,7 @@ extension Rules {
 
     struct MisplacedViewRule: Rule {
 
-        static let identifier: String = "misplaced"
+        static let identifier = "misplaced"
         static let description = "Display error when views are misplaced."
 
         init(context: Context) {}
