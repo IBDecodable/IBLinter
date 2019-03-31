@@ -1,8 +1,6 @@
 # IBLinter
 [![Build Status](https://travis-ci.org/IBDecodable/IBLinter.svg?branch=master)](https://travis-ci.org/IBDecodable/IBLinter)
-[![Swift 4.0](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
-
-A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/SwiftLint](https://github.com/realm/SwiftLint)
+[![Swift 4.0](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)](https://developer.apple.com/swift/) A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/SwiftLint](https://github.com/realm/SwiftLint)
 
 ![](assets/warning.png)
 
@@ -65,20 +63,7 @@ Alternatively, if you've installed IBLinter via CocoaPods the script should look
 
 ## Rules
 
-| Rule id                        | description                                                                    |
-|:-------------------------------|:-------------------------------------------------------------------------------|
-| `custom_class_name`            | Custom class name of ViewController in storyboard should be same as file name. |
-| `relative_to_margin`           | Forbid to use `relative to margin` option.                                     |
-| `misplaced`                    | Display error when views are misplaced.                                        |
-| `ambiguous`                    | Display error when views are ambiguous.                                        |
-| `enable_autolayout`            | Force to use `useAutolayout` option                                            |
-| `duplicate_constraint`         | Display warning when view has duplicated constraint.                           |
-| `storyboard_viewcontroller_id` | Check that Storyboard ID same as ViewController class name.                    |
-| `image_resources`              | Check if image resources are valid.                                            |
-| `custom_module`                | Check if custom class match custom module by `custom_module_rule` config.      |
-| `use_base_class`               | Check if custom class is in base classes by `use_base_class_rule` config.      |
-| `view_as_device`               | Check `View as:` set as a device specified by `view_as_device_rule` config.    |
-
+All rules are documented in [Rules.md](Rules.md)
 
 Pull requests are encouraged.
 
