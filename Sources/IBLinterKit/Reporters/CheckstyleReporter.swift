@@ -8,7 +8,7 @@ public struct CheckstyleReporter: Reporter {
         return "Reports violations as Checkstyle XML."
     }
 
-    public static func generateReport(_ violations: [StyleViolation]) -> String {
+    public static func generateReport(_ violations: [Violation]) -> String {
         return [
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<checkstyle version=\"4.3\">",
             violations
@@ -19,7 +19,7 @@ public struct CheckstyleReporter: Reporter {
         ].joined()
     }
 
-    private static func generateForViolationFile(_ file: String, violations: [StyleViolation]) -> String {
+    private static func generateForViolationFile(_ file: String, violations: [Violation]) -> String {
         return [
             "\n\t<file name=\"", file, "\">\n",
             violations.map(generateForSingleViolation).joined(),
@@ -27,7 +27,7 @@ public struct CheckstyleReporter: Reporter {
         ].joined()
     }
 
-    private static func generateForSingleViolation(_ violation: StyleViolation) -> String {
+    private static func generateForSingleViolation(_ violation: Violation) -> String {
         let line: Int = violation.location.line ?? 0
         let col: Int = violation.location.character ?? 0
         let severity: String = violation.severity.rawValue
