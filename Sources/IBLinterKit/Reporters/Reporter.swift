@@ -21,6 +21,8 @@ public struct Reporters {
             return JSONReporter.self
         case EmojiReporter.identifier:
             return EmojiReporter.self
+        case CheckstyleReporter.identifier:
+            return CheckstyleReporter.self
         default:
             fatalError("no reporter with identifier '\(reporter) available'")
         }
