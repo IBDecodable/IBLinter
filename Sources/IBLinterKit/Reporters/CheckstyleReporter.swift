@@ -8,7 +8,7 @@ public struct CheckstyleReporter: Reporter {
         return "Reports violations as Checkstyle XML."
     }
 
-    public static func generateReport(_ violations: [Violation]) -> String {
+    public static func generateReport(violations: [Violation]) -> String {
         return [
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<checkstyle version=\"4.3\">",
             violations
@@ -27,12 +27,12 @@ public struct CheckstyleReporter: Reporter {
         ].joined()
     }
 
-    private static func generateForSingleViolation(_ violation: Violation) -> String {
-        let line: Int = violation.location.line ?? 0
-        let col: Int = violation.location.character ?? 0
-        let severity: String = violation.severity.rawValue
-        let reason: String = violation.reason.escapedForXML()
-        let identifier: String = violation.ruleDescription.identifier
+    private static func generateForSingleViolation(violation: Violation) -> String {
+//        let line: Int = violation.location.line ?? 0
+//        let col: Int = violation.location.character ?? 0
+        let severity: String = violation.level.rawValue
+        let reason: String = violation.message.escapedForXML()
+//        let identifier: String = violation.ruleDescription.identifier
 //        let source: String = "iblinter.rules.\(identifier)".escapedForXML()
         return [
             "\t\t<error line=\"\(line)\" ",
