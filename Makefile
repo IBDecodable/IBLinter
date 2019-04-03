@@ -1,6 +1,4 @@
 PREFIX?=/usr/local
-SWIFT_LIB_FILES = .build/release/libIBLinter.dylib .build/release/*.swiftmodule
-C_LIB_DIRS = .build/release/CYaml.build .build/release/Clang_C.build .build/release/SourceKit.build
 
 build:
 		swift build --disable-sandbox -c release --static-swift-stdlib
@@ -12,13 +10,11 @@ clean_build:
 portable_zip: build
 		rm -rf portable_iblinter
 		mkdir portable_iblinter
-		mkdir portable_iblinter/lib
 		mkdir portable_iblinter/bin
 		cp -f .build/release/iblinter portable_iblinter/bin/iblinter
-		cp -rf $(C_LIB_DIRS) $(SWIFT_LIB_FILES) "portable_iblinter/lib"
 		cp -f LICENSE portable_iblinter
 		cd portable_iblinter
-		(cd portable_iblinter; zip -yr - "lib" "bin" "LICENSE") > "./portable_iblinter.zip"
+		(cd portable_iblinter; zip -yr - "bin" "LICENSE") > "./portable_iblinter.zip"
 		rm -rf portable_iblinter
 
 install: build
