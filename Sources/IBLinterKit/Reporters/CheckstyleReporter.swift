@@ -1,4 +1,4 @@
-public struct CheckstyleReporter: Reporter {
+struct CheckstyleReporter: Reporter {
     public static let identifier = "checkstyle"
     public static let isRealtime = false
 
