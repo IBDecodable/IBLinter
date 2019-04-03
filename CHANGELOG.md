@@ -3,8 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [0.4.14]
 ### Added
 - Add this `CHANGELOG.md`
+- Add `CheckstyleReporter` [#92](https://github.com/IBDecodable/IBLinter/pull/92)
 ### Removed
 - Remove `IBLinterfile` feature until module ABI stability
 ## [0.4.13] - 2019-3-30
@@ -42,7 +45,8 @@ All notable changes to this project will be documented in this file.
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.13...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.14...HEAD
+[0.4.13]: https://github.com/IBDecodable/IBLinter/compare/0.4.13...0.4.14
 [0.4.13]: https://github.com/IBDecodable/IBLinter/compare/0.4.12...0.4.13
 [0.4.12]: https://github.com/IBDecodable/IBLinter/compare/0.4.11...0.4.12
 [0.4.11]: https://github.com/IBDecodable/IBLinter/compare/0.4.10...0.4.11
