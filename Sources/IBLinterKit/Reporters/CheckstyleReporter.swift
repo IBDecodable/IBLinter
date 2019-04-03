@@ -30,7 +30,7 @@ public struct CheckstyleReporter: Reporter {
         let reason: String = violation.message.escapedForXML()
         return [
             "\t\t<error severity=\"", severity, "\" ",
-            "message=\"", reason, "\">\n"
+            "message=\"", reason, "\"/>\n"
         ].joined()
     }
 }
