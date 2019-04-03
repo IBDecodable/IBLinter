@@ -29,8 +29,8 @@ public struct CheckstyleReporter: Reporter {
         let severity: String = violation.level.rawValue
         let reason: String = violation.message.escapedForXML()
         return [
-            "severity=\"", severity, "\" ",
-            "message=\"", reason, "\"\n"
+            "\t\t<error severity=\"", severity, "\" ",
+            "message=\"", reason, "\">\n"
         ].joined()
     }
 }
