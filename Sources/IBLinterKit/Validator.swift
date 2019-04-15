@@ -44,8 +44,8 @@ public class Validator {
         return rules.flatMap { rule in
             return lintablePaths.flatMap { path -> [Violation] in
                 do {
-                    let file = try StoryboardFile.init(path: path.relativePath)
-                    return rule.validate(storyboard: file)
+                    let file = try XibFile.init(path: path.relativePath)
+                    return rule.validate(xib: file)
                 } catch let error as InterfaceBuilderParser.Error {
                     return [error.asViolation(filePath: path)]
                 } catch let error {
@@ -55,7 +55,6 @@ public class Validator {
         }
     }
 }
-
 
 extension InterfaceBuilderParser.Error {
     func asViolation(filePath path: URL) -> Violation {
