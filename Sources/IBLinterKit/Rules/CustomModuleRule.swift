@@ -51,12 +51,8 @@ extension Rules {
             }
 
             func resolvePath(_ includeURLString: String) -> URL {
-                if #available(OSX 10.11, *) {
-                    let url = URL(fileURLWithPath: includeURLString, relativeTo: context.workDirectory)
-                    return url.standardizedFileURL
-                } else {
-                    fatalError("Unsupported OS version")
-                }
+                let url = URL(fileURLWithPath: includeURLString, relativeTo: context.workDirectory)
+                return url.standardizedFileURL
             }
             func expandGlob(_ baseDirectory: URL) -> Set<URL> {
                 return glob(pattern: baseDirectory.appendingPathComponent("**").appendingPathComponent("*.swift").path)
