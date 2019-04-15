@@ -2,8 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-
+## [0.4.15]
+### Fixed
+- XIB files were not validated since 0.4.14. [#94](https://github.com/IBDecodable/IBLinter/pull/94)
+- Fix `custom_module` to support relative paths. [#95](https://github.com/IBDecodable/IBLinter/pull/95)
 ## [0.4.14]
 ### Added
 - Add this `CHANGELOG.md`
@@ -45,7 +47,8 @@ All notable changes to this project will be documented in this file.
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.14...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.15...HEAD
+[0.4.15]: https://github.com/IBDecodable/IBLinter/compare/0.4.14...0.4.15
 [0.4.14]: https://github.com/IBDecodable/IBLinter/compare/0.4.13...0.4.14
 [0.4.13]: https://github.com/IBDecodable/IBLinter/compare/0.4.12...0.4.13
 [0.4.12]: https://github.com/IBDecodable/IBLinter/compare/0.4.11...0.4.12
