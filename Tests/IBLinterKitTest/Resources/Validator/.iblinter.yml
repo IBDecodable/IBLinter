@@ -1,0 +1,3 @@
+enabled_rules:
+  - check_xib
+  - check_storyboard
