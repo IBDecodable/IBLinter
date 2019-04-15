@@ -50,9 +50,16 @@ extension Rules {
                 }
             }
 
+            func resolvePath(_ includeURLString: String) -> URL {
+                let url = URL(fileURLWithPath: includeURLString, relativeTo: context.workDirectory)
+                return url.standardizedFileURL
+            }
+            func expandGlob(_ baseDirectory: URL) -> Set<URL> {
+                return glob(pattern: baseDirectory.appendingPathComponent("**").appendingPathComponent("*.swift").path)
+            }
             moduleClasses = context.config.customModuleRule.reduce(into: [:]) { moduleClasses, customModuleConfig in
-                let paths = customModuleConfig.included.flatMap { glob(pattern: "\($0)/**/*.swift") }
-                let excluded = customModuleConfig.excluded.flatMap { glob(pattern: "\($0)/**/*.swift") }
+                let paths = customModuleConfig.included.map(resolvePath).flatMap(expandGlob)
+                let excluded = customModuleConfig.excluded.map(resolvePath).flatMap(expandGlob)
                 let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
                 let classes: [String] = lintablePaths.flatMap(classes(from: ))
                 moduleClasses[customModuleConfig.module] = classes
