@@ -6,8 +6,8 @@ import IBDecodable
 private struct CheckXibRule: Rule {
     init(context: Context) { }
     
-    static var identifier: String = "check_xib"
-    static var description: String = "Warn xib"
+    static let identifier = "check_xib"
+    static let description = "Warn xib"
     
     func validate(storyboard: StoryboardFile) -> [Violation] {
         return []
@@ -23,8 +23,8 @@ private struct CheckXibRule: Rule {
 private struct CheckStoryboardRule: Rule {
     init(context: Context) { }
     
-    static var identifier: String = "check_storyboard"
-    static var description: String = "Warn storyboard"
+    static let identifier = "check_storyboard"
+    static let description = "Warn storyboard"
     
     func validate(storyboard: StoryboardFile) -> [Violation] {
         return [
