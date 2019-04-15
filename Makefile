@@ -19,9 +19,7 @@ portable_zip: build
 
 install: build
 		mkdir -p "$(PREFIX)/bin"
-		mkdir -p "$(PREFIX)/lib/iblinter"
 		cp -f ".build/release/iblinter" "$(PREFIX)/bin/iblinter"
-		cp -rf $(C_LIB_DIRS) $(SWIFT_LIB_FILES) "$(PREFIX)/lib/iblinter"
 
 current_version:
 		@cat .version
