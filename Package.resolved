@@ -23,9 +23,9 @@
         "package": "IBDecodable",
         "repositoryURL": "https://github.com/IBDecodable/IBDecodable.git",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "3f1289222c5323605dede3e616e0f549bcb7c335",
-          "version": null
+          "version": "0.0.3"
         }
       },
       {
