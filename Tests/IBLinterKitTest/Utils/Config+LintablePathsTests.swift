@@ -13,7 +13,7 @@ class ConfigLintablePathsTests: XCTestCase {
             customModuleRule: [], baseClassRule: [], reporter: ""
         )
         let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
-        let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
+        let lintablePaths = config.lintablePaths(workDirectory: projectPath).xib
 
         XCTAssertEqual(
             lintablePaths.map { $0.path },
@@ -28,7 +28,7 @@ class ConfigLintablePathsTests: XCTestCase {
             customModuleRule: [], baseClassRule: [], reporter: ""
         )
         let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
-        let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
+        let lintablePaths = config.lintablePaths(workDirectory: projectPath).xib
 
         XCTAssertEqual(
             lintablePaths.map { $0.path },
@@ -43,7 +43,7 @@ class ConfigLintablePathsTests: XCTestCase {
             customModuleRule: [], baseClassRule: [], reporter: ""
         )
         let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
-        let lintablePaths = config.lintablePaths(workDirectory: projectPath, fileExtension: "xib")
+        let lintablePaths = config.lintablePaths(workDirectory: projectPath).xib
 
         XCTAssertEqual(lintablePaths, [])
     }

@@ -19,14 +19,14 @@ public class Validator {
     public func validate(workDirectory: URL, config: Config) -> [Violation] {
         let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
         let rules = Rules.rules(context)
-        return validateXib(workDirectory: workDirectory, rules: rules, config: config)
-            + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
+        let (xibs, storyboards) = config.lintablePaths(workDirectory: workDirectory)
+        return validateXib(files: xibs, rules: rules, config: config)
+            + validateStoryboard(files: storyboards, rules: rules, config: config)
     }
 
-    public func validateStoryboard(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
-        let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "storyboard")
+    public func validateStoryboard(files: Set<URL>, rules: [Rule], config: Config) -> [Violation] {
         return rules.flatMap { rule in
-            return lintablePaths.flatMap { path -> [Violation] in
+            return files.flatMap { path -> [Violation] in
                 do {
                     let file = try StoryboardFile.init(path: path.relativePath)
                     return rule.validate(storyboard: file)
@@ -39,10 +39,9 @@ public class Validator {
         }
     }
 
-    public func validateXib(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
-        let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "xib")
+    public func validateXib(files: Set<URL>, rules: [Rule], config: Config) -> [Violation] {
         return rules.flatMap { rule in
-            return lintablePaths.flatMap { path -> [Violation] in
+            return files.flatMap { path -> [Violation] in
                 do {
                     let file = try XibFile.init(path: path.relativePath)
                     return rule.validate(xib: file)
