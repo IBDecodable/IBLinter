@@ -74,4 +74,3 @@ extension ProcessInfo {
         return environment["COMPILED_FOR_INTERFACE_BUILDER"] != nil
     }
 }
-

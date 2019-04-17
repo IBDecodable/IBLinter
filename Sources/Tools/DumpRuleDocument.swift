@@ -8,6 +8,7 @@
 import Commandant
 import Result
 import IBLinterKit
+import Darwin
 
 struct DumpRuleDocument: CommandProtocol {
 
@@ -34,7 +35,11 @@ struct DumpRuleDocument: CommandProtocol {
     func run(_ options: Options) -> Result<(), ClientError> {
         let content = Rules.allRules.map { $0.dumpMarkdown() }.joined(separator: "\n\n")
         if let path = options.path {
-            try! content.write(toFile: path, atomically: true, encoding: .utf8)
+            do {
+                try content.write(toFile: path, atomically: true, encoding: .utf8)
+            } catch {
+                fputs("Something went wrong", stderr)
+            }
         } else {
             print(content)
         }
