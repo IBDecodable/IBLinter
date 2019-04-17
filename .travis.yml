@@ -1,5 +1,7 @@
 language: objective-c
 osx_image: xcode10.2
+before_script:
+  - swiftlint --strict
 script:
   - swift test
 before_deploy:
