@@ -11,14 +11,14 @@ extension Rules {
 
     struct RelativeToMarginRule: Rule {
 
-        static let identifier = "relative_to_margin"
-        static let description = "Forbid to use relative to margin option."
+        static let identifier: String = "relative_to_margin"
+        static let description: String = "Forbid to use relative to margin option."
 
         init(context: Context) {}
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
-            let scenes = storyboard.document.scenes
-            let viewControllers = scenes?.compactMap { $0.viewController }
+            let scenes: [Scene]? = storyboard.document.scenes
+            let viewControllers: [AnyViewController]? = scenes?.compactMap { $0.viewController }
             return viewControllers?.compactMap { $0.viewController.rootView }
                 .flatMap { validate(for: $0, file: storyboard) } ?? []
         }
@@ -32,10 +32,10 @@ extension Rules {
             let relativeToMarginKeys: [Constraint.LayoutAttribute] = [
                 .leadingMargin, .trailingMargin, .topMargin, .bottomMargin
             ]
-            let attributes = constraints.flatMap { [$0.firstAttribute, $0.secondAttribute] }.compactMap { $0 }
+            let attributes: [Constraint.LayoutAttribute] = constraints.flatMap { [$0.firstAttribute, $0.secondAttribute] }.compactMap { $0 }
             let violations: [Violation] = attributes.filter { relativeToMarginKeys.contains($0) }
-                .map { at in
-                    let message = " \(at) is deprecated in \(view.customClass ?? view.elementClass)"
+                .map { (at: Constraint.LayoutAttribute) -> Violation in
+                    let message: String = " \(at) is deprecated in \(view.customClass ?? view.elementClass)"
                     return Violation.init(pathString: file.pathString, message: message, level: .warning)
             }
             if let subviews = view.subviews {

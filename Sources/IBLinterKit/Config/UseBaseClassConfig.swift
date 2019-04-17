@@ -22,7 +22,7 @@ public struct UseBaseClassConfig: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let container: KeyedDecodingContainer<UseBaseClassConfig.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
         elementClass = try container.decode(String.self, forKey: .elementClass)
         baseClasses = try container.decodeIfPresent(Optional<[String]>.self, forKey: .baseClasses)?.flatMap { $0 } ?? []
     }

@@ -9,10 +9,10 @@ import Foundation
 
 struct JSONReporter: Reporter {
 
-    static let identifier = "json"
+    static let identifier: String = "json"
 
     static func generateReport(violations: [Violation]) -> String {
-        let dictionary = violations.map(toJSON)
+        let dictionary: [[String : Any]] = violations.map(toJSON)
         if let json = try? JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted),
             let jsonString = String(data: json, encoding: .utf8) {
             return jsonString

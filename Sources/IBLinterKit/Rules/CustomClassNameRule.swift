@@ -21,8 +21,8 @@ extension Rules {
 
     struct CustomClassNameRule: Rule {
 
-        static let identifier = "custom_class_name"
-        static let description = "Custom class name of ViewController in storyboard should be same as file name."
+        static let identifier: String = "custom_class_name"
+        static let description: String = "Custom class name of ViewController in storyboard should be same as file name."
 
         init(context: Context) {}
 
@@ -35,7 +35,7 @@ extension Rules {
                 return []
             }
             if customClass == storyboard.fileNameWithoutExtension { return [] }
-            let message = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
+            let message: String = "custom class name '\(customClass)' should be '\(storyboard.fileNameWithoutExtension)' "
             return [Violation.init(pathString: storyboard.pathString, message: message, level: .error)]
         }
 

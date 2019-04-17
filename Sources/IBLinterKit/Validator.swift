@@ -17,18 +17,18 @@ public class Validator {
     }
 
     public func validate(workDirectory: URL, config: Config) -> [Violation] {
-        let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
-        let rules = Rules.rules(context)
+        let context: Context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
+        let rules: [Rule] = Rules.rules(context)
         return validateXib(workDirectory: workDirectory, rules: rules, config: config)
             + validateStoryboard(workDirectory: workDirectory, rules: rules, config: config)
     }
 
     public func validateStoryboard(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
-        let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "storyboard")
-        return rules.flatMap { rule in
-            return lintablePaths.flatMap { path -> [Violation] in
+        let lintablePaths: [URL] = config.lintablePaths(workDirectory: workDirectory, fileExtension: "storyboard")
+        return rules.flatMap { (rule: Rule) -> [Violation] in
+            return lintablePaths.flatMap { (path: URL) -> [Violation] in
                 do {
-                    let file = try StoryboardFile.init(path: path.relativePath)
+                    let file: StoryboardFile = try StoryboardFile.init(path: path.relativePath)
                     return rule.validate(storyboard: file)
                 } catch let error as InterfaceBuilderParser.Error {
                     return [error.asViolation(filePath: path)]
@@ -40,11 +40,11 @@ public class Validator {
     }
 
     public func validateXib(workDirectory: URL, rules: [Rule], config: Config) -> [Violation] {
-        let lintablePaths = config.lintablePaths(workDirectory: workDirectory, fileExtension: "xib")
-        return rules.flatMap { rule in
-            return lintablePaths.flatMap { path -> [Violation] in
+        let lintablePaths: [URL] = config.lintablePaths(workDirectory: workDirectory, fileExtension: "xib")
+        return rules.flatMap { (rule: Rule) -> [Violation] in
+            return lintablePaths.flatMap { (path: URL) -> [Violation] in
                 do {
-                    let file = try XibFile.init(path: path.relativePath)
+                    let file: XibFile = try XibFile.init(path: path.relativePath)
                     return rule.validate(xib: file)
                 } catch let error as InterfaceBuilderParser.Error {
                     return [error.asViolation(filePath: path)]

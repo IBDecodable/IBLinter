@@ -24,7 +24,7 @@ extension Rules {
     fileprivate static func violation<T: InterfaceBuilderFile>(deviceIdToFit: String, file: T) -> [Violation] {
         guard let document = file.document as? InterfaceBuilderDocument,
             let deviceId = document.device?.id else {
-            let message = "\"View as:\" should be \(deviceName(from: deviceIdToFit)) (\(deviceIdToFit)) explicitly"
+            let message: String = "\"View as:\" should be \(deviceName(from: deviceIdToFit)) (\(deviceIdToFit)) explicitly"
             return [Violation(pathString: file.pathString, message: message, level: .warning)]
         }
         let message = "\"View as:\" should be \(deviceName(from: deviceIdToFit)) (\(deviceIdToFit)). Currently it is \(deviceName(from: deviceId)) (\(deviceId))."
@@ -32,8 +32,8 @@ extension Rules {
     }
 
     struct ViewAsDeviceRule: Rule {
-        static let identifier = "view_as_device"
-        static let description = "Check View as: set as a device specified by view_as_device_rule config."
+        static let identifier: String = "view_as_device"
+        static let description: String = "Check View as: set as a device specified by view_as_device_rule config."
 
         let deviceIdToFit: String
         init(context: Context) {

@@ -1,6 +1,6 @@
 struct CheckstyleReporter: Reporter {
-    public static let identifier = "checkstyle"
-    public static let isRealtime = false
+    public static let identifier: String = "checkstyle"
+    public static let isRealtime: Bool = false
 
     public var description: String {
         return "Reports violations as Checkstyle XML."

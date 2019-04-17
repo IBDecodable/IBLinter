@@ -18,7 +18,7 @@ public struct ViewAsDeviceConfig: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let container: KeyedDecodingContainer<ViewAsDeviceConfig.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
         deviceId = try container.decode(String.self, forKey: .deviceId)
     }
 }

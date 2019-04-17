@@ -11,9 +11,9 @@ extension Rules {
 
     struct AmbiguousViewRule: Rule {
 
-        static let identifier = "ambiguous"
-        static let description = "Display error when views are ambiguous."
-        static let isDefault = true
+        static let identifier: String = "ambiguous"
+        static let description: String = "Display error when views are ambiguous."
+        static let isDefault: Bool = true
 
         init(context: Context) {}
 
@@ -24,14 +24,14 @@ extension Rules {
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
-            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
+            let views: [ViewProtocol] = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
                 if view.isAmbiguous ?? false {
-                    let message = "\(viewName(of: view)) has ambiguous constraints"
+                    let message: String = "\(viewName(of: view)) has ambiguous constraints"
                     return [Violation(pathString: file.pathString, message: message, level: .error)]
                 } else {
                     return []

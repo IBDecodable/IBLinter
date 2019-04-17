@@ -13,16 +13,16 @@ extension Rules {
 
     struct ImageResourcesRule: Rule {
 
-        static let identifier = "image_resources"
-        static let description = "Check if image resources are valid."
+        static let identifier: String = "image_resources"
+        static let description: String = "Check if image resources are valid."
 
         let assetsCatalogs: [AssetsCatalog]
         let xcodeproj: [XcodeProj]
 
         public init(context: Context) {
-            let paths = glob(pattern: context.workDirectory.appendingPathComponent("**/*.xcassets").path)
-            let excluded = context.config.excluded.flatMap { glob(pattern: "\($0)/**/*.xcassets") }
-            let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
+            let paths: Set<URL> = glob(pattern: context.workDirectory.appendingPathComponent("**/*.xcassets").path)
+            let excluded: [URL] = context.config.excluded.flatMap { glob(pattern: "\($0)/**/*.xcassets") }
+            let lintablePaths: Set<URL> = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
             self.init(catalogs: lintablePaths.map { AssetsCatalog.init(path: $0.relativePath) })
         }
 
@@ -50,13 +50,13 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], file: T) -> [Violation] {
-            let catalogAssetNames = assetsCatalogs.flatMap { $0.values }
-            let xcodeprojAssetNames = xcodeproj.flatMap {
+            let catalogAssetNames: [String] = assetsCatalogs.flatMap { $0.values }
+            let xcodeprojAssetNames: [String] = xcodeproj.flatMap {
                 $0.pbxproj.fileReferences.compactMap {
                     $0.name
                 }
             }
-            let assetNames = catalogAssetNames + xcodeprojAssetNames
+            let assetNames: [String] = catalogAssetNames + xcodeprojAssetNames
             return Set(imageViews.compactMap { $0.image } + images.map { $0.name })
                 .filter { !assetNames.contains($0) }
                 .map {

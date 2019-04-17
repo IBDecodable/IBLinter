@@ -11,8 +11,8 @@ import IBDecodable
 extension Rules {
     struct UseBaseClassRule: Rule {
 
-        static let identifier = "use_base_class"
-        static let description = "Check if custom class is in base classes by use_base_class_rule config."
+        static let identifier: String = "use_base_class"
+        static let description: String = "Check if custom class is in base classes by use_base_class_rule config."
 
         private var baseClasses: [String: [String]] = [:]
 
@@ -24,7 +24,7 @@ extension Rules {
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
-            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
+            let views: [ViewProtocol] = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
@@ -37,12 +37,12 @@ extension Rules {
             let violation: [Violation] = {
                 guard let baseClassesForElement = baseClasses[view.elementClass] else { return [] }
                 guard let customClass = view.customClass else {
-                    let message = "CustomClass is not set to \(viewName(of: view))"
+                    let message: String = "CustomClass is not set to \(viewName(of: view))"
                     return [Violation(pathString: file.pathString, message: message, level: .warning)]
                 }
 
                 if !baseClassesForElement.contains(customClass) {
-                    let message = "\(viewName(of: view)) is not contained in the BaseClasses"
+                    let message: String = "\(viewName(of: view)) is not contained in the BaseClasses"
                     return [Violation(pathString: file.pathString, message: message, level: .warning)]
                 }
                 return []

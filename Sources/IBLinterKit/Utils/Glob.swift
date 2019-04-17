@@ -25,7 +25,7 @@ let system_glob = Glibc.glob
 #else
 import Darwin
 
-let system_glob = Darwin.glob
+let system_glob: (UnsafePointer<Int8>?, Int32, (@convention(c) (UnsafePointer<Int8>?, Int32) -> Int32)?, UnsafeMutablePointer<glob_t>?) -> Int32 = Darwin.glob
 #endif
 
 public class Glob {
@@ -34,12 +34,12 @@ public class Glob {
         self.fileManager = fileManager
     }
 
-    private let globFlags = GLOB_TILDE | GLOB_BRACE | GLOB_MARK
+    private let globFlags: Int32 = GLOB_TILDE | GLOB_BRACE | GLOB_MARK
     public func glob(pattern: String) -> Set<URL> {
-        var gt = glob_t.init()
+        var gt: glob_t = glob_t.init()
         defer { globfree(&gt) }
 
-        let patterns = expandRecursiveStars(pattern: pattern)
+        let patterns: Set<String> = expandRecursiveStars(pattern: pattern)
         var results: [String] = []
 
         for pattern in patterns {
@@ -47,10 +47,10 @@ public class Glob {
                 #if os(Linux)
                 let matchCount = Int(gt.gl_pathc)
                 #else
-                let matchCount = Int(gt.gl_matchc)
+                let matchCount: Int = Int(gt.gl_matchc)
                 #endif
                 for i in 0..<matchCount {
-                    let path = String.init(cString: gt.gl_pathv[i]!)
+                    let path: String = String.init(cString: gt.gl_pathv[i]!)
                     results.append(path)
                 }
             }
@@ -64,11 +64,11 @@ public class Glob {
 
     func expandRecursiveStars(pattern: String) -> Set<String> {
         func splitFirstStar(pattern: String) -> (head: String, tail: String?)? {
-            let components = pattern.components(separatedBy: "**")
+            let components: [String] = pattern.components(separatedBy: "**")
             guard let head = components.first, !head.isEmpty else { return nil }
-            let tailComponents = components.dropFirst()
+            let tailComponents: ArraySlice<String> = components.dropFirst()
             guard !tailComponents.isEmpty else { return (head, nil) }
-            var tail = tailComponents.joined(separator: "**")
+            var tail: String = tailComponents.joined(separator: "**")
             tail = tail.first == "/" ? String(tail.dropFirst()) : tail
             return (head, tail)
 
@@ -94,8 +94,8 @@ public class Glob {
                 return []
             }
         }
-        let children = childDirectories(current: head)
-        let result = children.map { URL(fileURLWithPath: $0).appendingPathComponent(tailComponent).path }
+        let children: [String] = childDirectories(current: head)
+        let result: [String] = children.map { URL(fileURLWithPath: $0).appendingPathComponent(tailComponent).path }
             .flatMap { expandRecursiveStars(pattern: $0) }
         return Set(result)
     }

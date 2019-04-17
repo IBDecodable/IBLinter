@@ -13,7 +13,7 @@ public struct CustomModuleConfig: Codable {
     public let included: [String]
     public let excluded: [String]
 
-    public static let `default` = CustomModuleConfig.init()
+    public static let `default`: CustomModuleConfig = CustomModuleConfig.init()
 
     private init() {
         module = ""
@@ -28,7 +28,7 @@ public struct CustomModuleConfig: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let container: KeyedDecodingContainer<CustomModuleConfig.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
         module = try container.decodeIfPresent(Optional<String>.self, forKey: .module).flatMap { $0 } ?? ""
         included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
         excluded = try container.decodeIfPresent(Optional<[String]>.self, forKey: .excluded).flatMap { $0 } ?? []

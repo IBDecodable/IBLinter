@@ -11,13 +11,13 @@ extension Rules {
 
     struct StoryboardViewControllerId: Rule {
 
-        static let identifier = "storyboard_viewcontroller_id"
-        static let description = "Check that Storyboard ID same as ViewController class name."
+        static let identifier: String = "storyboard_viewcontroller_id"
+        static let description: String = "Check that Storyboard ID same as ViewController class name."
 
         init(context: Context) {}
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
-            let viewControllers = storyboard.document.scenes?.compactMap { $0.viewController }
+            let viewControllers: [AnyViewController]? = storyboard.document.scenes?.compactMap { $0.viewController }
             return viewControllers?.compactMap {
                 $0.viewController.customClass != $0.viewController.storyboardIdentifier ?
                     Violation(pathString: storyboard.pathString,

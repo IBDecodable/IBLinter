@@ -32,9 +32,9 @@ extension Rules {
 
     struct CustomModuleRule: Rule {
 
-        static let identifier = "custom_module"
-        static let description = "Check if custom class match custom module by custom_module_rule config."
-        static let isDefault = true
+        static let identifier: String = "custom_module"
+        static let description: String = "Check if custom class match custom module by custom_module_rule config."
+        static let isDefault: Bool = true
 
         private var moduleClasses: [String:[String]] = [:]
 
@@ -43,7 +43,7 @@ extension Rules {
             func classes(from path: URL) -> [String] {
                 guard let file = SourceKittenFramework.File(path: path.relativePath),
                     let structure = try? Structure(file: file) else { return [] }
-                return structure.dictionary.substructure.compactMap { dictionary in
+                return structure.dictionary.substructure.compactMap { (dictionary: [String : SourceKitRepresentable]) -> String? in
                     guard let kind = dictionary.kind,
                         SwiftDeclarationKind(rawValue: kind) == .class else { return nil }
                     return dictionary.name
@@ -51,16 +51,16 @@ extension Rules {
             }
 
             func resolvePath(_ includeURLString: String) -> URL {
-                let url = URL(fileURLWithPath: includeURLString, relativeTo: context.workDirectory)
+                let url: URL = URL(fileURLWithPath: includeURLString, relativeTo: context.workDirectory)
                 return url.standardizedFileURL
             }
             func expandGlob(_ baseDirectory: URL) -> Set<URL> {
                 return glob(pattern: baseDirectory.appendingPathComponent("**").appendingPathComponent("*.swift").path)
             }
             moduleClasses = context.config.customModuleRule.reduce(into: [:]) { moduleClasses, customModuleConfig in
-                let paths = customModuleConfig.included.map(resolvePath).flatMap(expandGlob)
-                let excluded = customModuleConfig.excluded.map(resolvePath).flatMap(expandGlob)
-                let lintablePaths = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
+                let paths: [URL] = customModuleConfig.included.map(resolvePath).flatMap(expandGlob)
+                let excluded: [URL] = customModuleConfig.excluded.map(resolvePath).flatMap(expandGlob)
+                let lintablePaths: [URL] = paths.filter { !excluded.map { $0.absoluteString }.contains($0.absoluteString) }
                 let classes: [String] = lintablePaths.flatMap(classes(from: ))
                 moduleClasses[customModuleConfig.module] = classes
             }
@@ -73,7 +73,7 @@ extension Rules {
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
-            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
+            let views: [ViewProtocol] = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
         }
 
@@ -83,8 +83,8 @@ extension Rules {
                 guard let expectedModule = moduleClasses.first(where: { $0.value.contains(customClass) }) else {
                     return []
                 }
-                let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(expectedModule.key)"
-                let violation = Violation(pathString: file.pathString, message: message, level: .error)
+                let message: String = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(expectedModule.key)"
+                let violation: Violation = Violation(pathString: file.pathString, message: message, level: .error)
                 guard let customModule = view.customModule, expectedModule.key == customModule else {
                     return [violation]
                 }

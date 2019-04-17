@@ -31,8 +31,8 @@ public struct Config: Codable {
         case disableWhileBuildingForIB = "disable_while_building_for_ib"
     }
 
-    public static let fileName = ".iblinter.yml"
-    public static let `default` = Config.init()
+    public static let fileName: String = ".iblinter.yml"
+    public static let `default`: Config = Config.init()
 
     private init() {
         disabledRules = []
@@ -64,7 +64,7 @@ public struct Config: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let container: KeyedDecodingContainer<Config.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
         disabledRules = try container.decodeIfPresent(Optional<[String]>.self, forKey: .disabledRules).flatMap { $0 } ?? []
         enabledRules = try container.decodeIfPresent(Optional<[String]>.self, forKey: .enabledRules).flatMap { $0 } ?? []
         excluded = try container.decodeIfPresent(Optional<[String]>.self, forKey: .excluded).flatMap { $0 } ?? []
@@ -81,7 +81,7 @@ public struct Config: Codable {
     }
 
     public static func load(from configPath: URL, fileName: String = fileName) throws -> Config {
-        let url = configPath.appendingPathComponent(fileName)
+        let url: URL = configPath.appendingPathComponent(fileName)
         return try load(url)
     }
 }

@@ -11,9 +11,9 @@ extension Rules {
 
     struct ForceToEnableAutoLayoutRule: Rule {
 
-        static let identifier = "enable_autolayout"
-        static let description = "Force to use useAutolayout option"
-        static let isDefault = true
+        static let identifier: String = "enable_autolayout"
+        static let description: String = "Force to use useAutolayout option"
+        static let isDefault: Bool = true
 
         init(context: Context) {}
 
@@ -28,7 +28,7 @@ extension Rules {
         }
 
         private func violation<T: InterfaceBuilderFile>(useAutolayout: Bool, file: T) -> [Violation] {
-            let message = "\(file.fileName) is not enabled to use Autolayout."
+            let message: String = "\(file.fileName) is not enabled to use Autolayout."
             return useAutolayout ? [] : [Violation(pathString: file.pathString, message: message, level: .warning)]
         }
     }

@@ -28,9 +28,9 @@ extension AssetsCatalog {
     }
 
     private enum Constants {
-        static let path = "Contents.json"
-        static let properties = "properties"
-        static let providesNamespace = "provides-namespace"
+        static let path: String = "Contents.json"
+        static let properties: String = "properties"
+        static let providesNamespace: String = "provides-namespace"
 
         enum Item: String {
             case colorSet = "colorset"
@@ -45,19 +45,19 @@ extension AssetsCatalog {
 
         init?(path: String, withPrefix prefix: String) {
             guard FileManager.default.isDirectory(path) else { return nil }
-            let type = path.extension ?? ""
+            let type: String = path.extension ?? ""
 
             switch Constants.Item(rawValue: type) {
             case .colorSet?:
-                let name = path.lastComponentWithoutExtension
+                let name: String = path.lastComponentWithoutExtension
                 self = .color(name: name, value: "\(prefix)\(name)")
             case .imageSet?:
-                let name = path.lastComponentWithoutExtension
+                let name: String = path.lastComponentWithoutExtension
                 self = .image(name: name, value: "\(prefix)\(name)")
             case nil:
                 guard type.isEmpty else { return nil }
-                let filename = path.lastComponent
-                let subPrefix = AssetsCatalog.Entry.isNamespaced(path: path) ? "\(prefix)\(filename)/" : prefix
+                let filename: String = path.lastComponent
+                let subPrefix: String = AssetsCatalog.Entry.isNamespaced(path: path) ? "\(prefix)\(filename)/" : prefix
 
                 self = .group(
                     name: filename,
@@ -67,7 +67,7 @@ extension AssetsCatalog {
         }
 
         private static func isNamespaced(path: String) -> Bool {
-            let metadata = self.metadata(for: path)
+            let metadata: [String : Any] = self.metadata(for: path)
 
             if let properties = metadata[Constants.properties] as? [String: Any],
                 let providesNamespace = properties[Constants.providesNamespace] as? Bool {
@@ -78,7 +78,7 @@ extension AssetsCatalog {
         }
 
         private static func metadata(for path: String) -> [String: Any] {
-            let contentsFile = URL(fileURLWithPath: path).appendingPathComponent(Constants.path)
+            let contentsFile: URL = URL(fileURLWithPath: path).appendingPathComponent(Constants.path)
 
             guard let data = try? Data.init(contentsOf: contentsFile),
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
