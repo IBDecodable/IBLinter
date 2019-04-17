@@ -77,6 +77,12 @@ extension InterfaceBuilderParser.Error {
                 message: "Parse error \(error)",
                 level: .warning
             )
+        case .macFormat:
+            return Violation(
+                pathString: path.relativePath,
+                message: "Parse error. You are using Cocoa. Please refer a format.",
+                level: .warning
+            )
         }
     }
 }

@@ -37,12 +37,12 @@ extension Rules {
             let violation: [Violation] = {
                 guard let baseClassesForElement = baseClasses[view.elementClass] else { return [] }
                 guard let customClass = view.customClass else {
-                    let message = "CustomClass is not set to \(view.elementClass) (\(view.id)) "
+                    let message = "CustomClass is not set to \(viewName(of: view))"
                     return [Violation(pathString: file.pathString, message: message, level: .warning)]
                 }
 
                 if !baseClassesForElement.contains(customClass) {
-                    let message = "\(customClass) (\(view.id) is not contained in the BaseClasses"
+                    let message = "\(viewName(of: view)) is not contained in the BaseClasses"
                     return [Violation(pathString: file.pathString, message: message, level: .warning)]
                 }
                 return []
