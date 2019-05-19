@@ -1,6 +1,9 @@
 # IBLinter
 [![Build Status](https://travis-ci.org/IBDecodable/IBLinter.svg?branch=master)](https://travis-ci.org/IBDecodable/IBLinter)
-[![Swift 4.0](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)](https://developer.apple.com/swift/) A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/SwiftLint](https://github.com/realm/SwiftLint)
+[![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
+
+
+A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/SwiftLint](https://github.com/realm/SwiftLint)
 
 ![](assets/warning.png)
 
