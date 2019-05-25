@@ -28,7 +28,7 @@ import Darwin
 let system_glob = Darwin.glob
 #endif
 
-public class Glob {
+public final class Glob {
     let fileManager: GlobFileManager
     init(fileManager: GlobFileManager) {
         self.fileManager = fileManager
