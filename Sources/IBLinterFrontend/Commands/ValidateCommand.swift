@@ -25,7 +25,8 @@ struct ValidateCommand: CommandProtocol {
         guard FileManager.default.isDirectory(workDirectory.path) else {
             fatalError("\(workDirectoryString) is not directory.")
         }
-        let config = (try? Config.load(from: workDirectory)) ?? Config.default
+        
+        let config = Config(options: options) ?? Config.default
         if config.disableWhileBuildingForIB &&
             ProcessInfo.processInfo.compiledForInterfaceBuilder {
             return .success(())
@@ -52,11 +53,14 @@ struct ValidateOptions: OptionsProtocol {
     let path: String?
     let reporter: String?
     let iblinterFilePath: String?
+    let configurationFile: String?
 
-    static func create(_ path: String?) -> (_ reporter: String?) -> (_ script: String?) -> ValidateOptions {
+    static func create(_ path: String?) -> (_ reporter: String?) -> (_ script: String?) -> (_ config: String?) -> ValidateOptions {
         return { reporter in
             return { script in
-                self.init(path: path, reporter: reporter, iblinterFilePath: script)
+                return { config in
+                    self.init(path: path, reporter: reporter, iblinterFilePath: script, configurationFile: config)
+                }
             }
         }
     }
@@ -66,11 +70,25 @@ struct ValidateOptions: OptionsProtocol {
             <*> mode <| Option(key: "path", defaultValue: nil, usage: "validate project root directory")
             <*> mode <| Option(key: "reporter", defaultValue: nil, usage: "the reporter used to log errors and warnings")
             <*> mode <| Option(key: "script", defaultValue: nil, usage: "custom IBLinterfile.swift")
+            <*> mode <| Option(key: "config", defaultValue: nil, usage: "the path to IBLint's configuration file")
     }
 }
 
 extension ProcessInfo {
     var compiledForInterfaceBuilder: Bool {
         return environment["COMPILED_FOR_INTERFACE_BUILDER"] != nil
+    }
+}
+
+extension Config {
+    init?(options: ValidateOptions)  {
+        if let configurationFile = options.configurationFile {
+            let workDirectory = URL(fileURLWithPath: configurationFile)
+            try? self.init(workDirectory)
+        } else {
+            let workDirectoryString = options.path ?? FileManager.default.currentDirectoryPath
+            let workDirectory = URL(fileURLWithPath: workDirectoryString)
+            try? self.init(from: workDirectory)
+        }
     }
 }
