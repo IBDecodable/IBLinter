@@ -64,6 +64,13 @@ Alternatively, if you've installed IBLinter via CocoaPods the script should look
 "${PODS_ROOT}/IBLinter/bin/iblinter"
 ```
 
+## Requirements
+
+IBLinter requires Swift5.0 runtime. Please satisfy at least one of following requirements.
+
+ - macOS 10.14.4 or later
+ - Install `Swift 5 Runtime Support for Command Line Tools` from [More Downloads for Apple Developers](https://developer.apple.com/download/more/)
+
 ## Rules
 
 All rules are documented in [Rules.md](Rules.md)
