@@ -25,7 +25,7 @@ struct ValidateCommand: CommandProtocol {
         guard FileManager.default.isDirectory(workDirectory.path) else {
             fatalError("\(workDirectoryString) is not directory.")
         }
-        
+
         let config = Config(options: options) ?? Config.default
         if config.disableWhileBuildingForIB &&
             ProcessInfo.processInfo.compiledForInterfaceBuilder {
@@ -81,7 +81,7 @@ extension ProcessInfo {
 }
 
 extension Config {
-    init?(options: ValidateOptions)  {
+    init?(options: ValidateOptions) {
         if let configurationFile = options.configurationFile {
             let workDirectory = URL(fileURLWithPath: configurationFile)
             try? self.init(workDirectory)
