@@ -76,12 +76,12 @@ public struct Config: Codable {
         disableWhileBuildingForIB = try container.decodeIfPresent(Bool.self, forKey: .disableWhileBuildingForIB) ?? true
     }
 
-    public static func load(_ url: URL) throws -> Config {
-        return try YAMLDecoder.init().decode(from: String.init(contentsOf: url))
+    public init(url: URL) throws {
+        self = try YAMLDecoder().decode(from: String.init(contentsOf: url))
     }
 
-    public static func load(from configPath: URL, fileName: String = fileName) throws -> Config {
-        let url = configPath.appendingPathComponent(fileName)
-        return try load(url)
+    public init(directoryURL: URL, fileName: String = fileName) throws {
+        let url = directoryURL.appendingPathComponent(fileName)
+        try self.init(url: url)
     }
 }
