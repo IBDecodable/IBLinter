@@ -136,6 +136,12 @@ extension InterfaceBuilderParser.Error {
                 message: "Parse error \(error)",
                 level: .warning
             )
+        case .xmlError(let error):
+            return Violation(
+                pathString: path.relativePath,
+                message: "Parse XML error \(error)",
+                level: .warning
+            )
         case .macFormat:
             return Violation(
                 pathString: path.relativePath,

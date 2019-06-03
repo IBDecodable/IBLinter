@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/IBDecodable/IBDecodable.git",
         "state": {
           "branch": null,
-          "revision": "3f1289222c5323605dede3e616e0f549bcb7c335",
-          "version": "0.0.3"
+          "revision": "d290038df73db68678a1eca1d8cbd3237750113d",
+          "version": "0.0.4"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {
           "branch": null,
-          "revision": "0b4ed6c706dd0cce923b5019a605a9bcc6b1b600",
-          "version": "2.0.0"
+          "revision": "94df9b449508344667e5afc7e80f8bcbff1e4c37",
+          "version": "2.1.0"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/jpsim/SourceKitten.git",
         "state": {
           "branch": null,
-          "revision": "176f04295a09324673245d8ec0afcce21ace8722",
-          "version": "0.22.0"
+          "revision": "fd9091759201473aa234c22322a3939615aef59a",
+          "version": "0.23.2"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/jpsim/Yams.git",
         "state": {
           "branch": null,
-          "revision": "b08dba4bcea978bf1ad37703a384097d3efce5af",
-          "version": "1.0.2"
+          "revision": "c947a306d2e80ecb2c0859047b35c73b8e1ca27f",
+          "version": "2.0.0"
         }
       }
     ]
