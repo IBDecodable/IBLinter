@@ -41,7 +41,7 @@ final class VaridatorTest: XCTestCase {
     func testValidateXib() {
         let workingDir = Fixture().path("Resources/Validator")
         let validator = Validator(externalRules: [CheckXibRule.self])
-        let config = try! Config(workingDir.appendingPathComponent(".iblinter.yml"))
+        let config = try! Config(url: workingDir.appendingPathComponent(".iblinter.yml"))
         let violations = validator.validate(workDirectory: workingDir, config: config)
         XCTAssertEqual(violations.count, 1)
     }
@@ -49,7 +49,7 @@ final class VaridatorTest: XCTestCase {
     func testValidateStoryboard() {
         let workingDir = Fixture().path("Resources/Validator")
         let validator = Validator(externalRules: [CheckStoryboardRule.self])
-        let config = try! Config(workingDir.appendingPathComponent(".iblinter.yml"))
+        let config = try! Config(url: workingDir.appendingPathComponent(".iblinter.yml"))
         let violations = validator.validate(workDirectory: workingDir, config: config)
         XCTAssertEqual(violations.count, 1)
     }

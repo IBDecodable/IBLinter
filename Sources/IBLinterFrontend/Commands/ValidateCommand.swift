@@ -83,12 +83,12 @@ extension ProcessInfo {
 extension Config {
     init?(options: ValidateOptions) {
         if let configurationFile = options.configurationFile {
-            let workDirectory = URL(fileURLWithPath: configurationFile)
-            try? self.init(workDirectory)
+            let configurationURL = URL(fileURLWithPath: configurationFile)
+            try? self.init(url: configurationURL)
         } else {
             let workDirectoryString = options.path ?? FileManager.default.currentDirectoryPath
             let workDirectory = URL(fileURLWithPath: workDirectoryString)
-            try? self.init(from: workDirectory)
+            try? self.init(directoryURL: workDirectory)
         }
     }
 }
