@@ -43,7 +43,7 @@ Available commands:
 
    help      Display general or command-specific help
    lint      Print lint warnings and errors (default command)
-   version   Display the current version of SwiftLint
+   version   Display the current version of iblinter
 ```
 
 ### Xcode
