@@ -68,13 +68,17 @@ extension Rules {
 
         func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
+            let placeholders = xib.document.placeholders ?? []
             return views.flatMap { validate(for: $0.view, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
+                + placeholders.flatMap { validate(for: $0, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
         }
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
-            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
+            let viewControllers = scenes.compactMap { $0.viewController?.viewController }
+            let views = viewControllers.compactMap { $0.rootView }
             return views.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
+                + viewControllers.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
         }
 
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T, fileNameWithoutExtension: String) -> [Violation] {
@@ -93,6 +97,18 @@ extension Rules {
             return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file, fileNameWithoutExtension: fileNameWithoutExtension) } ?? [])
         }
 
+        private func validate<T: InterfaceBuilderFile>(for classableObject: IBCustomClassable, file: T, fileNameWithoutExtension: String) -> [Violation] {
+            guard let customClass = classableObject.customClass else { return [] }
+            guard let expectedModule = moduleClasses.first(where: { $0.value.contains(customClass) }) else {
+                return []
+            }
+            let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(expectedModule.key)"
+            let violation = Violation(pathString: file.pathString, message: message, level: .error)
+            guard let customModule = classableObject.customModule, expectedModule.key == customModule else {
+                return [violation]
+            }
+            return []
+        }
     }
 }
 
