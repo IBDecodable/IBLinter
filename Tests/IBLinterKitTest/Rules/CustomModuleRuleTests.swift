@@ -40,10 +40,16 @@ class CustomModuleRuleTests: XCTestCase {
         let rule = Rules.CustomModuleRule(context: .mock(from: config))
         let ngUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.xib")
         let ngViolations = try! rule.validate(xib: XibFile(url: ngUrl))
-        XCTAssertEqual(ngViolations.count, 1)
+        XCTAssertEqual(ngViolations.count, 2)
         let okUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.xib")
         let okViolations = try! rule.validate(xib: XibFile(url: okUrl))
         XCTAssertEqual(okViolations.count, 0)
+        let storyboardNGUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.storyboard")
+        let storyboardNGViolations = try! rule.validate(storyboard: StoryboardFile(url: storyboardNGUrl))
+        XCTAssertEqual(storyboardNGViolations.count, 1)
+        let storyboardOkUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.storyboard")
+        let storyboardOkViolations = try! rule.validate(storyboard: StoryboardFile(url: storyboardOkUrl))
+        XCTAssertEqual(storyboardOkViolations.count, 0)
     }
     
     func testCustomModuleWithRelativePath() {
@@ -54,7 +60,7 @@ class CustomModuleRuleTests: XCTestCase {
         let rule = Rules.CustomModuleRule(context: .mock(from: config))
         let ngUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.xib")
         let ngViolations = try! rule.validate(xib: XibFile(url: ngUrl))
-        XCTAssertEqual(ngViolations.count, 1)
+        XCTAssertEqual(ngViolations.count, 2)
         let okUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.xib")
         let okViolations = try! rule.validate(xib: XibFile(url: okUrl))
         XCTAssertEqual(okViolations.count, 0)
