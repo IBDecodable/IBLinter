@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.4.17]
+
+### Added
+
+- Add support validating placeholder and viewController module [#109](https://github.com/IBDecodable/IBLinter/pull/109)
 
 ## [0.4.16]
 ### Fixed
