@@ -38,18 +38,18 @@ class CustomModuleRuleTests: XCTestCase {
             excluded: [fixture.path("\(projectMockPath)/CustomModuleExcluded").path]
         )
         let rule = Rules.CustomModuleRule(context: .mock(from: config))
-        let ngUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.xib")
-        let ngViolations = try! rule.validate(xib: XibFile(url: ngUrl))
+        let ngURL = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.xib")
+        let ngViolations = try! rule.validate(xib: XibFile(url: ngURL))
         XCTAssertEqual(ngViolations.count, 2)
-        let okUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.xib")
-        let okViolations = try! rule.validate(xib: XibFile(url: okUrl))
+        let okURL = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.xib")
+        let okViolations = try! rule.validate(xib: XibFile(url: okURL))
         XCTAssertEqual(okViolations.count, 0)
-        let storyboardNGUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.storyboard")
-        let storyboardNGViolations = try! rule.validate(storyboard: StoryboardFile(url: storyboardNGUrl))
+        let storyboardNGURL = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.storyboard")
+        let storyboardNGViolations = try! rule.validate(storyboard: StoryboardFile(url: storyboardNGURL))
         XCTAssertEqual(storyboardNGViolations.count, 1)
-        let storyboardOkUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.storyboard")
-        let storyboardOkViolations = try! rule.validate(storyboard: StoryboardFile(url: storyboardOkUrl))
-        XCTAssertEqual(storyboardOkViolations.count, 0)
+        let storyboardOKURL = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.storyboard")
+        let storyboardOKViolations = try! rule.validate(storyboard: StoryboardFile(url: storyboardOKURL))
+        XCTAssertEqual(storyboardOKViolations.count, 0)
     }
     
     func testCustomModuleWithRelativePath() {
@@ -58,11 +58,11 @@ class CustomModuleRuleTests: XCTestCase {
             excluded: ["Tests/IBLinterKitTest/\(projectMockPath)/CustomModuleExcluded"]
         )
         let rule = Rules.CustomModuleRule(context: .mock(from: config))
-        let ngUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.xib")
-        let ngViolations = try! rule.validate(xib: XibFile(url: ngUrl))
+        let ngURL = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleNGTest.xib")
+        let ngViolations = try! rule.validate(xib: XibFile(url: ngURL))
         XCTAssertEqual(ngViolations.count, 2)
-        let okUrl = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.xib")
-        let okViolations = try! rule.validate(xib: XibFile(url: okUrl))
+        let okURL = fixture.path("Resources/Rules/CustomModuleRule/CustomModuleOKTest.xib")
+        let okViolations = try! rule.validate(xib: XibFile(url: okURL))
         XCTAssertEqual(okViolations.count, 0)
     }
 }
