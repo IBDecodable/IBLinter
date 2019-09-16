@@ -1,6 +1,7 @@
 language: objective-c
 osx_image: xcode10.2
 before_script:
+  - pod lib lint
   - swiftlint --strict
 script:
   - swift test
