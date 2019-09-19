@@ -3,10 +3,7 @@ on: push
 jobs:
   test:
     name: Build and Test
-    strategy:
-      matrix:
-        os: [ubuntu-14.04, macOS-10.14]
-    runs-on: ${{ matrix.os }}
+    runs-on: macOS-10.14
     steps:
       - name: Checkout
         uses: actions/checkout@master
