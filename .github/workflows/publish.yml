@@ -5,6 +5,26 @@ jobs:
     name: Publish
     runs-on: macOS-10.14
     steps:
+      - name: Accept events only when release branch merged
+        run: |
+          IS_MERGED=$(jq -r .pull_request.merged "$GITHUB_EVENT_PATH")
+          if [ "$IS_MERGED" != "true" ]; then
+            exit 78
+          fi
+          REF_PATTERN="refs/heads/release/*"
+          case "$GITHUB_REF" in
+            "")
+              echo "\$GITHUB_REF is not set"
+              exit 1
+              ;;
+            $REF_PATTERN)
+              echo "$GITHUB_REF matches $pattern"
+              exit 0
+              ;;
+            *)
+              echo "$GITHUB_REF does not match $pattern"
+              exit 78
+          esac
       - name: Checkout
         uses: actions/checkout@master
       - name: Git config
@@ -14,12 +34,6 @@ jobs:
           git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Accept events only from release branch
-        uses: actions/bin/filter@master
-        with: { args: "branch release/*" }
-      - name: Accept events only when release branch merged
-        uses: actions/bin/filter@master
-        with: { args: "merged true" }
       - name: Tag release version
         run: |
           RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/release\///")

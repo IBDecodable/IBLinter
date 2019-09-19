@@ -3,8 +3,11 @@ on: create
 jobs:
   release:
     name: Release
-    runs-on: macOS-10.14
+    runs-on: ubuntu-18.04
     steps:
+      - name: Accept events only from release branch
+        uses: actions/bin/filter@master
+        with: { args: "branch release/*" }
       - name: Git config
         run: |
           git config --local user.name "IBLinter Bot"
@@ -12,9 +15,6 @@ jobs:
           git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Accept events only from release branch
-        uses: actions/bin/filter@master
-        with: { args: "branch release/*" }
       - name: Checkout
         uses: actions/checkout@master
       - name: Bump version
