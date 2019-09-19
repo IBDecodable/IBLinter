@@ -39,11 +39,13 @@ jobs:
         with:
           github-token: ${{github.token}}
           script: |
-            if (/^.*release\/.+/.test(context.payload)) {
-              github.pulls.create({
+            if (/^.*release\/.+/.test(context.payload.ref)) {
+              const version = context.payload.ref.replace(/^.*release\/(.+)/, '$1')
+              await github.pulls.create({
                 ...context.repo,
-                base: context.payload.ref,
-                title: "Release ${context.payload.ref.replace(/.*release\/(.+)/, '$1')}"
+                head: context.payload.ref,
+                base: "master",
+                title: "Release " + version,
                 body: "New release tag will be pushed automatically after this PR is merged"
               })
             }
