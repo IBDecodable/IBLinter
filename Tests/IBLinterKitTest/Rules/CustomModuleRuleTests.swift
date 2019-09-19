@@ -65,4 +65,31 @@ class CustomModuleRuleTests: XCTestCase {
         let okViolations = try! rule.validate(xib: XibFile(url: okURL))
         XCTAssertEqual(okViolations.count, 0)
     }
+
+    func testSameNameClass() {
+        let config = Config(
+            disabledRules: defaultEnabledRules,
+            enabledRules: ["custom_module"],
+            excluded: [], included: [],
+            customModuleRule: [
+                CustomModuleConfig(
+                    module: "ModuleA",
+                    included: ["Tests/IBLinterKitTest/Resources/Rules/CustomModuleRule/SameNameClass/ModuleA"],
+                    excluded: []
+                ),
+                CustomModuleConfig(
+                    module: "ModuleB",
+                    included: ["Tests/IBLinterKitTest/Resources/Rules/CustomModuleRule/SameNameClass/ModuleB"],
+                    excluded: []
+                ),
+            ],
+            baseClassRule: [],
+            reporter: "xcode"
+        )
+
+        let rule = Rules.CustomModuleRule(context: .mock(from: config))
+        let fileURL = fixture.path("Resources/Rules/CustomModuleRule/SameNameClass/TestView.xib")
+        let ngViolations = try! rule.validate(xib: XibFile(url: fileURL))
+        XCTAssertEqual(ngViolations.count, 0)
+    }
 }
