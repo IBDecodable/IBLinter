@@ -48,7 +48,10 @@ let package = Package(
         ),
         .testTarget(
             name: "IBLinterKitTest",
-            dependencies: ["IBLinterKit"]
+            dependencies: ["IBLinterKit"],
+            exclude: [
+                "Resources"
+            ]
         ),
     ]
 )

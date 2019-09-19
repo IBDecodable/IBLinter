@@ -70,7 +70,7 @@ extension Rules {
             guard let views = xib.document.views else { return [] }
             let placeholders = xib.document.placeholders ?? []
             return views.flatMap { validate(for: $0.view, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
-                + placeholders.flatMap { validate(for: $0, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
+                + placeholders.flatMap { validate(forClassableObject: $0, file: xib, fileNameWithoutExtension: xib.fileNameWithoutExtension) }
         }
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
@@ -78,33 +78,24 @@ extension Rules {
             let viewControllers = scenes.compactMap { $0.viewController?.viewController }
             let views = viewControllers.compactMap { $0.rootView }
             return views.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
-                + viewControllers.flatMap { validate(for: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
+                + viewControllers.flatMap { validate(forClassableObject: $0, file: storyboard, fileNameWithoutExtension: storyboard.fileNameWithoutExtension) }
         }
 
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T, fileNameWithoutExtension: String) -> [Violation] {
-            let violation: [Violation] = {
-                guard let customClass = view.customClass else { return [] }
-                guard let expectedModule = moduleClasses.first(where: { $0.value.contains(customClass) }) else {
-                    return []
-                }
-                let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(expectedModule.key)"
-                let violation = Violation(pathString: file.pathString, message: message, level: .error)
-                guard let customModule = view.customModule, expectedModule.key == customModule else {
-                    return [violation]
-                }
-                return []
-            }()
+            let violation = validate(forClassableObject: view, file: file, fileNameWithoutExtension: fileNameWithoutExtension)
             return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file, fileNameWithoutExtension: fileNameWithoutExtension) } ?? [])
         }
 
-        private func validate<T: InterfaceBuilderFile>(for classableObject: IBCustomClassable, file: T, fileNameWithoutExtension: String) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(
+            forClassableObject classableObject: IBCustomClassable, file: T, fileNameWithoutExtension: String
+        ) -> [Violation] {
             guard let customClass = classableObject.customClass else { return [] }
-            guard let expectedModule = moduleClasses.first(where: { $0.value.contains(customClass) }) else {
-                return []
-            }
-            let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is \(expectedModule.key)"
-            let violation = Violation(pathString: file.pathString, message: message, level: .error)
-            guard let customModule = classableObject.customModule, expectedModule.key == customModule else {
+            let moduleCandidates = moduleClasses.lazy.filter({ $0.value.contains(customClass) }).map { $0.key }
+            guard !moduleCandidates.isEmpty else { return [] }
+            guard let customModule = classableObject.customModule, moduleCandidates.contains(customModule) else {
+                let moduleNames = "[\(moduleCandidates.joined(separator: ", "))]"
+                let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is one of \(moduleNames)"
+                let violation = Violation(pathString: file.pathString, message: message, level: .error)
                 return [violation]
             }
             return []
