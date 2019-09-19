@@ -93,7 +93,7 @@ extension Rules {
             let moduleCandidates = moduleClasses.lazy.filter({ $0.value.contains(customClass) }).map { $0.key }
             guard !moduleCandidates.isEmpty else { return [] }
             guard let customModule = classableObject.customModule, moduleCandidates.contains(customModule) else {
-                let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is one of \(moduleCandidates)"
+                let message = "It does not match custom module rule in \(fileNameWithoutExtension). Custom module of \(customClass) is one of [\(moduleCandidates.joined(separator: ", "))]"
                 let violation = Violation(pathString: file.pathString, message: message, level: .error)
                 return [violation]
             }
