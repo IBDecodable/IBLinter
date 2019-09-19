@@ -15,7 +15,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bump version
-        if: github.event.ref_type == "branch"
+        if: github.event.ref_type == 'branch'
         run: |
           REF_PATTERN="refs/heads/release/*"
           case "$GITHUB_REF" in
@@ -34,7 +34,7 @@ jobs:
           make bump_version $RELEASE_VERSION
           git push origin HEAD
       - uses: actions/github-script@0.2.0
-        if: github.event.ref_type == "branch"
+        if: github.event.ref_type == 'branch'
         with:
           github-token: ${{github.token}}
           script: |
