@@ -1,0 +1,35 @@
+name: Release flow
+on: create
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Accept events only from release branch
+        uses: actions/bin/filter@master
+        with: { args: "branch release/*" }
+      - name: Git config
+        run: |
+          git config --local user.name "IBLinter Bot"
+          git config --local user.email $GITHUB_ACTOR@users.noreply.github.com
+          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Bump version
+        run: |
+          RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/release\///")
+          make bump_version $RELEASE_VERSION
+      - name: Push changes
+        run: git push origin HEAD
+      - uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{github.token}}
+          script: |
+            github.pulls.create({
+              ...context.repo,
+              base: context.payload.ref,
+              title: "Release ${process.env.RELEASE_VERSION}"
+              body: "New release tag will be pushed automatically after this PR is merged"
+            })

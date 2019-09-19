@@ -1,0 +1,19 @@
+name: Run unit tests
+on: push
+jobs:
+  test:
+    name: Build and Test
+    runs-on: macOS-10.14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Lint
+        run: |
+          pod lib lint
+          swiftlint --strict
+      - name: Run Test
+        run: swift test
