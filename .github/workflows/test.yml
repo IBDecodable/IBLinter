@@ -1,0 +1,20 @@
+name: Run unit tests
+on: push
+jobs:
+  test:
+    name: Build and Test
+    strategy:
+      matrix:
+        os: [ubuntu-14.04, macOS-10.14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Lint
+        run: |
+          pod lib lint
+          swiftlint --strict
+      - name: Run Test
+        run: swift test
