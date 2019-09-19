@@ -16,10 +16,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Accept events only from release branch
         uses: actions/bin/filter@master
-        with: "branch release/*"
+        with: { args: "branch release/*" }
       - name: Accept events only when release branch merged
         uses: actions/bin/filter@master
-        with: "merged true"
+        with: { args: "merged true" }
       - name: Tag release version
         run: |
           RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/release\///")
