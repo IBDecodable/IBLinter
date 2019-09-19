@@ -5,26 +5,6 @@ jobs:
     name: Publish
     runs-on: macOS-10.14
     steps:
-      - name: Accept events only when release branch merged
-        run: |
-          IS_MERGED=$(jq -r .pull_request.merged "$GITHUB_EVENT_PATH")
-          if [ "$IS_MERGED" != "true" ]; then
-            exit 78
-          fi
-          REF_PATTERN="refs/heads/release/*"
-          case "$GITHUB_REF" in
-            "")
-              echo "\$GITHUB_REF is not set"
-              exit 1
-              ;;
-            $REF_PATTERN)
-              echo "$GITHUB_REF matches $pattern"
-              exit 0
-              ;;
-            *)
-              echo "$GITHUB_REF does not match $pattern"
-              exit 78
-          esac
       - name: Checkout
         uses: actions/checkout@master
       - name: Git config
@@ -36,7 +16,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tag release version
         run: |
+          # Accept events only when release branch merged
+          IS_MERGED=$(jq -r .pull_request.merged "$GITHUB_EVENT_PATH")
+          if [ "$IS_MERGED" != "true" ]; then
+            exit 0
+          fi
+          REF_PATTERN="refs/heads/release/*"
+          case "$GITHUB_REF" in
+            "")
+              echo "\$GITHUB_REF is not set"
+              exit 1
+              ;;
+            $REF_PATTERN)
+              echo "$GITHUB_REF matches $REF_PATTERN"
+              ;;
+            *)
+              echo "$GITHUB_REF does not match $REF_PATTERN"
+              exit 0
+          esac
           RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/release\///")
           git tag $RELEASE_VERSION
-      - name: Push tag
-        run: git push origin --tags
+          git push origin --tags
