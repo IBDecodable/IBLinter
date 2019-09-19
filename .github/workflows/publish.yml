@@ -1,5 +1,8 @@
 name: Publish new version
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - release/*
 jobs:
   publish:
     name: Publish
@@ -15,25 +18,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tag release version
+        if: github.event.merged == true
         run: |
-          # Accept events only when release branch merged
-          IS_MERGED=$(jq -r .pull_request.merged "$GITHUB_EVENT_PATH")
-          if [ "$IS_MERGED" != "true" ]; then
-            exit 0
-          fi
-          REF_PATTERN="refs/heads/release/*"
-          case "$GITHUB_REF" in
-            "")
-              echo "\$GITHUB_REF is not set"
-              exit 1
-              ;;
-            $REF_PATTERN)
-              echo "$GITHUB_REF matches $REF_PATTERN"
-              ;;
-            *)
-              echo "$GITHUB_REF does not match $REF_PATTERN"
-              exit 0
-          esac
-          RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/release\///")
+          RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}
           git tag $RELEASE_VERSION
           git push origin --tags
