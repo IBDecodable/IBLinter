@@ -86,7 +86,9 @@ extension Rules {
             return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file, fileNameWithoutExtension: fileNameWithoutExtension) } ?? [])
         }
 
-        private func validate<T: InterfaceBuilderFile>(forClassableObject classableObject: IBCustomClassable, file: T, fileNameWithoutExtension: String) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(
+            forClassableObject classableObject: IBCustomClassable, file: T, fileNameWithoutExtension: String
+        ) -> [Violation] {
             guard let customClass = classableObject.customClass else { return [] }
             let moduleCandidates = moduleClasses.lazy.filter({ $0.value.contains(customClass) }).map { $0.key }
             guard !moduleCandidates.isEmpty else { return [] }
