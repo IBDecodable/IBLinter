@@ -26,10 +26,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Homebrew formula
         run: |
-          brew update
+          brew tap IBDecodable/homebrew-tap
           brew bump-formula-pr --tag=$(git describe --tags) --revision=$(git rev-parse HEAD) iblinter
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
       - name: Update CocoaPods spec
         run: pod trunk push IBLinter.podspec
         env:
