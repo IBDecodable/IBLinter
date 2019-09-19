@@ -5,9 +5,8 @@ jobs:
     name: Release
     runs-on: ubuntu-18.04
     steps:
-      - name: Accept events only from release branch
-        uses: actions/bin/filter@master
-        with: { args: "branch release/*" }
+      - name: Checkout
+        uses: actions/checkout@master
       - name: Git config
         run: |
           git config --local user.name "IBLinter Bot"
@@ -15,21 +14,35 @@ jobs:
           git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Checkout
-        uses: actions/checkout@master
       - name: Bump version
+        if: github.event.ref_type == "branch"
         run: |
-          RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/release\///")
+          REF_PATTERN="refs/heads/release/*"
+          case "$GITHUB_REF" in
+            "")
+              echo "\$GITHUB_REF is not set"
+              exit 1
+              ;;
+            $REF_PATTERN)
+              echo "$GITHUB_REF matches $REF_PATTERN"
+              ;;
+            *)
+              echo "$GITHUB_REF does not match $REF_PATTERN"
+              exit 0
+          esac
+          RELEASE_VERSION=$(echo $GITHUB_REF | sed "s/^.*release\///")
           make bump_version $RELEASE_VERSION
-      - name: Push changes
-        run: git push origin HEAD
+          git push origin HEAD
       - uses: actions/github-script@0.2.0
+        if: github.event.ref_type == "branch"
         with:
           github-token: ${{github.token}}
           script: |
-            github.pulls.create({
-              ...context.repo,
-              base: context.payload.ref,
-              title: "Release ${process.env.RELEASE_VERSION}"
-              body: "New release tag will be pushed automatically after this PR is merged"
-            })
+            if (/^.*release\/.+/.test(context.payload)) {
+              github.pulls.create({
+                ...context.repo,
+                base: context.payload.ref,
+                title: "Release ${context.payload.ref.replace(/.*release\/(.+)/, '$1')}"
+                body: "New release tag will be pushed automatically after this PR is merged"
+              })
+            }
