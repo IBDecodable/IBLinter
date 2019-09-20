@@ -1,5 +1,7 @@
 name: Upload artifact
-on: release
+on:
+  release:
+    types: [published]
 jobs:
   publish:
     name: Publish
@@ -10,18 +12,7 @@ jobs:
       - name: Build portable_iblinter.zip
         run: make portable_zip
       - name: Upload portable_zip for Release assets
-        run: |
-          ARTIFACT=./portable_iblinter.zip
-          AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
-          CONTENT_LENGTH_HEADER="Content-Length: $(stat -f%z "$ARTIFACT")"
-          CONTENT_TYPE_HEADER="Content-Type: application/zip"
-          RELEASE_ID=$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)
-          FILENAME=$(basename $ARTIFACT)
-          UPLOAD_URL="https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets?name=$FILENAME"
-          echo "$UPLOAD_URL"
-          curl -sSL -XPOST \
-            -H "$AUTH_HEADER" -H "$CONTENT_LENGTH_HEADER" -H "$CONTENT_TYPE_HEADER" \
-            --upload-file "$ARTIFACT" "$UPLOAD_URL"
+        run: ./script/upload_artifact.sh ./portable_iblinter.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Homebrew formula
@@ -30,14 +21,28 @@ jobs:
           pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
           git config --local user.name "IBLinter Bot"
           git config --local user.email $GITHUB_ACTOR@users.noreply.github.com
-          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$HOMEBREW_TAP_REPOSITORY.git
+          git remote set-url origin https://$GITHUB_ACTOR:$HOMEBREW_GITHUB_API_TOKEN@github.com/$HOMEBREW_TAP_REPOSITORY.git
           popd
           git checkout ${GITHUB_REF#refs/heads/}
           brew bump-formula-pr --tag=$(git describe --tags) --revision=$(git rev-parse HEAD) iblinter
+
+          pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
+          FORMULA_PATH=iblinter.rb
+          brew install $FORMULA_PATH --build-bottle
+          brew bottle $FORMULA_PATH --force-core-tap
+
+          BOTTLE=$(find . -name "*mojave.bottle.tar.gz")
+          SHA256=$(shasum -a 256 $BOTTLE | cut -f1 -d ' ')
+          ruby utils/replace_bottle_sha256.rb iblinter.rb $SHA256 mojave
+          git commit -am"Update bottle sha256"
+          git push origin HEAD
+
+          $GITHUB_WORKSPACE/script/upload_artifact.sh $BOTTLE
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
           HOMEBREW_NO_INSTALL_CLEANUP: 1
           HOMEBREW_TAP_REPOSITORY: IBDecodable/homebrew-tap
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update CocoaPods spec
         run: pod trunk push IBLinter.podspec
         env:
