@@ -12,18 +12,7 @@ jobs:
       - name: Build portable_iblinter.zip
         run: make portable_zip
       - name: Upload portable_zip for Release assets
-        run: |
-          ARTIFACT=./portable_iblinter.zip
-          AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
-          CONTENT_LENGTH_HEADER="Content-Length: $(stat -f%z "$ARTIFACT")"
-          CONTENT_TYPE_HEADER="Content-Type: application/zip"
-          RELEASE_ID=$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)
-          FILENAME=$(basename $ARTIFACT)
-          UPLOAD_URL="https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets?name=$FILENAME"
-          echo "$UPLOAD_URL"
-          curl -sSL -XPOST \
-            -H "$AUTH_HEADER" -H "$CONTENT_LENGTH_HEADER" -H "$CONTENT_TYPE_HEADER" \
-            --upload-file "$ARTIFACT" "$UPLOAD_URL"
+        run: ./script/upload_artifact.sh ./portable_iblinter.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Homebrew formula
@@ -48,10 +37,12 @@ jobs:
           git commit -am"Update bottle sha256"
           git push origin HEAD
 
+          $GITHUB_WORKSPACE/script/upload_artifact.sh $BOTTLE
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
           HOMEBREW_NO_INSTALL_CLEANUP: 1
           HOMEBREW_TAP_REPOSITORY: IBDecodable/homebrew-tap
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update CocoaPods spec
         run: pod trunk push IBLinter.podspec
         env:
