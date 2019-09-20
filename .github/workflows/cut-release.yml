@@ -1,8 +1,5 @@
 name: Cut new version
-on:
-  pull_request:
-    branches:
-      - release/*
+on: pull_request
 jobs:
   cut_release:
     name: Cut new version
@@ -18,7 +15,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Tag release version
-        if: github.event.merged == true && github.event.pull_request.base.ref == 'master'
+        if: >
+          github.event.merged == true &&
+          github.event.pull_request.base.ref == 'master' &&
+          startsWith(github.event.pull_request.head.ref, 'release/')
         run: |
           RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}
           git checkout master
