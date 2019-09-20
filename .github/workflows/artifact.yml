@@ -42,3 +42,4 @@ jobs:
         run: pod trunk push IBLinter.podspec
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+          COCOAPODS_VALIDATOR_SKIP_XCODEBUILD: 1
