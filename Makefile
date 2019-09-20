@@ -32,7 +32,7 @@ bump_version:
 
 publish:
 		brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) iblinter
-		pod trunk push IBLinter.podspec
+		COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push IBLinter.podspec
 
 %:
 	@:
