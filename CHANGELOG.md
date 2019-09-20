@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.19]
+
+### Fixed
+
+- Remove platform parameter from podspec to fix installation failure for CocoaPods. [#121](https://github.com/IBDecodable/IBLinter/pull/121)
+
 ## [0.4.18]
 
 ### Fixed
