@@ -71,7 +71,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...HEAD
+[0.4.19]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...0.4.19
 [0.4.18]: https://github.com/IBDecodable/IBLinter/compare/0.4.17...0.4.18
 [0.4.17]: https://github.com/IBDecodable/IBLinter/compare/0.4.16...0.4.17
 [0.4.16]: https://github.com/IBDecodable/IBLinter/compare/0.4.15...0.4.16
