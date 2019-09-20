@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.19]
+
+### Fixed
+
+- Remove platform parameter from podspec to fix installation failure for CocoaPods. [#121](https://github.com/IBDecodable/IBLinter/pull/121)
+
 ## [0.4.18]
 
 ### Fixed
@@ -65,7 +71,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...HEAD
+[0.4.19]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...0.4.19
 [0.4.18]: https://github.com/IBDecodable/IBLinter/compare/0.4.17...0.4.18
 [0.4.17]: https://github.com/IBDecodable/IBLinter/compare/0.4.16...0.4.17
 [0.4.16]: https://github.com/IBDecodable/IBLinter/compare/0.4.15...0.4.16
