@@ -36,8 +36,20 @@ jobs:
           popd
           git checkout ${GITHUB_REF#refs/heads/}
           brew bump-formula-pr --tag=$(git describe --tags) --revision=$(git rev-parse HEAD) iblinter
+
+          pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
+          FORMULA_PATH=iblinter.rb
+          brew install $FORMULA_PATH --build-bottle
+          brew bottle $FORMULA_PATH --force-core-tap
+
+          BOTTLE=$(find . -name "*mojave.bottle.tar.gz")
+          SHA256=$(shasum -a 256 $BOTTLE | cut -f1 -d ' ')
+          ruby utils/replace_bottle_sha256.rb iblinter.rb $SHA256 mojave
+          git commit -am"Update bottle sha256"
+          git push origin HEAD
+
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
           HOMEBREW_NO_INSTALL_CLEANUP: 1
           HOMEBREW_TAP_REPOSITORY: IBDecodable/homebrew-tap
       - name: Update CocoaPods spec
