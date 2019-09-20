@@ -1,5 +1,7 @@
 name: Upload artifact
-on: release
+on:
+  release:
+    types: [published]
 jobs:
   publish:
     name: Publish
