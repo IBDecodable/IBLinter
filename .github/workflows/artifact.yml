@@ -26,11 +26,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Homebrew formula
         run: |
-          brew tap IBDecodable/homebrew-tap
+          brew tap $HOMEBREW_TAP_REPOSITORY
+          pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
+          git config --local user.name "IBLinter Bot"
+          git config --local user.email $GITHUB_ACTOR@users.noreply.github.com
+          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$HOMEBREW_TAP_REPOSITORY.git
+          popd
+          git checkout ${GITHUB_REF#refs/heads/}
           brew bump-formula-pr --tag=$(git describe --tags) --revision=$(git rev-parse HEAD) iblinter
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_NO_INSTALL_CLEANUP: 1
+          HOMEBREW_TAP_REPOSITORY: IBDecodable/homebrew-tap
       - name: Update CocoaPods spec
         run: pod trunk push IBLinter.podspec
         env:
