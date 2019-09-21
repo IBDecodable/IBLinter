@@ -28,3 +28,6 @@ public struct Violation {
         }
     }
 }
+
+extension Violation: Codable {}
+extension Violation.Level: Codable {}

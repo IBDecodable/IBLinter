@@ -19,39 +19,57 @@ public class Validator {
     public func validate(workDirectory: URL, config: Config) -> [Violation] {
         let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
         let rules = Rules.rules(context)
+        let cache: LintCache = {
+            do {
+                return try LintDiskCache.load(with: FileManager.default, config: config)
+            } catch {
+                if let new = try? LintDiskCache.new(with: FileManager.default, config: config) {
+                    return new
+                } else {
+                    return LintEmptyCache()
+                }
+            }
+        }()
+        defer {
+            do { try cache.save() }
+            catch { fputs(String(describing: error), stderr) }
+        }
         let (xibs, storyboards) = lintablePaths(workDirectory: workDirectory, config: config)
-        return validateXib(files: xibs, rules: rules, config: config)
-            + validateStoryboard(files: storyboards, rules: rules, config: config)
+        return
+            doValidate(files: storyboards, rules: rules, config: config, cache: cache) { rule, file in
+                let file = try StoryboardFile.init(path: file.relativePath)
+                return rule.validate(storyboard: file)
+            }
+            +
+            doValidate(files: xibs, rules: rules, config: config, cache: cache) { rule, file in
+                let file = try XibFile.init(path: file.relativePath)
+                return rule.validate(xib: file)
+            }
     }
 
-    public func validateStoryboard(files: Set<URL>, rules: [Rule], config: Config) -> [Violation] {
-        return rules.flatMap { rule in
-            return files.flatMap { path -> [Violation] in
+    public func doValidate(
+        files: Set<URL>, rules: [Rule], config: Config, cache: LintCache,
+        validate: (Rule, URL) throws -> [Violation]) -> [Violation] {
+        var violations: [Violation] = []
+
+        for path in files {
+            if let cachedViolations = cache.violations(for: path) {
+                violations.append(contentsOf: cachedViolations)
+                continue
+            }
+            let fileViolations = rules.flatMap { rule -> [Violation] in
                 do {
-                    let file = try StoryboardFile.init(path: path.relativePath)
-                    return rule.validate(storyboard: file)
+                    return try validate(rule, path)
                 } catch let error as InterfaceBuilderParser.Error {
                     return [error.asViolation(filePath: path)]
                 } catch let error {
                     fatalError("parse error \(path.relativePath): \(error)")
                 }
             }
+            cache.insertCache(for: path, violations: fileViolations)
+            violations.append(contentsOf: fileViolations)
         }
-    }
-
-    public func validateXib(files: Set<URL>, rules: [Rule], config: Config) -> [Violation] {
-        return rules.flatMap { rule in
-            return files.flatMap { path -> [Violation] in
-                do {
-                    let file = try XibFile.init(path: path.relativePath)
-                    return rule.validate(xib: file)
-                } catch let error as InterfaceBuilderParser.Error {
-                    return [error.asViolation(filePath: path)]
-                } catch let error {
-                    fatalError("parse error \(path.relativePath): \(error)")
-                }
-            }
-        }
+        return violations
     }
 
     private struct InterfaceBuilderFiles {
