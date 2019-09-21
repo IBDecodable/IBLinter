@@ -97,7 +97,7 @@ extension LintDiskCache {
 }
 
 import CommonCrypto
-private extension Data {
+extension Data {
     func sha1() -> [UInt8] {
         return withUnsafeBytes { [count] ptr in
             var hash = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
