@@ -20,6 +20,7 @@ public class Validator {
         let context = Context(config: config, workDirectory: workDirectory, externalRules: externalRules)
         let rules = Rules.rules(context)
         let cache: LintCache = {
+            guard !config.ignoreCache else { return LintEmptyCache() }
             do {
                 return try LintDiskCache.load(with: FileManager.default, config: config)
             } catch {

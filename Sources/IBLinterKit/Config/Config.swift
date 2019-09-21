@@ -18,6 +18,7 @@ public struct Config: Codable {
     public let viewAsDeviceRule: ViewAsDeviceConfig?
     public let reporter: String
     public let disableWhileBuildingForIB: Bool
+    public let ignoreCache: Bool
 
     enum CodingKeys: String, CodingKey {
         case disabledRules = "disabled_rules"
@@ -29,6 +30,7 @@ public struct Config: Codable {
         case viewAsDeviceRule = "view_as_device_rule"
         case reporter = "reporter"
         case disableWhileBuildingForIB = "disable_while_building_for_ib"
+        case ignoreCache = "ignore_cache"
     }
 
     public static let fileName = ".iblinter.yml"
@@ -44,6 +46,7 @@ public struct Config: Codable {
         viewAsDeviceRule = nil
         reporter = "xcode"
         disableWhileBuildingForIB = true
+        ignoreCache = false
     }
 
     init(disabledRules: [String] = [], enabledRules: [String] = [],
@@ -51,7 +54,8 @@ public struct Config: Codable {
          customModuleRule: [CustomModuleConfig] = [],
          baseClassRule: [UseBaseClassConfig] = [],
          viewAsDeviceRule: ViewAsDeviceConfig? = nil,
-         reporter: String = "xcode", disableWhileBuildingForIB: Bool = true) {
+         reporter: String = "xcode", disableWhileBuildingForIB: Bool = true,
+         ignoreCache: Bool = false) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules
         self.excluded = excluded
@@ -61,6 +65,7 @@ public struct Config: Codable {
         self.viewAsDeviceRule = viewAsDeviceRule
         self.reporter = reporter
         self.disableWhileBuildingForIB = disableWhileBuildingForIB
+        self.ignoreCache = ignoreCache
     }
 
     public init(from decoder: Decoder) throws {
@@ -74,6 +79,7 @@ public struct Config: Codable {
         viewAsDeviceRule = try container.decodeIfPresent(Optional<ViewAsDeviceConfig>.self, forKey: .viewAsDeviceRule) ?? nil
         reporter = try container.decodeIfPresent(String.self, forKey: .reporter) ?? "xcode"
         disableWhileBuildingForIB = try container.decodeIfPresent(Bool.self, forKey: .disableWhileBuildingForIB) ?? true
+        ignoreCache = try container.decodeIfPresent(Bool.self, forKey: .ignoreCache) ?? false
     }
 
     public init(url: URL) throws {
