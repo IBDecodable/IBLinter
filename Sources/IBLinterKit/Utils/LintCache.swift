@@ -71,7 +71,6 @@ public class LintDiskCache: LintCache {
 
 extension LintDiskCache {
 
-
     static func new(with fileManager: CacheFileManager, config: Config) throws -> LintCache {
         let emptyContent = LintCacheContent(entries: [:])
         let configContent = try JSONEncoder().encode(config)

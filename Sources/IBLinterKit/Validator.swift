@@ -32,8 +32,7 @@ public class Validator {
             }
         }()
         defer {
-            do { try cache.save() }
-            catch { fputs(String(describing: error), stderr) }
+            do { try cache.save() } catch { fputs(String(describing: error), stderr) }
         }
         let (xibs, storyboards) = lintablePaths(workDirectory: workDirectory, config: config)
         return
