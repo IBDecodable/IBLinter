@@ -7,6 +7,7 @@
 
 import Result
 import Commandant
+import IBLinterKit
 
 struct VersionCommand: CommandProtocol {
     let verb = "version"
