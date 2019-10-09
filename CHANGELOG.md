@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.20]
+
+### Fixed
+
+- Add cache system and significantly improve performance when running with a large number files. [#124](https://github.com/IBDecodable/IBLinter/pull/124)
+
 ## [0.4.19]
 
 ### Fixed
@@ -71,7 +77,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.20...HEAD
+[0.4.20]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...0.4.20
 [0.4.19]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...0.4.19
 [0.4.18]: https://github.com/IBDecodable/IBLinter/compare/0.4.17...0.4.18
 [0.4.17]: https://github.com/IBDecodable/IBLinter/compare/0.4.16...0.4.17
