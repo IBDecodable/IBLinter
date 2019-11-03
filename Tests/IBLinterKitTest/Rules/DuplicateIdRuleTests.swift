@@ -18,5 +18,7 @@ class DuplicateIdRuleTests: XCTestCase {
         let rule = Rules.DuplicateIdRule(context: .mock(from: .default))
         let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 2)
+        let expectedMessages = ["iN0-l3-epB", "aEU-56-OK8"].map { "duplicate element id \($0)"}
+        XCTAssertEqual(violations.map { $0.message }, expectedMessages)
     }
 }
