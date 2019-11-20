@@ -95,3 +95,11 @@ Display error when views are ambiguous.
 |   Default Rule  |  `false` |
 
 Check View as: set as a device specified by view_as_device_rule config.
+
+## DuplicateIDRule
+
+|    identifier   | `duplicate_id` |
+|:---------------:|:---------------:|
+|   Default Rule  |  `true` |
+
+Display warning when two element use the same id.
