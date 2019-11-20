@@ -27,7 +27,7 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(file: T, in document: IBElement) -> [Violation] {
-            return duplicateIds(in: document).map {
+            return duplicateIDs(in: document).map {
                 let message = "duplicate element id \($0.0)"
                 return Violation(
                     pathString: file.pathString,
@@ -36,7 +36,7 @@ extension Rules {
             }
         }
 
-        private func duplicateIds(in document: IBElement) -> [(String, [IBIdentifiable])] {
+        private func duplicateIDs(in document: IBElement) -> [(String, [IBIdentifiable])] {
             var byId: [String: [IBIdentifiable]] = [:]
             var duplicateId: [String] = []
             _ = document.browse { element in
