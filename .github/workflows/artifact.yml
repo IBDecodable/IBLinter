@@ -31,7 +31,7 @@ jobs:
           brew install $FORMULA_PATH --build-bottle
           brew bottle $FORMULA_PATH --force-core-tap
 
-          BOTTLE=$(find . -name "*mojave.bottle.tar.gz")
+          BOTTLE=$(find . -name "*.bottle*.tar.gz")
           SHA256=$(shasum -a 256 $BOTTLE | cut -f1 -d ' ')
           ruby utils/replace_bottle_sha256.rb iblinter.rb $SHA256 mojave
           git commit -am"Update bottle sha256"
