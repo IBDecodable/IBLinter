@@ -96,7 +96,7 @@ Display error when views are ambiguous.
 
 Check View as: set as a device specified by view_as_device_rule config.
 
-## DuplicateIdRule
+## DuplicateIDRule
 
 |    identifier   | `duplicate_id` |
 |:---------------:|:---------------:|

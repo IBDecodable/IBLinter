@@ -29,7 +29,7 @@ public struct Rules {
             MisplacedViewRule.self,
             ForceToEnableAutoLayoutRule.self,
             DuplicateConstraintRule.self,
-            DuplicateIdRule.self,
+            DuplicateIDRule.self,
             StoryboardViewControllerId.self,
             ImageResourcesRule.self,
             CustomModuleRule.self,

@@ -1,5 +1,5 @@
 //
-//  DuplicateIdRule.swift
+//  DuplicateIDRule.swift
 //  IBLinterKit
 //
 //  Created by Eric Marchand on 2019/10/29.
@@ -10,7 +10,7 @@ import IBDecodable
 
 extension Rules {
 
-    struct DuplicateIdRule: Rule {
+    struct DuplicateIDRule: Rule {
 
         static let identifier = "duplicate_id"
         static let description = "Display warning when elements use same id."

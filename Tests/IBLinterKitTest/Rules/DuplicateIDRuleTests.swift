@@ -9,13 +9,13 @@
 import XCTest
 import IBDecodable
 
-class DuplicateIdRuleTests: XCTestCase {
+class DuplicateIDRuleTests: XCTestCase {
 
     let fixture = Fixture()
 
     func testDuplicateId() {
-        let url = fixture.path("Resources/Rules/DuplicateIdRule/DuplicateId.xib")
-        let rule = Rules.DuplicateIdRule(context: .mock(from: .default))
+        let url = fixture.path("Resources/Rules/DuplicateIDRule/DuplicateID.xib")
+        let rule = Rules.DuplicateIDRule(context: .mock(from: .default))
         let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 2)
         let expectedMessages = ["iN0-l3-epB", "aEU-56-OK8"].map { "duplicate element id \($0)"}
