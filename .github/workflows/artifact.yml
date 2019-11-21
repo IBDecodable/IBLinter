@@ -32,6 +32,10 @@ jobs:
           brew bottle $FORMULA_PATH --force-core-tap
 
           BOTTLE=$(find . -name "*.bottle*.tar.gz")
+
+          # Homebrew introduced a change which puts "--" in the bottle name. Rename
+          # the bottle to something that homebrew expects to download/install.
+          mv "$BOTTLE" "${BOTTLE/--/-}"
           SHA256=$(shasum -a 256 $BOTTLE | cut -f1 -d ' ')
           ruby utils/replace_bottle_sha256.rb iblinter.rb $SHA256 mojave
           git commit -am"Update bottle sha256"
