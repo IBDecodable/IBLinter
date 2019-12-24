@@ -50,4 +50,20 @@ class LintablePathsTests: XCTestCase {
 
         XCTAssertEqual(lintablePaths, [])
     }
+    
+    func testIncludedFilePath() {
+        let config = Config(
+            disabledRules: [], enabledRules: [],
+            excluded: [], included: ["Level1_1/Level2_1/Label2_1.xib", "Level1_2"],
+            customModuleRule: [], baseClassRule: [], reporter: ""
+        )
+        let validator = Validator(externalRules: [])
+        let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
+        let lintablePaths = validator.lintablePaths(workDirectory: projectPath, config: config).xib
+
+        XCTAssertEqual(
+            lintablePaths.map { $0.path },
+            [projectPath.appendingPathComponent("Level1_1/Level2_1/Label2_1.xib").path, projectPath.appendingPathComponent("Level1_2/Level1_2.xib").path]
+        )
+    }
 }
