@@ -59,11 +59,9 @@ class LintablePathsTests: XCTestCase {
         )
         let validator = Validator(externalRules: [])
         let projectPath = fixture.path("Resources/Utils/Glob/ProjectMock")
-        let lintablePaths = validator.lintablePaths(workDirectory: projectPath, config: config).xib
-
-        XCTAssertEqual(
-            lintablePaths.map { $0.path },
-            [projectPath.appendingPathComponent("Level1_1/Level2_1/Label2_1.xib").path, projectPath.appendingPathComponent("Level1_2/Level1_2.xib").path]
-        )
+        let lintablePaths = validator.lintablePaths(workDirectory: projectPath, config: config).xib.map { $0.path }
+        
+        XCTAssert(lintablePaths.contains(projectPath.appendingPathComponent("Level1_1/Level2_1/Label2_1.xib").path))
+        XCTAssert(lintablePaths.contains(projectPath.appendingPathComponent("Level1_2/Level1_2.xib").path));
     }
 }
