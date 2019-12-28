@@ -37,6 +37,7 @@ extension Rules {
             return validate(
                 for: xib.document.children(of: Image.self),
                 imageViews: xib.document.children(of: ImageView.self),
+                states: xib.document.children(of: Button.State.self),
                 file: xib
             )
         }
@@ -45,19 +46,23 @@ extension Rules {
             return validate(
                 for: storyboard.document.children(of: Image.self),
                 imageViews: storyboard.document.children(of: ImageView.self),
+                states: storyboard.document.children(of: Button.State.self),
                 file: storyboard
             )
         }
 
-        private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], file: T) -> [Violation] {
+        private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], states: [Button.State], file: T) -> [Violation] {
             let catalogAssetNames = assetsCatalogs.flatMap { $0.values }
             let xcodeprojAssetNames = xcodeproj.flatMap {
                 $0.pbxproj.fileReferences.compactMap {
                     $0.name
                 }
             }
-            let assetNames = catalogAssetNames + xcodeprojAssetNames
-            return Set(imageViews.compactMap { $0.image } + images.map { $0.name })
+            let imagesToCheck = images.filter { $0.catalog != "system" }.map { $0.name }
+                + imageViews.filter { $0.catalog != "system" }.compactMap { $0.image }
+                + states.filter { $0.catalog != "system" }.compactMap { $0.image }
+            let assetNames = (catalogAssetNames + xcodeprojAssetNames)
+            return Set(imagesToCheck)
                 .filter { !assetNames.contains($0) }
                 .map {
                     Violation(
