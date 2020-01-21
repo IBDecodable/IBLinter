@@ -16,40 +16,36 @@ extension Rules {
         }
         
         func validate(xib: XibFile) -> [Violation] {
-            // TODO: support Xib
-            return []
+            guard let views = xib.document.views else { return [] }
+            return views.flatMap { validate(for: $0.view, file: xib) }
         }
         
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
-                func makeViolation(from view: ViewProtocol) -> Violation {
-                    let message = "\(viewName(of: view)) should have the same reuseidentifier"
-                    return Violation(pathString: file.pathString, message: message, level: .warning)
+                // Currently only supported TableViewCell and CollectionViewCell
+                // UICollectionReusableView will be support after IBDecodable support its view.
+                // MKAnnotationView is not yet supported by interfacebuilder.
+                var reusableCells = [IBReusable & ViewProtocol]()
+                if let tableView = view as? TableView, let cells = tableView.prototypeCells {
+                    reusableCells += cells
+                } else if let collectionView = view as? CollectionView, let cells = collectionView.cells {
+                    reusableCells += cells
+                } else if let cell = view as? TableViewCell {
+                    reusableCells += [cell]
+                } else if let cell = view as? CollectionViewCell {
+                    reusableCells += [cell]
                 }
                 
-                // Currently only supported TableViewCell and CollectionViewCell (contains UICollectionReusableView)
-                if let tableView = view as? TableView {
-                    return tableView.prototypeCells?.compactMap {
-                        guard let customClass = $0.customClass, let reuseIdentifier = $0.reuseIdentifier else {
-                            return makeViolation(from: $0)
-                        }
-                        if customClass != reuseIdentifier {
-                            return makeViolation(from: $0)
-                        }
+                return reusableCells.compactMap {
+                    guard let customClass = $0.customClass else {
+                        // don't violate if not have custom class for example Static cell type of table view.
                         return nil
-                    } ?? []
-                } else if let collectionView = view as? CollectionView {
-                    return collectionView.cells?.compactMap {
-                        guard let customClass = $0.customClass, let reuseIdentifier = $0.reuseIdentifier else {
-                            return makeViolation(from: $0)
-                        }
-                        if customClass != reuseIdentifier {
-                            return makeViolation(from: $0)
-                        }
-                        return nil
-                    } ?? []
-                } else {
-                    return []
+                    }
+                    if customClass != $0.reuseIdentifier {
+                        let message = "\(viewName(of: $0)) should have the same Reuse Identifier"
+                        return Violation(pathString: file.pathString, message: message, level: .warning)
+                    }
+                    return nil
                 }
             }()
             return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [])
