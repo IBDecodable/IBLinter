@@ -30,9 +30,7 @@ extension Rules {
                     reusableCells += cells
                 } else if let collectionView = view as? CollectionView, let cells = collectionView.cells {
                     reusableCells += cells
-                } else if let cell = view as? TableViewCell {
-                    reusableCells += [cell]
-                } else if let cell = view as? CollectionViewCell {
+                } else if let cell = view as? IBReusable & ViewProtocol {
                     reusableCells += [cell]
                 }
                 
