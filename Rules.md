@@ -111,4 +111,4 @@ Display warning when two element use the same id.
 |   Default Rule  |  `false` |
 
 Check that Reuse Identifier same as view class name.  
-Currently only supported TableViewCell and CollectionViewCell.
+Currently only supported `TableViewCell` and `CollectionViewCell`.
