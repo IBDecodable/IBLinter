@@ -103,3 +103,12 @@ Check View as: set as a device specified by view_as_device_rule config.
 |   Default Rule  |  `true` |
 
 Display warning when two element use the same id.
+
+## ReuseIdentifierRule
+
+|    identifier   | `reuse_identifier` |
+|:---------------:|:---------------:|
+|   Default Rule  |  `false` |
+
+Check that Reuse Identifier same as view class name.  
+Currently only supported TableViewCell and CollectionViewCell.
