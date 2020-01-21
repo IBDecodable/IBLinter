@@ -2,7 +2,7 @@ import IBDecodable
 
 extension Rules {
     
-    struct ReuseIdentifier: Rule {
+    struct ReuseIdentifierRule: Rule {
         
         static let identifier = "reuse_identifier"
         static let description = "Check that ReuseIdentifier same as class name."
