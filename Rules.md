@@ -43,6 +43,15 @@ Force to use useAutolayout option
 Display warning when view has duplicated constraint.
 
 
+## DuplicateIDRule
+
+|    identifier   | `duplicate_id` |
+|:---------------:|:---------------:|
+|   Default Rule  |  `true` |
+
+Display warning when elements use same id.
+
+
 ## StoryboardViewControllerId
 
 |    identifier   | `storyboard_viewcontroller_id` |
@@ -96,10 +105,13 @@ Display error when views are ambiguous.
 
 Check View as: set as a device specified by view_as_device_rule config.
 
-## DuplicateIDRule
 
-|    identifier   | `duplicate_id` |
+## ReuseIdentifierRule
+
+|    identifier   | `reuse_identifier` |
 |:---------------:|:---------------:|
-|   Default Rule  |  `true` |
+|   Default Rule  |  `false` |
 
-Display warning when two element use the same id.
+Check that ReuseIdentifier same as class name.\
+Currently only supported `TableViewCell` and `CollectionViewCell`.
+
