@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.21]
+
+### Added
+
+- Add rule `duplicate_id`, which detect xml element duplicate id [#126](https://github.com/IBDecodable/IBLinter/pull/126)
+- Add rule `reuse_identifier` which checks that ReuseIdentifier same as class name. [#137](https://github.com/IBDecodable/IBLinter/pull/137)
+
+### Fixed
+
+- Do not detect violations for system images for `image_resources` rule. [#131](https://github.com/IBDecodable/IBLinter/pull/131)
+
 ## [0.4.20]
 
 ### Fixed
@@ -77,7 +88,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.20...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.21...HEAD
+[0.4.21]: https://github.com/IBDecodable/IBLinter/compare/0.4.20...0.4.21
 [0.4.20]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...0.4.20
 [0.4.19]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...0.4.19
 [0.4.18]: https://github.com/IBDecodable/IBLinter/compare/0.4.17...0.4.18
