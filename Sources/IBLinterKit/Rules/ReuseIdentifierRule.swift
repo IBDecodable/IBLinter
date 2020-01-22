@@ -5,7 +5,10 @@ extension Rules {
     struct ReuseIdentifierRule: Rule {
         
         static let identifier = "reuse_identifier"
-        static let description = "Check that ReuseIdentifier same as class name."
+        static let description = """
+Check that ReuseIdentifier same as class name.\\
+Currently only supported `TableViewCell` and `CollectionViewCell`.
+"""
         
         init(context: Context) {}
         
