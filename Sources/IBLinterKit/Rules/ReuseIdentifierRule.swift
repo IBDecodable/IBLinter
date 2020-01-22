@@ -1,28 +1,28 @@
 import IBDecodable
 
 extension Rules {
-    
+
     struct ReuseIdentifierRule: Rule {
-        
+
         static let identifier = "reuse_identifier"
         static let description = """
 Check that ReuseIdentifier same as class name.\\
 Currently only supported `TableViewCell` and `CollectionViewCell`.
 """
-        
+
         init(context: Context) {}
-        
+
         func validate(storyboard: StoryboardFile) -> [Violation] {
             guard let scenes = storyboard.document.scenes else { return [] }
             let views = scenes.compactMap { $0.viewController?.viewController.rootView }
             return views.flatMap { validate(for: $0, file: storyboard) }
         }
-        
+
         func validate(xib: XibFile) -> [Violation] {
             guard let views = xib.document.views else { return [] }
             return views.flatMap { validate(for: $0.view, file: xib) }
         }
-        
+
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
                 // Currently only supported TableViewCell and CollectionViewCell
@@ -36,7 +36,7 @@ Currently only supported `TableViewCell` and `CollectionViewCell`.
                 } else if let cell = view as? IBReusable & ViewProtocol {
                     reusableCells += [cell]
                 }
-                
+
                 return reusableCells.compactMap {
                     guard let customClass = $0.customClass else {
                         // don't violate if not have custom class for example Static cell type of table view.
