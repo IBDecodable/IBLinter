@@ -64,8 +64,8 @@ private extension AssetsCatalog.Entry {
             return items.flatMap { $0.values }
         case .color(_, let value):
             return [value]
-        case .image(_, let value):
-            return [value]
+        case .image:
+            return []
         }
     }
 }
