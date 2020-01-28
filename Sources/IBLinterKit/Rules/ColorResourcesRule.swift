@@ -36,7 +36,7 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(for colors: [NamedColor], file: T) -> [Violation] {
-            let catalogAssetNames = assetsCatalogs.flatMap { $0.values }
+            let catalogAssetNames = assetsCatalogs.flatMap { $0.entryValues(for: .colorSet) }
             return colors
                 .map { $0.name }
                 .filter { !catalogAssetNames.contains($0) }
@@ -46,26 +46,6 @@ extension Rules {
                         message: "\($0) not found",
                         level: .error)
             }
-        }
-    }
-}
-
-private extension AssetsCatalog {
-    // namespaced names of the
-    var values: [String] {
-        return entries.flatMap { $0.values }
-    }
-}
-
-private extension AssetsCatalog.Entry {
-    var values: [String] {
-        switch self {
-        case .group(_, let items):
-            return items.flatMap { $0.values }
-        case .color(_, let value):
-            return [value]
-        case .image:
-            return []
         }
     }
 }

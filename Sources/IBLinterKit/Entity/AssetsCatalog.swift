@@ -27,15 +27,19 @@ extension AssetsCatalog {
             }) ?? []
     }
 
+    func entryValues(for item: Item) -> [String] {
+        return entries.flatMap { $0.values(for: item) }
+    }
+
     private enum Constants {
         static let path = "Contents.json"
         static let properties = "properties"
         static let providesNamespace = "provides-namespace"
+    }
 
-        enum Item: String {
-            case colorSet = "colorset"
-            case imageSet = "imageset"
-        }
+    enum Item: String {
+        case colorSet = "colorset"
+        case imageSet = "imageset"
     }
 
     enum Entry: Equatable {
@@ -47,7 +51,7 @@ extension AssetsCatalog {
             guard FileManager.default.isDirectory(path) else { return nil }
             let type = path.extension ?? ""
 
-            switch Constants.Item(rawValue: type) {
+            switch Item(rawValue: type) {
             case .colorSet?:
                 let name = path.lastComponentWithoutExtension
                 self = .color(name: name, value: "\(prefix)\(name)")
@@ -86,6 +90,17 @@ extension AssetsCatalog {
             }
 
             return (json as? [String: Any]) ?? [:]
+        }
+
+        fileprivate func values(for item: Item) -> [String] {
+            switch self {
+            case .group(_, let items):
+                return items.flatMap { $0.values(for: item) }
+            case .color(_, let value):
+                return item == .colorSet ? [value] : []
+            case .image(_, let value):
+                return item == .imageSet ? [value] : []
+            }
         }
     }
 }
