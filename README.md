@@ -15,6 +15,12 @@ A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/Sw
 $ brew install IBDecodable/homebrew-tap/iblinter
 ```
 
+### Using [Mint](https://github.com/yonaskolb/Mint)
+
+```sh
+$ mint install IBDecodable/IBLinter
+```
+
 ### Using [CocoaPods](https://cocoapods.org)
 
 ```sh
