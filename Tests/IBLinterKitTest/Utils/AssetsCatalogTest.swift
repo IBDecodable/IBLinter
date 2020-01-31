@@ -28,12 +28,14 @@ class AssetsCatalogTest: XCTestCase {
                             name: "Nested",
                             items: [
                                 .image(name: "EmptyNested", value: "Namespace/EmptyNested"),
+                                .symbol(name: "NamespaceNestedSymbol", value: "Namespace/NamespaceNestedSymbol"),
                                 ]
                         ),
                         .group(
                             name: "NestedNamespace",
                             items: [
                                 .image(name: "EmptyNamespaced", value: "Namespace/NestedNamespace/EmptyNamespaced"),
+                                .symbol(name: "NestedNamespaceSymbol", value: "Namespace/NestedNamespace/NestedNamespaceSymbol"),
                             ]
                         ),
                     ]

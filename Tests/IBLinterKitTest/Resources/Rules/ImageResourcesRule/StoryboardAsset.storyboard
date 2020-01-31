@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -47,6 +47,10 @@
                                 <rect key="frame" x="130" y="37" width="115" height="81"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Namespace/NamespaceNestedSymbol" translatesAutoresizingMaskIntoConstraints="NO" id="tvc-W1-7sK">
+                                <rect key="frame" x="244" y="215" width="33" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="grid" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ExE-Si-hwZ">
                                 <rect key="frame" x="44" y="232" width="115" height="81"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -61,6 +65,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button" image="bag" catalog="system"/>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Namespace/NestedNamespace/NestedNamespaceSymbolTypo" translatesAutoresizingMaskIntoConstraints="NO" id="DYi-wq-Oow">
+                                <rect key="frame" x="285" y="235" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="hhG-XG-10b"/>
@@ -77,6 +85,8 @@
         <image name="Folder/AppleNonNamespaced" width="16" height="16"/>
         <image name="Namespace/AppleNamespaced" width="16" height="16"/>
         <image name="Namespace/AppleNonNamespaced" width="16" height="16"/>
+        <image name="Namespace/NamespaceNestedSymbol" width="15" height="19"/>
+        <image name="Namespace/NestedNamespace/NestedNamespaceSymbolTypo" width="16" height="16"/>
         <image name="TypoImage" width="16" height="16"/>
         <image name="bag" catalog="system" width="64" height="64"/>
         <image name="grid" catalog="system" width="64" height="56"/>

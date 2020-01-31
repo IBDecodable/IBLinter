@@ -52,7 +52,7 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], states: [Button.State], file: T) -> [Violation] {
-            let catalogAssetNames = assetsCatalogs.flatMap { $0.entryValues(for: .imageSet) }
+            let catalogAssetNames = assetsCatalogs.flatMap { $0.entryValues(for: .imageSet, .symbolSet) }
             let xcodeprojAssetNames = xcodeproj.flatMap {
                 $0.pbxproj.fileReferences.compactMap {
                     $0.name

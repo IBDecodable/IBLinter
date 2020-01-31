@@ -18,6 +18,6 @@ class ImageResourcesRuleTests: XCTestCase {
         let assetURL = fixture.path("Resources/Rules/ImageResourcesRule/Media.xcassets")
         let rule = Rules.ImageResourcesRule(catalogs: [.init(path: assetURL.path)])
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
-        XCTAssertEqual(violations.count, 3)
+        XCTAssertEqual(violations.count, 4)
     }
 }

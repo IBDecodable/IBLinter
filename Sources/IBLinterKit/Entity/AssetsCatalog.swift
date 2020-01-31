@@ -27,8 +27,8 @@ extension AssetsCatalog {
             }) ?? []
     }
 
-    func entryValues(for item: Item) -> [String] {
-        return entries.flatMap { $0.values(for: item) }
+    func entryValues(for items: Item...) -> [String] {
+        return entries.flatMap { $0.values(for: items) }
     }
 
     private enum Constants {
@@ -40,12 +40,14 @@ extension AssetsCatalog {
     enum Item: String {
         case colorSet = "colorset"
         case imageSet = "imageset"
+        case symbolSet = "symbolset"
     }
 
     enum Entry: Equatable {
         case group(name: String, items: [Entry])
         case color(name: String, value: String)
         case image(name: String, value: String)
+        case symbol(name: String, value: String)
 
         init?(path: String, withPrefix prefix: String) {
             guard FileManager.default.isDirectory(path) else { return nil }
@@ -58,6 +60,9 @@ extension AssetsCatalog {
             case .imageSet?:
                 let name = path.lastComponentWithoutExtension
                 self = .image(name: name, value: "\(prefix)\(name)")
+            case .symbolSet?:
+                let name = path.lastComponentWithoutExtension
+                self = .symbol(name: name, value: "\(prefix)\(name)")
             case nil:
                 guard type.isEmpty else { return nil }
                 let filename = path.lastComponent
@@ -92,14 +97,16 @@ extension AssetsCatalog {
             return (json as? [String: Any]) ?? [:]
         }
 
-        fileprivate func values(for item: Item) -> [String] {
+        fileprivate func values(for targets: [Item]) -> [String] {
             switch self {
             case .group(_, let items):
-                return items.flatMap { $0.values(for: item) }
+                return items.flatMap { $0.values(for: targets) }
             case .color(_, let value):
-                return item == .colorSet ? [value] : []
+                return targets.contains(.colorSet) ? [value] : []
             case .image(_, let value):
-                return item == .imageSet ? [value] : []
+                return targets.contains(.imageSet) ? [value] : []
+            case .symbol(_, let value):
+                return targets.contains(.symbolSet) ? [value] : []
             }
         }
     }
