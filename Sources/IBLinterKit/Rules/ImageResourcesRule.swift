@@ -52,7 +52,7 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], states: [Button.State], file: T) -> [Violation] {
-            let catalogAssetNames = assetsCatalogs.flatMap { $0.values }
+            let catalogAssetNames = assetsCatalogs.flatMap { $0.entryValues(for: .imageSet) }
             let xcodeprojAssetNames = xcodeproj.flatMap {
                 $0.pbxproj.fileReferences.compactMap {
                     $0.name
@@ -70,26 +70,6 @@ extension Rules {
                         message: "\($0) not found",
                         level: .error)
                 }
-        }
-    }
-}
-
-private extension AssetsCatalog {
-    // namespaced names of the
-    var values: [String] {
-        return entries.flatMap { $0.values }
-    }
-}
-
-private extension AssetsCatalog.Entry {
-    var values: [String] {
-        switch self {
-        case .group(_, let items):
-            return items.flatMap { $0.values }
-        case .color(_, let value):
-            return [value]
-        case .image(_, let value):
-            return [value]
         }
     }
 }

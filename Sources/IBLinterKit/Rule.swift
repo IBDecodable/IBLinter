@@ -36,7 +36,8 @@ public struct Rules {
             UseBaseClassRule.self,
             AmbiguousViewRule.self,
             ViewAsDeviceRule.self,
-            ReuseIdentifierRule.self
+            ReuseIdentifierRule.self,
+            ColorResourcesRule.self
         ]
     }()
 
