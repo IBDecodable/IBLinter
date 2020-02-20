@@ -37,7 +37,15 @@ extension Rules {
         }
 
         private func validate<T: InterfaceBuilderFile>(for colors: [NamedColor], file: T) -> [Violation] {
-            return [Violation(pathString: file.pathString, message: "WOOO", level: .error)]
+            return colors
+                .map { $0.name }
+                .filter { !self.allowedColors.contains($0) }
+                .map {
+                    Violation(
+                        pathString: file.pathString,
+                        message: "\($0) not a allowed color",
+                        level: .error)
+            }
         }
     }
 }
