@@ -11,7 +11,7 @@ import IBDecodable
 extension Rules {
     struct UseColorRule: Rule {
 
-        static let identifier = "use_color_rule"
+        static let identifier = "use_color"
         static let description = "Check if colors used are valid"
 
         private var allowedColors: [String] = []
