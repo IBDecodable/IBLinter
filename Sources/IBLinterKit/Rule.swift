@@ -37,7 +37,9 @@ public struct Rules {
             AmbiguousViewRule.self,
             ViewAsDeviceRule.self,
             ReuseIdentifierRule.self,
-            ColorResourcesRule.self
+            ColorResourcesRule.self,
+            UseColorRule.self
+
         ]
     }()
 
