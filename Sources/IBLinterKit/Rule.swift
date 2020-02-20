@@ -34,12 +34,11 @@ public struct Rules {
             ImageResourcesRule.self,
             CustomModuleRule.self,
             UseBaseClassRule.self,
+            UseColorRule.self,
             AmbiguousViewRule.self,
             ViewAsDeviceRule.self,
             ReuseIdentifierRule.self,
-            ColorResourcesRule.self,
-            UseColorRule.self
-
+            ColorResourcesRule.self
         ]
     }()
 

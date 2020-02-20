@@ -15,9 +15,9 @@ class UseColorRuleTests: XCTestCase {
     func testColorProperties() {
         let url = fixture.path("Resources/Rules/ColorResourcesRule/ColorResources.xib")
         let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], colorRule: [UseColorConfig(allowedColors: ["black", "blue"])], reporter: "xcode")
+        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], colorRule: [UseColorConfig(allowedColors: ["MyTestColor", "ColorResourcesTestColor"])], reporter: "xcode")
         let rule = Rules.UseColorRule(context: .mock(from: config))
         let violations = try! rule.validate(xib: .init(url: url))
-        XCTAssertEqual(violations.count, 1)
+        XCTAssertEqual(violations.count, 0)
     }
 }
