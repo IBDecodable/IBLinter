@@ -7,17 +7,18 @@
 
 @testable import IBLinterKit
 import XCTest
+import IBDecodable
 
 class UseColorRuleTests: XCTestCase {
 
     let fixture = Fixture()
 
     func testColorProperties() {
-        let url = fixture.path("Resources/Rules/ColorResourcesRule/ColorResources.xib")
-        let defaultEnabledRules = Rules.defaultRules.map({ $0.identifier })
-        let config = Config(disabledRules: defaultEnabledRules, enabledRules: [], excluded: [], included: [], customModuleRule: [], colorRule: [UseColorConfig(allowedColors: ["MyTestColor", "ColorResourcesTestColor"])], reporter: "xcode")
+        let url = fixture.path("Resources/Rules/AmbiguousViewRule/AmbiguousConstraint.storyboard")
+        let config = Config(disabledRules: [], enabledRules: [], excluded: [], included: [], customModuleRule: [], colorRule: [UseColorConfig(allowedColors: ["whiteColor", "blackColor"])], reporter: "xcode")
         let rule = Rules.UseColorRule(context: .mock(from: config))
-        let violations = try! rule.validate(xib: .init(url: url))
-        XCTAssertEqual(violations.count, 0)
+        let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
+//        let violations = try! rule.validate(xib: .init(url: url))
+        XCTAssertEqual(violations.count, 1)
     }
 }

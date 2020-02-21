@@ -22,30 +22,29 @@ extension Rules {
             }
         }
 
-        func validate(xib: XibFile) -> [Violation] {
-            return validate(
-                for: xib.document.children(of: NamedColor.self),
-                file: xib
-            )
-        }
-
         func validate(storyboard: StoryboardFile) -> [Violation] {
-            return validate(
-                for: storyboard.document.children(of: NamedColor.self),
-                file: storyboard
-            )
+            guard let scenes = storyboard.document.scenes else { return [] }
+            let views = scenes.compactMap { $0.viewController?.viewController.rootView }
+            return views.flatMap { validate(for: $0, file: storyboard) }
         }
 
-        private func validate<T: InterfaceBuilderFile>(for colors: [NamedColor], file: T) -> [Violation] {
-            return colors
-                .map { $0.name }
-                .filter { !self.allowedColors.contains($0) }
-                .map {
-                    Violation(
-                        pathString: file.pathString,
-                        message: "\($0) not a allowed color",
-                        level: .error)
-            }
+        func validate(xib: XibFile) -> [Violation] {
+            guard let views = xib.document.views else { return [] }
+            return views.flatMap { validate(for: $0.view, file: xib) }
+        }
+
+        private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
+            let violation: [Violation] = {
+                let colors = view.children(of: Color.self)
+                for i in colors {
+                    if i.sRGB != nil {
+                        let message = "Custom color used in \(viewName(of: view))"
+                        return [Violation(pathString: file.pathString, message: message, level: .error)]
+                    }
+                }
+                return []
+            }()
+            return violation + (view.subviews?.flatMap { validate(for: $0.view, file: file) } ?? [])
         }
     }
 }
