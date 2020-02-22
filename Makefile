@@ -31,9 +31,10 @@ bump_version:
 		@sed 's/__VERSION__/$(NEW_VERSION)/g' script/Version.swift.template > Sources/IBLinterKit/Version.swift
 		git commit -am"Bump version to $(NEW_VERSION)"
 
-publish:
+publish_brew:
 		brew update && brew bump-formula-pr --url=$(REPO)/archive/$(shell cat .version).tar.gz iblinter
-		COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push IBLinter.podspec
 
+publish_pods:
+		COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push IBLinter.podspec
 %:
 	@:
