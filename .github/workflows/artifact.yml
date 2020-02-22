@@ -15,10 +15,10 @@ jobs:
           pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
           git config --local user.name "IBLinter Bot"
           git config --local user.email $GITHUB_ACTOR@users.noreply.github.com
-          git remote set-url origin https://$GITHUB_ACTOR:$HOMEBREW_GITHUB_API_TOKEN@github.com/$HOMEBREW_TAP_REPOSITORY.git
+          git remote set-url origin git@github.com:$HOMEBREW_TAP_REPOSITORY
           popd
           git checkout ${GITHUB_REF#refs/heads/}
-          brew bump-formula-pr --tag=$(git describe --tags) --revision=$(git rev-parse HEAD) iblinter
+          make publish_brew
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
           HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -36,7 +36,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update CocoaPods spec
-        run: pod trunk push IBLinter.podspec
+        run: make publish_pods
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-          COCOAPODS_VALIDATOR_SKIP_XCODEBUILD: 1
