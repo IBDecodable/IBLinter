@@ -1,4 +1,5 @@
 PREFIX?=/usr/local
+REPO = https://github.com/IBDecodable/IBLinter
 
 build:
 		swift build --disable-sandbox -c release --static-swift-stdlib
@@ -31,7 +32,7 @@ bump_version:
 		git commit -am"Bump version to $(NEW_VERSION)"
 
 publish:
-		brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) iblinter
+		brew update && brew bump-formula-pr --url=$(REPO)/archive/$(shell cat .version).tar.gz iblinter
 		COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push IBLinter.podspec
 
 %:
