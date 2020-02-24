@@ -59,13 +59,12 @@ struct ValidateOptions: OptionsProtocol {
     let configurationFile: String?
     let included: [String]
 
-    static func create(_ path: String?) -> (_ reporter: String?) -> (_ script: String?) -> (_ config: String?) -> (_ included: String?) -> ValidateOptions {
+    static func create(_ path: String?) -> (_ reporter: String?) -> (_ script: String?) -> (_ config: String?) -> (_ included: [String]) -> ValidateOptions {
         return { reporter in
             return { script in
                 return { config in
                     return { included in
-                        let finalIncluded = included?.split { $0.isNewline || $0 == "," }.map { String($0) }
-                        return self.init(path: path, reporter: reporter, iblinterFilePath: script, configurationFile: config, included: finalIncluded ?? [])
+                        return self.init(path: path, reporter: reporter, iblinterFilePath: script, configurationFile: config, included: included)
                     }
                 }
             }
@@ -78,7 +77,7 @@ struct ValidateOptions: OptionsProtocol {
             <*> mode <| Option(key: "reporter", defaultValue: nil, usage: "the reporter used to log errors and warnings")
             <*> mode <| Option(key: "script", defaultValue: nil, usage: "custom IBLinterfile.swift")
             <*> mode <| Option(key: "config", defaultValue: nil, usage: "the path to IBLint's configuration file")
-            <*> mode <| Option(key: "included", defaultValue: nil, usage: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file. You can separate paths using `,` or a new line") //swiftlint:disable:this line_length
+            <*> mode <| Argument<[String]>(defaultValue: [], usage: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.", usageParameter: "included") //swiftlint:disable:this line_length
     }
 }
 
