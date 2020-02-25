@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.22]
+
+### Added
+
+- Add rule `color_resources`, which detect missing named colors similar to image_resources rule. [#141](https://github.com/IBDecodable/IBLinter/pull/141)
+- Support custom symbol image for `image_resources` rule. [#142](https://github.com/IBDecodable/IBLinter/pull/142)
+
 ## [0.4.21]
 
 ### Added
@@ -88,7 +95,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.21...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.22...HEAD
+[0.4.22]: https://github.com/IBDecodable/IBLinter/compare/0.4.21...0.4.22
 [0.4.21]: https://github.com/IBDecodable/IBLinter/compare/0.4.20...0.4.21
 [0.4.20]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...0.4.20
 [0.4.19]: https://github.com/IBDecodable/IBLinter/compare/0.4.18...0.4.19

@@ -12,7 +12,7 @@ A linter tool to normalize `.xib` and `.storyboard` files. Inspired by [realm/Sw
 ### Using [Homebrew](http://brew.sh/)
 
 ```sh
-$ brew install IBDecodable/homebrew-tap/iblinter
+$ brew install iblinter
 ```
 
 ### Using [Mint](https://github.com/yonaskolb/Mint)

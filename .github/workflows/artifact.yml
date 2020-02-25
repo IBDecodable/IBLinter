@@ -3,8 +3,28 @@ on:
   release:
     types: [published]
 jobs:
-  publish:
-    name: Publish
+  publish_brew:
+    name: Publish to Homebrew
+    runs-on: macOS-10.14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Update Homebrew formula
+        run: |
+          brew update
+          pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
+          git config --local user.name "IBLinter Bot"
+          git config --local user.email $GITHUB_ACTOR@users.noreply.github.com
+          git remote set-url origin git@github.com:$HOMEBREW_TAP_REPOSITORY
+          popd
+          git checkout ${GITHUB_REF#refs/heads/}
+          make publish_brew
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+          HOMEBREW_TAP_REPOSITORY: homebrew/homebrew-core
+  publish_pods:
+    name: Publish to CocoaPods
     runs-on: macOS-10.14
     steps:
       - name: Checkout
@@ -15,40 +35,7 @@ jobs:
         run: ./script/upload_artifact.sh ./portable_iblinter.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Update Homebrew formula
-        run: |
-          brew tap $HOMEBREW_TAP_REPOSITORY
-          pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
-          git config --local user.name "IBLinter Bot"
-          git config --local user.email $GITHUB_ACTOR@users.noreply.github.com
-          git remote set-url origin https://$GITHUB_ACTOR:$HOMEBREW_GITHUB_API_TOKEN@github.com/$HOMEBREW_TAP_REPOSITORY.git
-          popd
-          git checkout ${GITHUB_REF#refs/heads/}
-          brew bump-formula-pr --tag=$(git describe --tags) --revision=$(git rev-parse HEAD) iblinter
-
-          pushd $(brew --repository)/Library/Taps/$HOMEBREW_TAP_REPOSITORY
-          FORMULA_PATH=iblinter.rb
-          brew install $FORMULA_PATH --build-bottle
-          brew bottle $FORMULA_PATH --force-core-tap
-
-          BOTTLE=$(find . -name "*.bottle*.tar.gz")
-
-          # Homebrew introduced a change which puts "--" in the bottle name. Rename
-          # the bottle to something that homebrew expects to download/install.
-          mv "$BOTTLE" "${BOTTLE/--/-}"
-          SHA256=$(shasum -a 256 $BOTTLE | cut -f1 -d ' ')
-          ruby utils/replace_bottle_sha256.rb iblinter.rb $SHA256 mojave
-          git commit -am"Update bottle sha256"
-          git push origin HEAD
-
-          $GITHUB_WORKSPACE/script/upload_artifact.sh $BOTTLE
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
-          HOMEBREW_NO_INSTALL_CLEANUP: 1
-          HOMEBREW_TAP_REPOSITORY: IBDecodable/homebrew-tap
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update CocoaPods spec
-        run: pod trunk push IBLinter.podspec
+        run: make publish_pods
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-          COCOAPODS_VALIDATOR_SKIP_XCODEBUILD: 1
