@@ -1,5 +1,5 @@
 PREFIX?=/usr/local
-REPO = https://github.com/mfernandez94/IBLinter
+REPO = git@github.com:mfernandez94/IBLinter.git
 
 build:
 		swift build --disable-sandbox -c release --static-swift-stdlib
@@ -21,6 +21,9 @@ portable_zip: build
 install: build
 		mkdir -p "$(PREFIX)/bin"
 		cp -f ".build/release/iblinter" "$(PREFIX)/bin/iblinter"
+
+current_version:
+	@cat .version
 
 bump_version:
 		$(eval NEW_VERSION := $(filter-out $@,$(MAKECMDGOALS)))
