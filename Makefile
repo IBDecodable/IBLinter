@@ -1,5 +1,5 @@
 PREFIX?=/usr/local
-REPO = https://github.com/IBDecodable/IBLinter
+REPO = https://github.com/mfernandez94/IBLinter
 
 build:
 		swift build --disable-sandbox -c release --static-swift-stdlib
