@@ -10,7 +10,7 @@ class ConfigTest: XCTestCase {
         let workingDirectory = url.deletingLastPathComponent()
         let config = try Config(directoryURL: workingDirectory)
         XCTAssertEqual(config.disabledRules, ["custom_class_name"])
-        XCTAssertEqual(config.enabledRules, ["relative_to_margin"])
+        XCTAssertEqual(config.enabledRules, ["relative_to_margin", "use_color"])
         XCTAssertEqual(config.excluded, ["Carthage"])
         XCTAssertEqual(config.reporter, "json")
     }
@@ -30,5 +30,12 @@ class ConfigTest: XCTestCase {
         let config = try Config(directoryURL: workingDirectory, fileName: url.lastPathComponent)
         XCTAssertNotNil(config.viewAsDeviceRule)
         XCTAssertEqual(config.viewAsDeviceRule?.deviceId, "retina3_5")
+    }
+
+    func testConfigFileSanity() throws {
+        let url = fixture.path("Resources/Config/.iblinter_sanity_test.yml")
+        let workingDirectory = url.deletingLastPathComponent()
+        let config = try Config(directoryURL: workingDirectory)
+        XCTAssert(config.useColorRule.isEmpty == false)
     }
 }

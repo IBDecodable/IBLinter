@@ -1,0 +1,32 @@
+enabled_rules:
+ - use_base_class
+ - use_color
+
+disabled_rules:
+ - custom_class_name
+ - relative_to_margin
+ - misplaced
+ - enable_autolayout
+ - duplicate_constraint
+ - duplicate_id
+ - storyboard_viewcontroller_id
+ - image_resources
+ - custom_module
+ - ambiguous
+ - view_as_device
+ - reuse_identifier
+ - color_resources
+
+use_base_class_rule:
+ - element_class: UIButton
+   base_classes:
+     - PrimaryButton
+     - SecondaryButton
+
+use_color_rule:
+ - allowed_colors:
+   - whiteColor
+
+excluded:
+  - Pods
+

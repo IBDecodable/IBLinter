@@ -15,6 +15,7 @@ public struct Config: Codable {
     public let included: [String]
     public let customModuleRule: [CustomModuleConfig]
     public let useBaseClassRule: [UseBaseClassConfig]
+    public let useColorRule: [UseColorConfig]
     public let viewAsDeviceRule: ViewAsDeviceConfig?
     public let reporter: String
     public let disableWhileBuildingForIB: Bool
@@ -27,6 +28,7 @@ public struct Config: Codable {
         case included = "included"
         case customModuleRule = "custom_module_rule"
         case useBaseClassRule = "use_base_class_rule"
+        case useColorRule = "use_color_rule"
         case viewAsDeviceRule = "view_as_device_rule"
         case reporter = "reporter"
         case disableWhileBuildingForIB = "disable_while_building_for_ib"
@@ -43,6 +45,7 @@ public struct Config: Codable {
         included = []
         customModuleRule = []
         useBaseClassRule = []
+        useColorRule = []
         viewAsDeviceRule = nil
         reporter = "xcode"
         disableWhileBuildingForIB = true
@@ -53,6 +56,7 @@ public struct Config: Codable {
          excluded: [String] = [], included: [String] = [],
          customModuleRule: [CustomModuleConfig] = [],
          baseClassRule: [UseBaseClassConfig] = [],
+         colorRule: [UseColorConfig] = [],
          viewAsDeviceRule: ViewAsDeviceConfig? = nil,
          reporter: String = "xcode", disableWhileBuildingForIB: Bool = true,
          ignoreCache: Bool = false) {
@@ -62,6 +66,7 @@ public struct Config: Codable {
         self.included = included
         self.customModuleRule = customModuleRule
         self.useBaseClassRule = baseClassRule
+        self.useColorRule = colorRule
         self.viewAsDeviceRule = viewAsDeviceRule
         self.reporter = reporter
         self.disableWhileBuildingForIB = disableWhileBuildingForIB
@@ -76,6 +81,7 @@ public struct Config: Codable {
         included = try container.decodeIfPresent(Optional<[String]>.self, forKey: .included).flatMap { $0 } ?? []
         customModuleRule = try container.decodeIfPresent(Optional<[CustomModuleConfig]>.self, forKey: .customModuleRule).flatMap { $0 } ?? []
         useBaseClassRule = try container.decodeIfPresent(Optional<[UseBaseClassConfig]>.self, forKey: .useBaseClassRule)?.flatMap { $0 } ?? []
+        useColorRule = try container.decodeIfPresent(Optional<[UseColorConfig]>.self, forKey: .useColorRule)?.flatMap { $0 } ?? []
         viewAsDeviceRule = try container.decodeIfPresent(Optional<ViewAsDeviceConfig>.self, forKey: .viewAsDeviceRule) ?? nil
         reporter = try container.decodeIfPresent(String.self, forKey: .reporter) ?? "xcode"
         disableWhileBuildingForIB = try container.decodeIfPresent(Bool.self, forKey: .disableWhileBuildingForIB) ?? true
