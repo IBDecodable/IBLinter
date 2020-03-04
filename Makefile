@@ -22,9 +22,6 @@ install: build
 		mkdir -p "$(PREFIX)/bin"
 		cp -f ".build/release/iblinter" "$(PREFIX)/bin/iblinter"
 
-current_version:
-		@cat .version
-
 bump_version:
 		$(eval NEW_VERSION := $(filter-out $@,$(MAKECMDGOALS)))
 		@echo $(NEW_VERSION) > .version
