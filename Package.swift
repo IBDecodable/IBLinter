@@ -21,9 +21,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        // this changes are WIP until release of next version of IBDecodable.
-        .package(url: "https://github.com/IBDecodable/IBDecodable.git", ._branchItem("master")),
-//        .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.1.0"),
+        .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.2.0"),
         .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.16.0")),
         .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.22.0"),
         .package(url: "https://github.com/xcodeswift/xcproj.git", from: "6.6.0"),
