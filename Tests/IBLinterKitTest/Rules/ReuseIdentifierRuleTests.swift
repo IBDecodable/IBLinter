@@ -10,13 +10,13 @@ class ReuseIdentifierRuleTests: XCTestCase {
         let url = fixture.path("Resources/Rules/ReuseIdentifierRule/ReuseIdentifier.storyboard")
         let rule = Rules.ReuseIdentifierRule(context: .mock(from: .default))
         let violations = try! rule.validate(storyboard: StoryboardFile(url: url))
-        XCTAssertEqual(violations.count, 2)
+        XCTAssertEqual(violations.count, 4)
     }
     
     func testReuseIdentifierXib() {
         let url = fixture.path("Resources/Rules/ReuseIdentifierRule/ReuseIdentifier.xib")
         let rule = Rules.ReuseIdentifierRule(context: .mock(from: .default))
         let violations = try! rule.validate(xib: XibFile(url: url))
-        XCTAssertEqual(violations.count, 2)
+        XCTAssertEqual(violations.count, 3)
     }
 }

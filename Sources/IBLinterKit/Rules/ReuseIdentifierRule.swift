@@ -5,10 +5,7 @@ extension Rules {
     struct ReuseIdentifierRule: Rule {
 
         static let identifier = "reuse_identifier"
-        static let description = """
-Check that ReuseIdentifier same as class name.\\
-Currently only supported `TableViewCell` and `CollectionViewCell`.
-"""
+        static let description = " Check that ReuseIdentifier same as class name."
 
         init(context: Context) {}
 
@@ -25,14 +22,17 @@ Currently only supported `TableViewCell` and `CollectionViewCell`.
 
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
-                // Currently only supported TableViewCell and CollectionViewCell
-                // UICollectionReusableView will be support after IBDecodable support its view.
                 // MKAnnotationView is not yet supported by interfacebuilder.
                 var reusableCells = [IBReusable & ViewProtocol]()
                 if let tableView = view as? TableView, let cells = tableView.prototypeCells {
                     reusableCells += cells
-                } else if let collectionView = view as? CollectionView, let cells = collectionView.cells {
-                    reusableCells += cells
+                } else if let collectionView = view as? CollectionView {
+                    if let cells = collectionView.cells {
+                        reusableCells += cells
+                    }
+                    if let views = collectionView.collectionReusableViews {
+                        reusableCells += views
+                    }
                 } else if let cell = view as? IBReusable & ViewProtocol {
                     reusableCells += [cell]
                 }

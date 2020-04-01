@@ -112,8 +112,7 @@ Check View as: set as a device specified by view_as_device_rule config.
 |:---------------:|:---------------:|
 |   Default Rule  |  `false` |
 
-Check that ReuseIdentifier same as class name.\
-Currently only supported `TableViewCell` and `CollectionViewCell`.
+Check that ReuseIdentifier same as class name.
 
 
 ## ColorResourcesRule
