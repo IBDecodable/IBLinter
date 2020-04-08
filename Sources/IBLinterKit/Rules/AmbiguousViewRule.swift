@@ -30,7 +30,7 @@ extension Rules {
 
         private func validate<T: InterfaceBuilderFile>(for view: ViewProtocol, file: T) -> [Violation] {
             let violation: [Violation] = {
-                if view.isAmbiguous ?? false {
+                if let isAmbiguous = view.isAmbiguous, isAmbiguous, view.verifyAmbiguity == nil {
                     let message = "\(viewName(of: view)) has ambiguous constraints"
                     return [Violation(pathString: file.pathString, message: message, level: .error)]
                 } else {
