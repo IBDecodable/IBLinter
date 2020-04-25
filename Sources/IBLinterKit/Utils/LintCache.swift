@@ -73,18 +73,22 @@ extension LintDiskCache {
 
     static func new(with fileManager: CacheFileManager, config: Config) throws -> LintCache {
         let emptyContent = LintCacheContent(entries: [:])
-        let configContent = try JSONEncoder().encode(config)
-        let hashKey = Data(configContent.sha1()).base64EncodedString()
+        let hashKey = try cacheHashKey(for: config)
         return LintDiskCache(content: emptyContent, fileManager: fileManager, configHashKey: hashKey)
     }
 
     static func load(with fileManager: CacheFileManager, config: Config) throws -> LintCache {
-        let configContent = try JSONEncoder().encode(config)
-        let hashKey = Data(configContent.sha1()).base64EncodedString()
+        let hashKey = try cacheHashKey(for: config)
         let cacheFilePath = fileManager.cacheDir.appendingPathComponent(hashKey)
         let cacheFileContent = try Data(contentsOf: cacheFilePath)
         let content = try JSONDecoder().decode(LintCacheContent.self, from: cacheFileContent)
         return LintDiskCache(content: content, fileManager: fileManager, configHashKey: hashKey)
+    }
+
+    private static func cacheHashKey(for config: Config) throws -> String {
+        let configContent = try JSONEncoder().encode(config)
+        let hashKey = Data(configContent.sha1()).base64EncodedString()
+        return hashKey.replacingOccurrences(of: "/", with: "_")
     }
 
     public func save() throws {
