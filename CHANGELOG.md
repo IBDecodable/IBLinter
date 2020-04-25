@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.23]
+
+### Added
+
+- Support `UICollectionReusableView` for `reuse_identifier` rule. [#152](https://github.com/IBDecodable/IBLinter/pull/152)
+
+### Fixed
+
+- Respect `verifyAmbiguity` for `ambiguous` rule [#154](https://github.com/IBDecodable/IBLinter/pull/154)
+
 ## [0.4.22]
 
 ### Added
@@ -95,7 +105,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.22...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.23...HEAD
+[0.4.23]: https://github.com/IBDecodable/IBLinter/compare/0.4.22...0.4.23
 [0.4.22]: https://github.com/IBDecodable/IBLinter/compare/0.4.21...0.4.22
 [0.4.21]: https://github.com/IBDecodable/IBLinter/compare/0.4.20...0.4.21
 [0.4.20]: https://github.com/IBDecodable/IBLinter/compare/0.4.19...0.4.20
