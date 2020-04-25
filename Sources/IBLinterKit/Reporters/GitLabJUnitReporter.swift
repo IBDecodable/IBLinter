@@ -1,3 +1,5 @@
+import Foundation
+
 struct GitLabJUnitReporter: Reporter {
 
     static let identifier = "gitlab"
@@ -5,7 +7,7 @@ struct GitLabJUnitReporter: Reporter {
     static func generateReport(violations: [Violation]) -> String {
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites><testsuite>" +
             violations.map({ violation -> String in
-                let fileName = violation.pathString.escapedForXML()
+                let fileName = violation.pathString.replacingOccurrences(of: FileManager.default.currentDirectoryPath + "/", with: "").escapedForXML()
 
                 let severity = violation.level.rawValue
                 let reason = violation.message.escapedForXML()
