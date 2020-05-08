@@ -5,7 +5,6 @@
 //  Created by SaitoYuta on 2018/05/17.
 //
 
-import Result
 import Commandant
 import IBLinterKit
 
