@@ -5,7 +5,6 @@
 //  Created by SaitoYuta on 2017/12/13.
 //
 
-import Result
 import Foundation
 import IBDecodable
 import IBLinterKit

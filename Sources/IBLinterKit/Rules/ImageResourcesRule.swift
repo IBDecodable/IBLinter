@@ -7,7 +7,7 @@
 
 import Foundation
 import IBDecodable
-import xcodeproj
+import XcodeProj
 
 extension Rules {
 

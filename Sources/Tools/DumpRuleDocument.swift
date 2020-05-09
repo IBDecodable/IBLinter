@@ -6,7 +6,6 @@
 //
 
 import Commandant
-import Result
 import IBLinterKit
 import Darwin
 
