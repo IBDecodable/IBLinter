@@ -7,7 +7,7 @@
 
 import Foundation
 import IBDecodable
-import XcodeProj
+import XcodeProjKit
 
 extension Rules {
 
@@ -29,7 +29,7 @@ extension Rules {
         init(catalogs: [AssetsCatalog]) {
             self.assetsCatalogs = catalogs
             self.xcodeproj = glob(pattern: "*.xcodeproj").compactMap {
-                try? XcodeProj.init(pathString: $0.path)
+                try? XcodeProj(url: $0)
             }
         }
 
@@ -54,7 +54,7 @@ extension Rules {
         private func validate<T: InterfaceBuilderFile>(for images: [Image], imageViews: [ImageView], states: [Button.State], file: T) -> [Violation] {
             let catalogAssetNames = assetsCatalogs.flatMap { $0.entryValues(for: .imageSet, .symbolSet) }
             let xcodeprojAssetNames = xcodeproj.flatMap {
-                $0.pbxproj.fileReferences.compactMap {
+                $0.fileReferences.compactMap {
                     $0.name
                 }
             }
@@ -71,5 +71,11 @@ extension Rules {
                         level: .error)
                 }
         }
+    }
+}
+
+extension XcodeProj {
+    var fileReferences: [PBXFileReference] {
+        return objects.dict.values.compactMap({ $0 as? PBXFileReference })
     }
 }
