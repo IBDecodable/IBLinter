@@ -9,7 +9,6 @@ import Foundation
 import IBDecodable
 import IBLinterKit
 import Commandant
-import PathKit
 
 struct ValidateCommand: CommandProtocol {
     typealias Options = ValidateOptions

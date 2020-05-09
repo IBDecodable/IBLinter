@@ -7,7 +7,11 @@
 
 import Commandant
 import IBLinterKit
+#if os(Linux)
+import Glibc
+#else
 import Darwin
+#endif
 
 struct DumpRuleDocument: CommandProtocol {
 
