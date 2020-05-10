@@ -87,7 +87,7 @@ extension LintDiskCache {
 
     private static func cacheHashKey(for config: Config) throws -> String {
         let configContent = try JSONEncoder().encode(config)
-        let hashKey = Data(configContent.sha1()).base64EncodedString()
+        let hashKey = configContent.sha1().base64EncodedString()
         return hashKey.replacingOccurrences(of: "/", with: "_")
     }
 
@@ -99,15 +99,29 @@ extension LintDiskCache {
     }
 }
 
+#if os(Linux)
+import Crypto
+#else
 import CommonCrypto
 extension Data {
-    func sha1() -> [UInt8] {
+    func sha1_legacy() -> Data {
         return withUnsafeBytes { [count] ptr in
             var hash = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
             if let bytes = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self) {
                 CC_SHA1(bytes, CC_LONG(count), &hash)
             }
-            return hash
+            return Data(hash)
         }
+    }
+}
+#endif
+
+private extension Data {
+    func sha1() -> Data {
+        #if os(Linux)
+        return Data(Insecure.SHA1.hash(data: self))
+        #else
+        return sha1_legacy()
+        #endif
     }
 }

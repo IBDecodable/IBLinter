@@ -2,7 +2,7 @@
 
 import PackageDescription
 
-let package = Package(
+var package = Package(
     name: "IBLinter",
     platforms: [.macOS(.v10_11)],
     products: [
@@ -55,3 +55,8 @@ let package = Package(
         ),
     ]
 )
+
+#if os(Linux)
+package.dependencies.append(.package(url: "https://github.com/apple/swift-crypto.git", from: "1.0.0"))
+package.targets[2].dependencies.append("Crypto")
+#endif
