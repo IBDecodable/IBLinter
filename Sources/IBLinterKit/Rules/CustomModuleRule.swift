@@ -8,7 +8,6 @@
 import Foundation
 import IBDecodable
 import SourceKittenFramework
-import XcodeProj
 
 private extension XibFile {
   var fileExtension: String {

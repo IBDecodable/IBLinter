@@ -2,7 +2,7 @@
 
 import PackageDescription
 
-let package = Package(
+var package = Package(
     name: "IBLinter",
     platforms: [.macOS(.v10_11)],
     products: [
@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.4.0"),
         .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.17.0")),
         .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.29.0"),
-        .package(url: "https://github.com/tuist/XcodeProj.git", from: "7.10.0"),
+        .package(url: "https://github.com/phimage/XcodeProjKit.git", from: "2.2.0"),
     ],
     targets: [
         .target(
@@ -39,7 +39,7 @@ let package = Package(
             name: "IBLinterKit",
             dependencies: [
                 "IBDecodable", "Commandant",
-                "SourceKittenFramework", "XcodeProj"
+                "SourceKittenFramework", "XcodeProjKit"
             ]
         ),
         .target(
@@ -55,3 +55,8 @@ let package = Package(
         ),
     ]
 )
+
+#if os(Linux)
+package.dependencies.append(.package(url: "https://github.com/apple/swift-crypto.git", from: "1.0.0"))
+package.targets[2].dependencies.append("Crypto")
+#endif
