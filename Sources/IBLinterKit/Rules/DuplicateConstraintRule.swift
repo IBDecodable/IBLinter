@@ -61,9 +61,10 @@ extension Rules {
             let sameConstant = lhs.constant == rhs.constant
             let reverseConstaint = lhs.constant == rhs.constant.map(-)
             let samePriority = lhs.priority == rhs.priority
+            let sameMultiplier = lhs.multiplier == rhs.multiplier
             let sameRelation = lhs.relation == rhs.relation
 
-            return (samePriority && sameRelation) && (sameItems && sameAttributes && sameConstant) ||
+            return (samePriority && sameMultiplier && sameRelation) && (sameItems && sameAttributes && sameConstant) ||
                     (reverseItems && reverseAttributes && reverseConstaint)
         }
     }

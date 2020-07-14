@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,19 +14,38 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ItZ-vi-bgh">
-                    <rect key="frame" x="166" y="323" width="42" height="21"/>
+                    <rect key="frame" x="166.5" y="303" width="42" height="61"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pfc-VO-bsH">
-                    <rect key="frame" x="164" y="457" width="46" height="30"/>
+                    <rect key="frame" x="164.5" y="457" width="46" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="hhg-lH-Emq"/>
                         <constraint firstAttribute="height" priority="750" constant="30" id="s6a-gw-F2T"/>
                     </constraints>
                     <state key="normal" title="Button"/>
                 </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QdP-V1-Jk9">
+                    <rect key="frame" x="162.5" y="193" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="QdP-V1-Jk9" secondAttribute="height" multiplier="1:1" id="Z5q-Ko-Vll"/>
+                        <constraint firstAttribute="height" constant="50" id="cwN-YF-iU6"/>
+                        <constraint firstAttribute="width" secondItem="QdP-V1-Jk9" secondAttribute="height" multiplier="2:1" id="tJb-Dj-njz"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="tJb-Dj-njz"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=regular">
+                        <mask key="constraints">
+                            <exclude reference="Z5q-Ko-Vll"/>
+                            <include reference="tJb-Dj-njz"/>
+                        </mask>
+                    </variation>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -37,10 +54,13 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Pfc-VO-bsH" secondAttribute="bottom" constant="180" id="RXI-db-JkZ"/>
                 <constraint firstItem="ItZ-vi-bgh" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="VAb-jS-xKl"/>
                 <constraint firstItem="ItZ-vi-bgh" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aEU-56-OK8"/>
+                <constraint firstItem="QdP-V1-Jk9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="eGc-SV-s41"/>
                 <constraint firstItem="Pfc-VO-bsH" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="m0f-LQ-wgj"/>
+                <constraint firstItem="ItZ-vi-bgh" firstAttribute="top" secondItem="QdP-V1-Jk9" secondAttribute="bottom" constant="60" id="nfl-AG-pQE"/>
                 <constraint firstItem="ItZ-vi-bgh" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="zWU-iS-F0Z"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="132" y="153"/>
         </view>
     </objects>
 </document>
