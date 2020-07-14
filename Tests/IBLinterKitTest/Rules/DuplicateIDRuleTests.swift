@@ -14,7 +14,7 @@ class DuplicateIDRuleTests: XCTestCase {
     let fixture = Fixture()
 
     func testDuplicateId() {
-        let url = fixture.path("Resources/Rules/DuplicateIDRule/DuplicateID.xib")
+        let url = fixture.path("Resources/Rules/DuplicateIdRule/DuplicateID.xib")
         let rule = Rules.DuplicateIDRule(context: .mock(from: .default))
         let violations = try! rule.validate(xib: XibFile(url: url))
         XCTAssertEqual(violations.count, 2)

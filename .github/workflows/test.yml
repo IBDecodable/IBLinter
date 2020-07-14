@@ -1,8 +1,8 @@
 name: Run unit tests
 on: [push, pull_request]
 jobs:
-  test:
-    name: Build and Test
+  test_macOS:
+    name: Build and Test on macOS
     runs-on: macOS-10.15
     steps:
       - name: Checkout
@@ -19,3 +19,19 @@ jobs:
           swiftlint --strict
       - name: Run Test
         run: swift test
+  test_linux:
+    name: Build and Test on Linux
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Run Test
+        run: |
+          git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
+          export SWIFTENV_ROOT="$HOME/.swiftenv"
+          export PATH="$SWIFTENV_ROOT/bin:$PATH"
+          eval "$(swiftenv init -)"
+          swiftenv install
+          swift test --enable-test-discovery
