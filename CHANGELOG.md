@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.24]
+
+### Added
+
+- Support Linux platform. [#160](https://github.com/IBDecodable/IBLinter/pull/160)
+
+### Fixed
+
+- Fix cache file name issue. [#157](https://github.com/IBDecodable/IBLinter/pull/157)
+- Fix duplicated constraints for multiplier. [#161](https://github.com/IBDecodable/IBLinter/pull/161)
+
 ## [0.4.23]
 
 ### Added
@@ -105,7 +116,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.23...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.24...HEAD
+[0.4.24]: https://github.com/IBDecodable/IBLinter/compare/0.4.23...0.4.24
 [0.4.23]: https://github.com/IBDecodable/IBLinter/compare/0.4.22...0.4.23
 [0.4.22]: https://github.com/IBDecodable/IBLinter/compare/0.4.21...0.4.22
 [0.4.21]: https://github.com/IBDecodable/IBLinter/compare/0.4.20...0.4.21
