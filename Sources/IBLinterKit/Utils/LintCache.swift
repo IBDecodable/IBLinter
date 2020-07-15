@@ -86,7 +86,9 @@ extension LintDiskCache {
     }
 
     private static func cacheHashKey(for config: Config) throws -> String {
-        let configContent = try JSONEncoder().encode(config)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        let configContent = try encoder.encode(config)
         let hashKey = configContent.sha1().base64EncodedString()
         return hashKey.replacingOccurrences(of: "/", with: "_")
     }
