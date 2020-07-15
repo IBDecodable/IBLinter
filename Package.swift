@@ -4,7 +4,7 @@ import PackageDescription
 
 var package = Package(
     name: "IBLinter",
-    platforms: [.macOS(.v10_11)],
+    platforms: [.macOS(.v10_13)],
     products: [
         .executable(
             name: "iblinter", targets: ["IBLinter"]
