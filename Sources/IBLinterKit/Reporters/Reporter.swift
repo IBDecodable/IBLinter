@@ -23,6 +23,8 @@ public struct Reporters {
             return EmojiReporter.self
         case CheckstyleReporter.identifier:
             return CheckstyleReporter.self
+        case GitLabJUnitReporter.identifier:
+            return GitLabJUnitReporter.self
         default:
             fatalError("no reporter with identifier '\(reporter) available'")
         }
