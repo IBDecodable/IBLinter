@@ -31,6 +31,7 @@ public struct Rules {
             DuplicateConstraintRule.self,
             DuplicateIDRule.self,
             StoryboardViewControllerId.self,
+            StackViewBackgroundColorRule.self,
             ImageResourcesRule.self,
             CustomModuleRule.self,
             UseBaseClassRule.self,
