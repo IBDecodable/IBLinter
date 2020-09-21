@@ -6,7 +6,7 @@ extension Rules {
     struct StackViewBackgroundColorRule: Rule {
 
         static let identifier = "stackview_backgroundcolor"
-        static let description = "Force to background color of stackview should be default."
+        static let description = "Force background color of StackView to be default."
 
         public init(context: Context) {}
 
