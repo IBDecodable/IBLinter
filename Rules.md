@@ -67,7 +67,7 @@ Check that Storyboard ID same as ViewController class name.
 |:---------------:|:---------------:|
 |   Default Rule  |  `false` |
 
-Force to background color of stackview should be default.
+Force background color of stackview to be default.
 
 
 ## ImageResourcesRule
@@ -131,4 +131,3 @@ Check that ReuseIdentifier same as class name.
 |   Default Rule  |  `false` |
 
 Check if named color resources are valid.
-
