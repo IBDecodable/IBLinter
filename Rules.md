@@ -131,3 +131,11 @@ Check that ReuseIdentifier same as class name.
 |   Default Rule  |  `false` |
 
 Check if named color resources are valid.
+
+## UseTraitCollectionsRule
+
+|    identifier   | `use_trait_collections` |
+|:---------------:|:---------------:|
+|   Default Rule  |  `false` |
+
+Check if a document useTraitCollections is enabled or disabled
