@@ -61,6 +61,15 @@ Display warning when elements use same id.
 Check that Storyboard ID same as ViewController class name.
 
 
+## StackViewBackgroundColorRule
+
+|    identifier   | `stackview_backgroundcolor` |
+|:---------------:|:---------------:|
+|   Default Rule  |  `false` |
+
+Force to background color of stackview should be default.
+
+
 ## ImageResourcesRule
 
 |    identifier   | `image_resources` |
