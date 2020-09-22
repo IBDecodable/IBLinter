@@ -13,53 +13,52 @@ class UseTraitCollectionsTests: XCTestCase {
 
     let fixture = Fixture()
     
-    var noUrl: URL!
-    var yesUrl: URL!
+    var storyboardUseTraitCollectionsYes: StoryboardFile!
+    var storyboardUseTraitCollectionsNo: StoryboardFile!
     
     override func setUp() {
         super.setUp()
-        noUrl = fixture.path("Resources/Rules/UseTraitCollectionsRule/UseTraitCollectionsNoTest.storyboard")
-        yesUrl = fixture.path("Resources/Rules/UseTraitCollectionsRule/UseTraitCollectionsYesTest.storyboard")
+        
+        let disabledUrl = fixture.path("Resources/Rules/UseTraitCollectionsRule/UseTraitCollectionsNoTest.storyboard")
+        let enabledUrl = fixture.path("Resources/Rules/UseTraitCollectionsRule/UseTraitCollectionsYesTest.storyboard")
+        
+        storyboardUseTraitCollectionsYes = try! .init(url: enabledUrl)
+        storyboardUseTraitCollectionsNo = try! .init(url: disabledUrl)
+        
     }
     
-    func testUseTraitCollectionsWithEmptyConfig() {
-        let contextMock = Context.mock(from: .default)
-        XCTAssertNil(contextMock.config.useTraitCollectionsRule)
-        XCTAssertFalse(Rules.UseTraitCollections.isDefault)
-    }
-    
-    func testUseTraitCollectionsEnabledWithDefaults() {
-        let defaultContext = Context.mock(from: Config.init(enabledRules: [Rules.UseTraitCollections.identifier]))
-        let ngRule = Rules.UseTraitCollections(context: defaultContext)
-        let ngViolations = try! ngRule.validate(xib: XibFile(url: noUrl))
-        XCTAssertEqual(ngViolations.count, 1)
+    func testUseTraitCollectionsNoConfig() {
+        let ibLinterConfig = Config.default
+        let rule = Rules.UseTraitCollections(context: .mock(from: ibLinterConfig))
         
-        let okConfig = Config(useTraitCollectionsRule: UseTraitCollectionsConfig(useTraitCollections: true))
-        let okRule = Rules.UseTraitCollections(context: .mock(from: okConfig))
-        let okViolations = try! okRule.validate(xib: XibFile(url: yesUrl))
-        XCTAssertTrue(okViolations.isEmpty)
+        let noViolations = rule.validate(storyboard: storyboardUseTraitCollectionsNo)
+        XCTAssertEqual(noViolations.count, 1)
+        
+        let yesViolations = rule.validate(storyboard: storyboardUseTraitCollectionsYes)
+        XCTAssertTrue(yesViolations.isEmpty)
     }
 
-    func testUseTraitCollectionsEnabledWithTrue() {
-        let ngConfig = Config(useTraitCollectionsRule: UseTraitCollectionsConfig(useTraitCollections: true))
-        let ngRule = Rules.UseTraitCollections(context: .mock(from: ngConfig))
-        let ngViolations = try! ngRule.validate(xib: XibFile(url: noUrl))
-        XCTAssertEqual(ngViolations.count, 1)
+    func testUseTraitCollectionsConfigWithTrue() {
+        let useTraitCollectionsConfig = UseTraitCollectionsConfig(useTraitCollections: true)
+        let ibLinterConfig = Config(useTraitCollectionsRule: useTraitCollectionsConfig)
+        let rule = Rules.UseTraitCollections(context: .mock(from: ibLinterConfig))
         
-        let okConfig = Config(useTraitCollectionsRule: UseTraitCollectionsConfig(useTraitCollections: true))
-        let okRule = Rules.UseTraitCollections(context: .mock(from: okConfig))
-        let okViolations = try! okRule.validate(xib: XibFile(url: yesUrl))
-        XCTAssertTrue(okViolations.isEmpty)
+        let noViolations = rule.validate(storyboard: storyboardUseTraitCollectionsNo)
+        XCTAssertEqual(noViolations.count, 1)
+        
+        let yesViolations = rule.validate(storyboard: storyboardUseTraitCollectionsYes)
+        XCTAssertTrue(yesViolations.isEmpty)
     }
 
-    func testUseTraitCollectionsEnabledWithFalse() {
-        let config = Config(useTraitCollectionsRule: .some(.init(useTraitCollections: false)))
-        let ngRule = Rules.UseTraitCollections(context: .mock(from: config))
-        let ngViolations = try! ngRule.validate(xib: XibFile(url: noUrl))
-        XCTAssertTrue(ngViolations.isEmpty)
+    func testUseTraitCollectionsConfigWithFalse() {
+        let useTraitCollectionsConfig = UseTraitCollectionsConfig(useTraitCollections: false)
+        let ibLinterConfig = Config(useTraitCollectionsRule: useTraitCollectionsConfig)
+        let rule = Rules.UseTraitCollections(context: .mock(from: ibLinterConfig))
         
-        let okRule = Rules.UseTraitCollections(context: .mock(from: config))
-        let okViolations = try! okRule.validate(xib: XibFile(url: yesUrl))
-        XCTAssertEqual(okViolations.count, 1)
+        let noViolations = rule.validate(storyboard: storyboardUseTraitCollectionsNo)
+        XCTAssertTrue(noViolations.isEmpty)
+        
+        let yesViolations = rule.validate(storyboard: storyboardUseTraitCollectionsYes)
+        XCTAssertEqual(yesViolations.count, 1)
     }
 }
