@@ -39,7 +39,7 @@ class UseTraitCollectionsTests: XCTestCase {
     }
 
     func testUseTraitCollectionsConfigWithTrue() {
-        let useTraitCollectionsConfig = UseTraitCollectionsConfig(useTraitCollections: true)
+        let useTraitCollectionsConfig = UseTraitCollectionsConfig(enabled: true)
         let ibLinterConfig = Config(useTraitCollectionsRule: useTraitCollectionsConfig)
         let rule = Rules.UseTraitCollections(context: .mock(from: ibLinterConfig))
         
@@ -51,7 +51,7 @@ class UseTraitCollectionsTests: XCTestCase {
     }
 
     func testUseTraitCollectionsConfigWithFalse() {
-        let useTraitCollectionsConfig = UseTraitCollectionsConfig(useTraitCollections: false)
+        let useTraitCollectionsConfig = UseTraitCollectionsConfig(enabled: false)
         let ibLinterConfig = Config(useTraitCollectionsRule: useTraitCollectionsConfig)
         let rule = Rules.UseTraitCollections(context: .mock(from: ibLinterConfig))
         

@@ -8,18 +8,18 @@
 import Foundation
 
 public struct UseTraitCollectionsConfig: Codable {
-    public let useTraitCollections: Bool
+    public let enabled: Bool
 
     enum CodingKeys: String, CodingKey {
-        case useTraitCollections = "use_trait_collections"
+        case enabled
     }
 
-    init(useTraitCollections: Bool) {
-        self.useTraitCollections = useTraitCollections
+    init(enabled: Bool) {
+        self.enabled = enabled
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        useTraitCollections = try container.decode(Bool.self, forKey: .useTraitCollections)
+        enabled = try container.decode(Bool.self, forKey: .enabled)
     }
 }

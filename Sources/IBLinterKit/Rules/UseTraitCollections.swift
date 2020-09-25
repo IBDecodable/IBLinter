@@ -13,33 +13,33 @@ extension Rules {
 
         static var identifier = "use_trait_collections"
         static var description = "Check id document useTraitCollections is enabled or diasbled"
-        let useTraitCollections: Bool
+        let enabled: Bool
 
         init(context: Context) {
             if let configUseTraitCollectionRule = context.config.useTraitCollectionsRule {
-                useTraitCollections = configUseTraitCollectionRule.useTraitCollections
+                enabled = configUseTraitCollectionRule.enabled
             } else {
-                useTraitCollections = true
+                enabled = true
             }
         }
 
         func validate(storyboard: StoryboardFile) -> [Violation] {
-            Rules.violation(useTraitCollections, file: storyboard)
+            Rules.violation(enabled, file: storyboard)
         }
 
         func validate(xib: XibFile) -> [Violation] {
-            Rules.violation(useTraitCollections, file: xib)
+            Rules.violation(enabled, file: xib)
         }
 
     }
 
-    fileprivate static func violation<T: InterfaceBuilderFile>(_ useTraitCollection: Bool, file: T) -> [Violation] {
+    fileprivate static func violation<T: InterfaceBuilderFile>(_ enabled: Bool, file: T) -> [Violation] {
 
         guard let document = file.document as? InterfaceBuilderDocument else {
             return []
         }
 
-        if useTraitCollection {
+        if enabled {
             if document.useTraitCollections == .some(true) {
                 return []
             } else {

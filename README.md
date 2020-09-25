@@ -146,7 +146,7 @@ You can configure `use_trait_collections rule by `UseTraitCollectionsConfig`. If
 
 |    key   | description |
 |:---------------:|:---------------:|
-|   use_trait_collections  |  `true` |
+|   enabled  |  `true` |
 
 
 ```yaml
@@ -174,5 +174,5 @@ use_base_class_rule:
 view_as_device_rule:
   device_id: retina4_0
 use_trait_collections_rule:
-  use_trait_collections: true
+  enabled: false
 ```
