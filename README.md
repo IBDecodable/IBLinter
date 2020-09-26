@@ -140,10 +140,19 @@ You can configure `view_as_device` rule by `ViewAsDeviceConfig`. If there are no
 | `iPhone XR`       | `retina6_1`          |
 | `iPhone XS Max`   | `retina6_5`          |
 
+### UseTraitCollectionsConfig
+
+You can configure `use_trait_collections rule by `UseTraitCollectionsConfig`. If there is no config then use_trait_collections is set to true
+
+|    key   | description |
+|:---------------:|:---------------:|
+|   enabled  |  `true` |
+
 
 ```yaml
 enabled_rules:
   - relative_to_margin
+  - use_trait_collections
 disabled_rules:
   - custom_class_name
 excluded:
@@ -164,4 +173,6 @@ use_base_class_rule:
       - SecondaryLabel
 view_as_device_rule:
   device_id: retina4_0
+use_trait_collections_rule:
+  enabled: false
 ```

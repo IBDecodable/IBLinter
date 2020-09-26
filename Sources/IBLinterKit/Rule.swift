@@ -36,6 +36,7 @@ public struct Rules {
             CustomModuleRule.self,
             UseBaseClassRule.self,
             AmbiguousViewRule.self,
+            UseTraitCollections.self,
             ViewAsDeviceRule.self,
             ReuseIdentifierRule.self,
             ColorResourcesRule.self
