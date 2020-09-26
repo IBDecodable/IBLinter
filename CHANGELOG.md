@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.25]
+
+### Added
+
+- Add GitLab JUnit reporter. [#163](https://github.com/IBDecodable/IBLinter/pull/163)
+- Add `stackview_backgroundcolor` rule, which detects background color definition for `UIStackView` to keep appearance compatibility between iOS 14 and less than iOS 13. [#165](https://github.com/IBDecodable/IBLinter/pull/165)
+- Add `use_trait_collections` rule, which checks if a document `useTraitCollections` is enabled or disabled. [#164](https://github.com/IBDecodable/IBLinter/pull/164)
+
 ## [0.4.24]
 
 ### Added
@@ -116,7 +124,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.24...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.25...HEAD
+[0.4.25]: https://github.com/IBDecodable/IBLinter/compare/0.4.24...0.4.25
 [0.4.24]: https://github.com/IBDecodable/IBLinter/compare/0.4.23...0.4.24
 [0.4.23]: https://github.com/IBDecodable/IBLinter/compare/0.4.22...0.4.23
 [0.4.22]: https://github.com/IBDecodable/IBLinter/compare/0.4.21...0.4.22
