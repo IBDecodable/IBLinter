@@ -1,4 +1,14 @@
-#if canImport(CommonCrypto)
+#if os(Linux)
+import Crypto
+import Foundation
+
+extension String {
+    internal func md5() -> String {
+        let data = Data(Insecure.MD5.hash(data: self.data(using: .utf8)!))
+        return String(data: data, encoding: .utf8)!
+    }
+}
+#elseif canImport(CommonCrypto)
 import CommonCrypto
 
 extension String {
