@@ -25,6 +25,8 @@ public struct Reporters {
             return CheckstyleReporter.self
         case GitLabJUnitReporter.identifier:
             return GitLabJUnitReporter.self
+        case CodeClimateReporter.identifier:
+            return CodeClimateReporter.self
         default:
             fatalError("no reporter with identifier '\(reporter) available'")
         }
