@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+## [0.4.26]
+
+### Added
+
+- Add CodeClimate reporter. [#167](https://github.com/IBDecodable/IBLinter/pull/167)
+- Support filename for including/excluding linting target. [#168](https://github.com/IBDecodable/IBLinter/pull/168)
 
 ## [0.4.25]
 
@@ -124,7 +130,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.25...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.26...HEAD
+[0.4.26]: https://github.com/IBDecodable/IBLinter/compare/0.4.25...0.4.26
 [0.4.25]: https://github.com/IBDecodable/IBLinter/compare/0.4.24...0.4.25
 [0.4.24]: https://github.com/IBDecodable/IBLinter/compare/0.4.23...0.4.24
 [0.4.23]: https://github.com/IBDecodable/IBLinter/compare/0.4.22...0.4.23
