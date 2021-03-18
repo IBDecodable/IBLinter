@@ -9,10 +9,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 1
-      - name: Install SwiftLint
-        run: brew install swiftlint
-        env:
-          HOMEBREW_NO_INSTALL_CLEANUP: 1
       - name: Lint
         run: |
           pod lib lint
