@@ -91,24 +91,31 @@ public class Validator {
                     let files = self.interfaceBuilderFiles(atPath: URL(fileURLWithPath: path))
                     result.xibPaths.formUnion(files.xibPaths)
                     result.storyboardPaths.formUnion(files.storyboardPaths)
-            }
+                }
         }
 
         func interfaceBuilderFiles(atPath path: URL) -> InterfaceBuilderFiles {
             var xibs: Set<URL> = []
             var storyboards: Set<URL> = []
+            guard path.hasDirectoryPath else {
+                switch path.pathExtension {
+                case "xib": xibs.insert(path)
+                case "storyboard": storyboards.insert(path)
+                default: break
+                }
+                return InterfaceBuilderFiles(xibPaths: xibs, storyboardPaths: storyboards)
+            }
             guard let enumerator = fileManager.enumerator(at: path, includingPropertiesForKeys: [.isRegularFileKey]) else {
                 return InterfaceBuilderFiles(xibPaths: xibs, storyboardPaths: storyboards)
             }
-
-            for element in enumerator {
-                guard let absolute = element as? URL else { continue }
-                switch absolute.pathExtension {
-                case "xib": xibs.insert(absolute)
-                case "storyboard": storyboards.insert(absolute)
-                default: continue
+            enumerator.compactMap { $0 as? URL }
+                .forEach { url in
+                    switch url.pathExtension {
+                    case "xib": xibs.insert(url)
+                    case "storyboard": storyboards.insert(url)
+                    default: break
+                    }
                 }
-            }
             return InterfaceBuilderFiles(xibPaths: xibs, storyboardPaths: storyboards)
         }
     }
