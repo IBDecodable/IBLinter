@@ -1,6 +1,6 @@
 //
 //  DumpRuleDocument.swift
-//  Tools
+//  IBLinterTools
 //
 //  Created by Yuta Saito on 2019/03/31.
 //

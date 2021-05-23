@@ -17,7 +17,7 @@ var package = Package(
             name: "IBLinterKit", targets: ["IBLinterKit"]
         ),
         .executable(
-            name: "iblinter-tools", targets: ["Tools"]
+            name: "iblinter-tools", targets: ["IBLinterTools"]
         )
     ],
     dependencies: [
@@ -43,7 +43,7 @@ var package = Package(
             ]
         ),
         .target(
-            name: "Tools",
+            name: "IBLinterTools",
             dependencies: ["IBLinterKit", "Commandant"]
         ),
         .testTarget(
