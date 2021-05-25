@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+## [0.4.27]
+
+### Fixed
+
+- Rename Tools to IBLinterTools to avoid naming conflict. [#171](https://github.com/IBDecodable/IBLinter/pull/171)
+- Incorrect warning for duplicate element id. [#170](https://github.com/IBDecodable/IBLinter/issues/170)
+
 ## [0.4.26]
 
 ### Added
@@ -130,7 +137,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.26...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.27...HEAD
+[0.4.27]: https://github.com/IBDecodable/IBLinter/compare/0.4.26...0.4.27
 [0.4.26]: https://github.com/IBDecodable/IBLinter/compare/0.4.25...0.4.26
 [0.4.25]: https://github.com/IBDecodable/IBLinter/compare/0.4.24...0.4.25
 [0.4.24]: https://github.com/IBDecodable/IBLinter/compare/0.4.23...0.4.24
