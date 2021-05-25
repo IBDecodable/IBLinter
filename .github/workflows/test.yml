@@ -1,33 +1,50 @@
 name: Run unit tests
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
-  test_macOS:
-    name: Build and Test on macOS
+  lint:
+    name: Lint check
     runs-on: macOS-10.15
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-        with:
-          fetch-depth: 1
-      - name: Lint
-        run: |
-          pod lib lint
-          swiftlint --strict
-      - name: Run Test
-        run: swift test
-  test_linux:
-    name: Build and Test on Linux
-    runs-on: ubuntu-18.04
+      - uses: actions/checkout@v2
+      - run: pod lib lint
+      - run: swiftlint --strict
+
+  test_on_macOS:
+    name: Build and Test on macOS
+    strategy:
+      matrix:
+        xcode-version:
+          - /Applications/Xcode_11.4.1.app
+          - /Applications/Xcode_12.3.app
+          - /Applications/Xcode_12.4.app
+    runs-on: macOS-10.15
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-        with:
-          fetch-depth: 1
-      - name: Run Test
+      - uses: actions/checkout@v2
+      - run: sudo xcode-select -s "${{ matrix.xcode-version }}"
+      - run: swift --version
+      - run: swift test
+
+  test_Linux:
+    name: Build and Test on Linux
+    strategy:
+      matrix:
+        swift-version: ["5.1", "5.2", "5.3", "5.4"]
+    runs-on: Ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup swiftenv
         run: |
           git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
           export SWIFTENV_ROOT="$HOME/.swiftenv"
           export PATH="$SWIFTENV_ROOT/bin:$PATH"
           eval "$(swiftenv init -)"
-          swiftenv install
-          swift test --enable-test-discovery
+          echo "$PATH" >> $GITHUB_PATH
+      - run: rm .swift-version
+      - name: Install Swift
+        run: swiftenv install "${{ matrix.swift-version }}" --skip-existing
+      - run: swift --version
+      - run: swift test --enable-test-discovery
