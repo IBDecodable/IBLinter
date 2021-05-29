@@ -88,6 +88,17 @@ public class Validator {
         func interfaceBuilderFiles(withPatterns patterns: [URL]) -> InterfaceBuilderFiles {
             return patterns.flatMap { globber.expandRecursiveStars(pattern: $0.path) }
                 .reduce(into: InterfaceBuilderFiles()) { result, path in
+                    let url = URL(fileURLWithPath: path)
+                    guard url.hasDirectoryPath else {
+                        switch url.pathExtension {
+                        case "xib": result.xibPaths.insert(url)
+                        case "storyboard": result.storyboardPaths.insert(url)
+                        default:
+                            break
+                        }
+                        return
+                    }
+
                     let files = self.interfaceBuilderFiles(atPath: URL(fileURLWithPath: path))
                     result.xibPaths.formUnion(files.xibPaths)
                     result.storyboardPaths.formUnion(files.storyboardPaths)

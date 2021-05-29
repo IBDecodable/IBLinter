@@ -24,10 +24,13 @@ struct ValidateCommand: CommandProtocol {
             fatalError("\(workDirectoryString) is not directory.")
         }
 
-        let config = Config(options: options) ?? Config.default
+        var config = Config(options: options) ?? Config.default
         if config.disableWhileBuildingForIB &&
             ProcessInfo.processInfo.compiledForInterfaceBuilder {
             return .success(())
+        }
+        if config.included.isEmpty {
+            config.included = options.included
         }
         let validator = Validator()
         let violations = validator.validate(workDirectory: workDirectory, config: config)
@@ -52,12 +55,15 @@ struct ValidateOptions: OptionsProtocol {
     let reporter: String?
     let iblinterFilePath: String?
     let configurationFile: String?
+    let included: [String]
 
-    static func create(_ path: String?) -> (_ reporter: String?) -> (_ script: String?) -> (_ config: String?) -> ValidateOptions {
+    static func create(_ path: String?) -> (_ reporter: String?) -> (_ script: String?) -> (_ config: String?) -> (_ included: [String]) -> ValidateOptions {
         return { reporter in
             return { script in
                 return { config in
-                    self.init(path: path, reporter: reporter, iblinterFilePath: script, configurationFile: config)
+                    return { included in
+                        return self.init(path: path, reporter: reporter, iblinterFilePath: script, configurationFile: config, included: included)
+                    }
                 }
             }
         }
@@ -69,6 +75,7 @@ struct ValidateOptions: OptionsProtocol {
             <*> mode <| Option(key: "reporter", defaultValue: nil, usage: "the reporter used to log errors and warnings")
             <*> mode <| Option(key: "script", defaultValue: nil, usage: "custom IBLinterfile.swift")
             <*> mode <| Option(key: "config", defaultValue: nil, usage: "the path to IBLint's configuration file")
+            <*> mode <| Argument<[String]>(defaultValue: [], usage: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.", usageParameter: "included") //swiftlint:disable:this line_length
     }
 }
 
