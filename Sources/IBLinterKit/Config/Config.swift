@@ -12,7 +12,7 @@ public struct Config: Codable {
     public let disabledRules: [String]
     public let enabledRules: [String]
     public let excluded: [String]
-    public let included: [String]
+    public var included: [String]
     public let customModuleRule: [CustomModuleConfig]
     public let useBaseClassRule: [UseBaseClassConfig]
     public let viewAsDeviceRule: ViewAsDeviceConfig?
