@@ -29,13 +29,12 @@ extension Rules {
         }
         
         private func validate<T: InterfaceBuilderFile>(for viewController: ViewControllerProtocol, file: T) -> Violation? {
-            guard let hidesBottomBar = viewController.hidesBottomBarWhenPushed,
-                  excluded.isEmpty,
-                  !excluded.contains(where: { $0 == viewController.customClass ?? viewController.elementClass })
-                   else {
+            guard let customClass = viewController.customClass,
+                  let hidesBottomBar = viewController.hidesBottomBarWhenPushed,
+                  !excluded.contains(where: { $0 == customClass }) else {
                 return nil
             }
-            let message = "\(viewController.customClass ?? viewController.elementClass).hidesBottomBarWhenPushed is not enabled. id: \(viewController.id)"
+            let message = "\(customClass).hidesBottomBarWhenPushed is not enabled."
             return hidesBottomBar ? nil : Violation(pathString: file.pathString, message: message, level: .error)
         }
     }
