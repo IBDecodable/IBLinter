@@ -27,7 +27,7 @@ public struct HidesBottomBarConfig: Codable {
 }
 
 extension HidesBottomBarConfig {
-    
+
     enum CodingKeys: String, CodingKey {
         case excludedViewControllers = "excluded_view_controllers"
     }
