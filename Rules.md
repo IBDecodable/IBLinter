@@ -139,3 +139,11 @@ Check if named color resources are valid.
 |   Default Rule  |  `false` |
 
 Check if a document useTraitCollections is enabled or disabled
+
+## HidesBottomBarConfigRule
+
+|    identifier   | `hides_bottom_bar` |
+|:---------------:|:---------------:|
+|   Default Rule  |  `false` |
+
+Check if custom class of ViewController's hidesBottomBarWhenPushed is enabled
