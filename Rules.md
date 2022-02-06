@@ -146,4 +146,4 @@ Check if a document useTraitCollections is enabled or disabled
 |:---------------:|:---------------:|
 |   Default Rule  |  `false` |
 
-Check if custom class of ViewController's hidesBottomBarWhenPushed is enabled
+Check if ViewController's hidesBottomBarWhenPushed is enabled
