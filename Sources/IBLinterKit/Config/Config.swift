@@ -97,9 +97,4 @@ public struct Config: Codable {
     public init(url: URL) throws {
         self = try YAMLDecoder().decode(from: String.init(contentsOf: url))
     }
-
-    public init(directoryURL: URL, fileName: String = fileName) throws {
-        let url = directoryURL.appendingPathComponent(fileName)
-        try self.init(url: url)
-    }
 }

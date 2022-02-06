@@ -24,7 +24,7 @@ struct ValidateCommand: CommandProtocol {
             fatalError("\(workDirectoryString) is not directory.")
         }
 
-        var config = Config(options: options) ?? Config.default
+        var config = (try? Config(url: options.deriveConfigurationFile())) ?? Config.default
         if config.disableWhileBuildingForIB &&
             ProcessInfo.processInfo.compiledForInterfaceBuilder {
             return .success(())
@@ -77,23 +77,21 @@ struct ValidateOptions: OptionsProtocol {
             <*> mode <| Option(key: "config", defaultValue: nil, usage: "the path to IBLint's configuration file")
             <*> mode <| Argument<[String]>(defaultValue: [], usage: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.", usageParameter: "included") //swiftlint:disable:this line_length
     }
+
+    func deriveConfigurationFile() -> URL {
+        if let configurationFile = configurationFile {
+            let configurationURL = URL(fileURLWithPath: configurationFile)
+            return configurationURL
+        } else {
+            let workDirectoryString = path ?? FileManager.default.currentDirectoryPath
+            let workDirectory = URL(fileURLWithPath: workDirectoryString)
+            return workDirectory.appendingPathComponent(Config.fileName)
+        }
+    }
 }
 
 extension ProcessInfo {
     var compiledForInterfaceBuilder: Bool {
         return environment["COMPILED_FOR_INTERFACE_BUILDER"] != nil
-    }
-}
-
-extension Config {
-    init?(options: ValidateOptions) {
-        if let configurationFile = options.configurationFile {
-            let configurationURL = URL(fileURLWithPath: configurationFile)
-            try? self.init(url: configurationURL)
-        } else {
-            let workDirectoryString = options.path ?? FileManager.default.currentDirectoryPath
-            let workDirectory = URL(fileURLWithPath: workDirectoryString)
-            try? self.init(directoryURL: workDirectory)
-        }
     }
 }
