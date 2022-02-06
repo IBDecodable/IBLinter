@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [0.5.0]
+
+### Added
+
+- Add a new rule: HidesBottomBar [#176](https://github.com/IBDecodable/IBLinter/pull/176)
+- Support dynamic paths [#135](https://github.com/IBDecodable/IBLinter/pull/135)
+
+### Fixed
+
+- Upgrade XcodeProjKit to support SPM [#175](https://github.com/IBDecodable/IBLinter/pull/175)
+
 ## [0.4.27]
 
 ### Fixed
@@ -137,7 +149,8 @@ Fix bug where IBLinter ignores to validate UICollectionViewCell. [#97](https://g
 - First version
 
 
-[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.4.27...HEAD
+[Unreleased]: https://github.com/IBDecodable/IBLinter/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/IBDecodable/IBLinter/compare/0.4.27...0.5.0
 [0.4.27]: https://github.com/IBDecodable/IBLinter/compare/0.4.26...0.4.27
 [0.4.26]: https://github.com/IBDecodable/IBLinter/compare/0.4.25...0.4.26
 [0.4.25]: https://github.com/IBDecodable/IBLinter/compare/0.4.24...0.4.25
