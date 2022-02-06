@@ -12,41 +12,41 @@ import IBDecodable
 class HidesBottomBarRuleTests: XCTestCase {
 
     let fixture = Fixture()
-    
+
     var storyboardHidesBottomBarWhenPushedYes: StoryboardFile!
     var storyboardHidesBottomBarWhenPushedNo: StoryboardFile!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         let showUrl = fixture.path("Resources/Rules/HidesBottomBarRule/HidesBottomBarYesViewController.storyboard")
         let hideUrl = fixture.path("Resources/Rules/HidesBottomBarRule/HidesBottomBarNoViewController.storyboard")
-        
+
         storyboardHidesBottomBarWhenPushedYes = try! .init(url: showUrl)
         storyboardHidesBottomBarWhenPushedNo = try! .init(url: hideUrl)
         
     }
 
     func testHidesBottomBarWithExcludeViolation() {
-        let hidesBottomBarConfig = HidesBottomBarConfig(excludedViewControllers: ["HidesBottomBarNoViewController"])
+        let hidesBottomBarConfig = HidesBottomBarConfig(excludedViewControllers: ["HidesBottomBarNoViewController", "UIViewController"])
         let ibLinterConfig = Config(hidesBottomBarRule: hidesBottomBarConfig)
         let rule = Rules.HidesBottomBarRule(context: .mock(from: ibLinterConfig))
-        
+
         let noViolations = rule.validate(storyboard: storyboardHidesBottomBarWhenPushedNo)
         XCTAssertTrue(noViolations.isEmpty)
-        
+
         let yesViolations = rule.validate(storyboard: storyboardHidesBottomBarWhenPushedYes)
         XCTAssertTrue(yesViolations.isEmpty)
     }
     
     func testHidesBottomBarWithIncludeViolation() {
-        let hidesBottomBarConfig = HidesBottomBarConfig(excludedViewControllers: ["HidesBottomBarYesViewController"])
+        let hidesBottomBarConfig = HidesBottomBarConfig(excludedViewControllers: [])
         let ibLinterConfig = Config(hidesBottomBarRule: hidesBottomBarConfig)
         let rule = Rules.HidesBottomBarRule(context: .mock(from: ibLinterConfig))
-        
+
         let noViolations = rule.validate(storyboard: storyboardHidesBottomBarWhenPushedNo)
-        XCTAssertEqual(noViolations.count, 1)
-        
+        XCTAssertEqual(noViolations.count, 2)
+
         let yesViolations = rule.validate(storyboard: storyboardHidesBottomBarWhenPushedYes)
         XCTAssertTrue(yesViolations.isEmpty)
     }
