@@ -30,10 +30,10 @@ extension Rules {
         
         private func validate<T: InterfaceBuilderFile>(for viewController: ViewControllerProtocol, file: T) -> Violation? {
             guard let customClass = viewController.customClass,
-                  let hidesBottomBar = viewController.hidesBottomBarWhenPushed,
                   !excluded.contains(where: { $0 == customClass }) else {
                 return nil
             }
+            let hidesBottomBar = viewController.hidesBottomBarWhenPushed ?? false
             let message = "\(customClass).hidesBottomBarWhenPushed is not enabled."
             return hidesBottomBar ? nil : Violation(pathString: file.pathString, message: message, level: .error)
         }
