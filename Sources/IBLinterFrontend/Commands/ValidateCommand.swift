@@ -75,7 +75,7 @@ struct ValidateOptions: OptionsProtocol {
             <*> mode <| Option(key: "reporter", defaultValue: nil, usage: "the reporter used to log errors and warnings")
             <*> mode <| Option(key: "script", defaultValue: nil, usage: "custom IBLinterfile.swift")
             <*> mode <| Option(key: "config", defaultValue: nil, usage: "the path to IBLint's configuration file")
-            <*> mode <| Argument<[String]>(defaultValue: [], usage: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.", usageParameter: "included") //swiftlint:disable:this line_length
+            <*> mode <| Argument<[String]>(defaultValue: [], usage: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.", usageParameter: "included") // swiftlint:disable:this line_length
     }
 
     func deriveConfigurationFile() -> URL {
