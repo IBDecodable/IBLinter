@@ -21,7 +21,7 @@ var package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/ykkd/IBDecodable.git", .branch("feature/add_hides_bottom_bar")), // TODO: fix
+        .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.5.0"),
         .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.17.0")),
         .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.29.0"),
         .package(url: "https://github.com/phimage/XcodeProjKit.git", from: "2.2.0"),
