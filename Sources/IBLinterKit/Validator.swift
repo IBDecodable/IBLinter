@@ -99,7 +99,7 @@ public class Validator {
                         return
                     }
 
-                    let files = self.interfaceBuilderFiles(atPath: URL(fileURLWithPath: path))
+                    let files = self.interfaceBuilderFiles(atPath: url)
                     result.xibPaths.formUnion(files.xibPaths)
                     result.storyboardPaths.formUnion(files.storyboardPaths)
                 }
@@ -138,12 +138,24 @@ public class Validator {
             files = matcher.interfaceBuilderFiles(atPath: workDirectory)
         } else {
             files = matcher.interfaceBuilderFiles(
-                withPatterns: config.included.map { workDirectory.appendingPathComponent($0) }
+                withPatterns: config.included.map {
+                    if $0.starts(with: "/") {
+                        return URL(fileURLWithPath: $0)
+                    } else {
+                        return workDirectory.appendingPathComponent($0)
+                    }
+                }
             )
         }
 
         let excluded = matcher.interfaceBuilderFiles(
-            withPatterns: config.excluded.map { workDirectory.appendingPathComponent($0) }
+            withPatterns: config.excluded.map {
+                if $0.starts(with: "/") {
+                    return URL(fileURLWithPath: $0)
+                } else {
+                    return workDirectory.appendingPathComponent($0)
+                }
+            }
         )
         let xibLintablePaths = files.xibPaths.subtracting(excluded.xibPaths)
         let storyboardLintablePaths = files.storyboardPaths.subtracting(excluded.storyboardPaths)
