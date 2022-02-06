@@ -148,11 +148,19 @@ You can configure `use_trait_collections rule by `UseTraitCollectionsConfig`. If
 |:---------------:|:---------------:|
 |   enabled  |  `true` |
 
+### HidesBottomBarConfig
+
+You can configure `hides_bottom_bar rule by `HidesBottomBarConfig` list.
+
+|    key   | description |
+|:---------------:|:---------------:|
+|   `excluded_view_controllers`  |  Controller's class name to ignore `hides_bottom_bar` rule. |
 
 ```yaml
 enabled_rules:
   - relative_to_margin
   - use_trait_collections
+  - hides_bottom_bar
 disabled_rules:
   - custom_class_name
 excluded:
@@ -175,4 +183,8 @@ view_as_device_rule:
   device_id: retina4_0
 use_trait_collections_rule:
   enabled: false
+hides_bottom_bar_rule:
+  excluded_view_controllers:
+      - FirstViewController
+      - SecondViewController
 ```

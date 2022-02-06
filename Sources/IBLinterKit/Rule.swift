@@ -39,7 +39,8 @@ public struct Rules {
             UseTraitCollections.self,
             ViewAsDeviceRule.self,
             ReuseIdentifierRule.self,
-            ColorResourcesRule.self
+            ColorResourcesRule.self,
+            HidesBottomBarRule.self
         ]
     }()
 
