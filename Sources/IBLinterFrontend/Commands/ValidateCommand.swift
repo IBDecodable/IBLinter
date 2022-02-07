@@ -22,7 +22,7 @@ struct ValidateCommand: ParsableCommand {
     @Option(help: "the path to IBLint's configuration file")
     var configurationFile: String?
     @Option(help: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.")
-    var included: [String]
+    var included: [String] = []
 
     func run() throws {
         let workDirectoryString = path ?? FileManager.default.currentDirectoryPath

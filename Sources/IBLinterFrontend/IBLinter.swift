@@ -11,5 +11,4 @@ import IBLinterKit
 public struct IBLinter: ParsableCommand {
     public init() {}
     public static let configuration = CommandConfiguration(commandName: "iblinter", version: Version.current.value, subcommands: [ValidateCommand.self], defaultSubcommand: ValidateCommand.self)
-    public func run() throws {}
 }
