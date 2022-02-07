@@ -24,7 +24,7 @@ var package = Package(
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.5.0"),
         .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.29.0"),
         .package(url: "https://github.com/phimage/XcodeProjKit.git", from: "2.2.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.0.1"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.0.5"),
     ],
     targets: [
         .target(
