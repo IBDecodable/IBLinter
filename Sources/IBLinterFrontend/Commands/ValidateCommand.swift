@@ -12,7 +12,7 @@ import ArgumentParser
 
 struct ValidateCommand: ParsableCommand {
     static let configuration = CommandConfiguration(commandName: "lint", abstract: "Print lint warnings and errors")
-    
+
     @Option(help: "validate project root directory")
     var path: String?
     @Option(help: "the reporter used to log errors and warnings")
@@ -51,7 +51,7 @@ struct ValidateCommand: ParsableCommand {
             throw ValidationError("")
         }
     }
-    
+
     func deriveConfigurationFile() -> URL {
         if let configurationFile = configurationFile {
             let configurationURL = URL(fileURLWithPath: configurationFile)

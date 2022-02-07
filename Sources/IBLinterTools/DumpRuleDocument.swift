@@ -14,13 +14,12 @@ import Darwin
 #endif
 
 struct DumpRuleDocument: ParsableCommand {
-    
+
     static let configuration = CommandConfiguration(commandName: "dump-rule-docs", abstract: "Dump rule docs")
 
     @Option(help: "The path where the documentation should be saved.")
     var path: String?
-    
-    
+
     func run() throws {
         let content = Rules.allRules.map { $0.dumpMarkdown() }.joined(separator: "\n\n")
         if let path = path {
