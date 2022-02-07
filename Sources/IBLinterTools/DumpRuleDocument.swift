@@ -5,7 +5,7 @@
 //  Created by Yuta Saito on 2019/03/31.
 //
 
-import Commandant
+import ArgumentParser
 import IBLinterKit
 #if os(Linux)
 import Glibc
@@ -13,40 +13,25 @@ import Glibc
 import Darwin
 #endif
 
-struct DumpRuleDocument: CommandProtocol {
+struct DumpRuleDocument: ParsableCommand {
+    
+    static let configuration = CommandConfiguration(commandName: "dump-rule-docs", abstract: "Dump rule docs")
 
-    let verb = "dump-rule-docs"
-    let function = "Dump rule docs"
-
-    typealias ClientError = CommandantError<()>
-    struct Options: OptionsProtocol {
-        typealias ClientError = CommandantError<()>
-        let path: String?
-
-        static func create(_ path: String?) -> Options {
-            return self.init(path: path)
-        }
-
-        static func evaluate(_ mode: CommandMode) -> Result<Options, CommandantError<ClientError>> {
-            return create
-                <*> mode <| Option(
-                    key: "path", defaultValue: nil,
-                    usage: "The path where the documentation should be saved.")
-        }
-    }
-
-    func run(_ options: Options) -> Result<(), ClientError> {
+    @Option(help: "The path where the documentation should be saved.")
+    var path: String?
+    
+    
+    func run() throws {
         let content = Rules.allRules.map { $0.dumpMarkdown() }.joined(separator: "\n\n")
-        if let path = options.path {
+        if let path = path {
             do {
                 try content.write(toFile: path, atomically: true, encoding: .utf8)
             } catch {
-                fputs("Something went wrong", stderr)
+                throw ValidationError("Something went wrong")
             }
         } else {
             print(content)
         }
-        return .success(())
     }
 }
 
