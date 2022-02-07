@@ -42,7 +42,7 @@ struct ValidateCommand: ParsableCommand {
         let validator = Validator()
         let violations = validator.validate(workDirectory: workDirectory, config: config)
 
-        let reporter = Reporters.reporter(from: reporter ?? config.reporter)
+        let reporter = Reporters.reporter(from: self.reporter ?? config.reporter)
         let report = reporter.generateReport(violations: violations)
         print(report)
 
