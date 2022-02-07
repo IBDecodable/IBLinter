@@ -22,7 +22,6 @@ var package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.5.0"),
-        .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.17.0")),
         .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.29.0"),
         .package(url: "https://github.com/phimage/XcodeProjKit.git", from: "2.2.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
@@ -39,14 +38,14 @@ var package = Package(
         .target(
             name: "IBLinterKit",
             dependencies: [
-                "IBDecodable", "Commandant",
+                "IBDecodable",
                 "SourceKittenFramework", "XcodeProjKit",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
         .target(
             name: "IBLinterTools",
-            dependencies: ["IBLinterKit", "Commandant"]
+            dependencies: ["IBLinterKit"]
         ),
         .testTarget(
             name: "IBLinterKitTest",
