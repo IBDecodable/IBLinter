@@ -13,15 +13,15 @@ import ArgumentParser
 struct ValidateCommand: ParsableCommand {
     static let configuration = CommandConfiguration(commandName: "lint", abstract: "Print lint warnings and errors")
 
-    @Option(help: "validate project root directory")
+    @Option(name: .long, help: "validate project root directory")
     var path: String?
-    @Option(help: "the reporter used to log errors and warnings")
+    @Option(name: .long, help: "the reporter used to log errors and warnings")
     var reporter: String?
-    @Option(help: "custom IBLinterfile.swift")
+    @Option(name: .long, help: "custom IBLinterfile.swift")
     var iblinterFilePath: String?
-    @Option(help: "the path to IBLint's configuration file")
+    @Option(name: .long, help: "the path to IBLint's configuration file")
     var configurationFile: String?
-    @Option(help: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.")
+    @Argument(help: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.")
     var included: [String] = []
 
     func run() throws {
