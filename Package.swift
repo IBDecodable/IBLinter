@@ -59,5 +59,5 @@ var package = Package(
 
 #if os(Linux)
 package.dependencies.append(.package(url: "https://github.com/apple/swift-crypto.git", from: "1.0.0"))
-package.targets[2].dependencies.append("Crypto")
+package.targets[2].dependencies.append(.product(name: "Crypto", package: "swift-crypto"))
 #endif
