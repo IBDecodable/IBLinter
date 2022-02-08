@@ -45,7 +45,7 @@ var package = Package(
         ),
         .target(
             name: "IBLinterTools",
-            dependencies: ["IBLinterKit"]
+            dependencies: ["IBLinterKit", .product(name: "ArgumentParser", package: "swift-argument-parser")]
         ),
         .testTarget(
             name: "IBLinterKitTest",
