@@ -5,20 +5,11 @@
 //  Created by SaitoYuta on 2017/12/11.
 //
 
-import Commandant
+import ArgumentParser
+import IBLinterKit
 
-public struct IBLinter {
-
+public struct IBLinter: ParsableCommand {
     public init() {}
-
-    public func run() {
-        let registry = CommandRegistry<CommandantError<()>>()
-        registry.register(ValidateCommand())
-        registry.register(HelpCommand(registry: registry))
-        registry.register(VersionCommand())
-
-        registry.main(defaultVerb: ValidateCommand().verb) { (error) in
-            print(String.init(describing: error))
-        }
-    }
+    public static let configuration = CommandConfiguration(commandName: "iblinter", version: Version.current.value,
+                                                           subcommands: [ValidateCommand.self], defaultSubcommand: ValidateCommand.self)
 }

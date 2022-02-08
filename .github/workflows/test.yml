@@ -32,7 +32,7 @@ jobs:
     name: Build and Test on Linux
     strategy:
       matrix:
-        swift-version: ["5.1", "5.2", "5.3", "5.4"]
+        swift-version: ["5.2", "5.3", "5.4"]
     runs-on: Ubuntu-18.04
     steps:
       - uses: actions/checkout@v2

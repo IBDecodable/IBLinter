@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -22,9 +22,9 @@ var package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/IBDecodable/IBDecodable.git", from: "0.5.0"),
-        .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.17.0")),
         .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.29.0"),
         .package(url: "https://github.com/phimage/XcodeProjKit.git", from: "2.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -38,13 +38,14 @@ var package = Package(
         .target(
             name: "IBLinterKit",
             dependencies: [
-                "IBDecodable", "Commandant",
-                "SourceKittenFramework", "XcodeProjKit"
+                "IBDecodable",
+                .product(name: "SourceKittenFramework", package: "SourceKitten"), "XcodeProjKit",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
         .target(
             name: "IBLinterTools",
-            dependencies: ["IBLinterKit", "Commandant"]
+            dependencies: ["IBLinterKit", .product(name: "ArgumentParser", package: "swift-argument-parser")]
         ),
         .testTarget(
             name: "IBLinterKitTest",
@@ -58,5 +59,5 @@ var package = Package(
 
 #if os(Linux)
 package.dependencies.append(.package(url: "https://github.com/apple/swift-crypto.git", from: "1.0.0"))
-package.targets[2].dependencies.append("Crypto")
+package.targets[2].dependencies.append(.product(name: "Crypto", package: "swift-crypto"))
 #endif
