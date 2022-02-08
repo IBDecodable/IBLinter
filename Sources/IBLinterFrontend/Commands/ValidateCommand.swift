@@ -47,7 +47,7 @@ struct ValidateCommand: ParsableCommand {
 
         let numberOfSeriousViolations = violations.filter { $0.level == .error }.count
         if numberOfSeriousViolations > 0 {
-            throw ValidationError("")
+            throw ExitCode.failure
         }
     }
 
