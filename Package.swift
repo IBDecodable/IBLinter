@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -39,7 +39,7 @@ var package = Package(
             name: "IBLinterKit",
             dependencies: [
                 "IBDecodable",
-                "SourceKittenFramework", "XcodeProjKit",
+                .product(name: "SourceKittenFramework", package: "SourceKitten"), "XcodeProjKit",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
