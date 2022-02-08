@@ -17,8 +17,6 @@ struct ValidateCommand: ParsableCommand {
     var path: String?
     @Option(name: .long, help: "the reporter used to log errors and warnings")
     var reporter: String?
-    @Option(name: .long, help: "custom IBLinterfile.swift", completion: .file(extensions: ["swift"]))
-    var iblinterFilePath: String?
     @Option(name: .long, help: "the path to IBLint's configuration file", completion: .file())
     var configurationFile: String?
     @Argument(help: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.",
