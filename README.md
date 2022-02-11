@@ -185,6 +185,6 @@ use_trait_collections_rule:
   enabled: false
 hides_bottom_bar_rule:
   excluded_view_controllers:
-      - FirstViewController
-      - SecondViewController
+    - FirstViewController
+    - SecondViewController
 ```
