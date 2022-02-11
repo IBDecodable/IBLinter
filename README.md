@@ -142,7 +142,7 @@ You can configure `view_as_device` rule by `ViewAsDeviceConfig`. If there are no
 
 ### UseTraitCollectionsConfig
 
-You can configure `use_trait_collections rule by `UseTraitCollectionsConfig`. If there is no config then use_trait_collections is set to true
+You can configure `use_trait_collections` rule by `UseTraitCollectionsConfig`. If there is no config then use_trait_collections is set to true
 
 |    key   | description |
 |:---------------:|:---------------:|
@@ -150,7 +150,7 @@ You can configure `use_trait_collections rule by `UseTraitCollectionsConfig`. If
 
 ### HidesBottomBarConfig
 
-You can configure `hides_bottom_bar rule by `HidesBottomBarConfig` list.
+You can configure `hides_bottom_bar` rule by `HidesBottomBarConfig` list.
 
 |    key   | description |
 |:---------------:|:---------------:|
@@ -185,6 +185,6 @@ use_trait_collections_rule:
   enabled: false
 hides_bottom_bar_rule:
   excluded_view_controllers:
-      - FirstViewController
-      - SecondViewController
+    - FirstViewController
+    - SecondViewController
 ```
