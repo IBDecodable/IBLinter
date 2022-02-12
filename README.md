@@ -41,7 +41,7 @@ $ make install
 
 ## Usage
 
-You can see all description by `iblinter help`
+You can see all description by `iblinter --help`
 
 ```
 $ iblinter --help
