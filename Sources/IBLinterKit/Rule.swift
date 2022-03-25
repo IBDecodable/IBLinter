@@ -41,6 +41,7 @@ public struct Rules {
             ReuseIdentifierRule.self,
             ColorResourcesRule.self,
             HidesBottomBarRule.self,
+            HasInitialViewControllerRule.self,
             HasSingleViewControllerRule.self
         ]
     }()
