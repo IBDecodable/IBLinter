@@ -161,6 +161,7 @@ enabled_rules:
   - relative_to_margin
   - use_trait_collections
   - hides_bottom_bar
+  - has_single_view_controller
 disabled_rules:
   - custom_class_name
 excluded:
