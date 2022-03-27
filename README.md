@@ -41,15 +41,20 @@ $ make install
 
 ## Usage
 
-You can see all description by `iblinter help`
+You can see all description by `iblinter --help`
 
 ```
-$ iblinter help
-Available commands:
+$ iblinter --help
+USAGE: iblinter <subcommand>
 
-   help      Display general or command-specific help
-   lint      Print lint warnings and errors (default command)
-   version   Display the current version of iblinter
+OPTIONS:
+  --version               Show the version.
+  -h, --help              Show help information.
+
+SUBCOMMANDS:
+  lint (default)          Print lint warnings and errors
+
+  See 'iblinter help <subcommand>' for detailed help.
 ```
 
 ### Xcode
