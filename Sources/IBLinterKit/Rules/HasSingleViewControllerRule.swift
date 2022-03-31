@@ -28,7 +28,7 @@ extension Rules {
         let numberOfViewControllersInStoryboard = file.document.scenes?.filter { $0.viewController != nil }.count ?? 0
 
         if numberOfViewControllersInStoryboard > 1 {
-            return [Violation(pathString: file.pathString, message: "Should have only a single VC", level: .warning)]
+            return [Violation(pathString: file.pathString, message: "Should have only a single view controller", level: .warning)]
         } else {
             return []
         }
