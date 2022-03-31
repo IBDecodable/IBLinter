@@ -40,7 +40,9 @@ public struct Rules {
             ViewAsDeviceRule.self,
             ReuseIdentifierRule.self,
             ColorResourcesRule.self,
-            HidesBottomBarRule.self
+            HidesBottomBarRule.self,
+            HasInitialViewControllerRule.self,
+            HasSingleViewControllerRule.self
         ]
     }()
 
