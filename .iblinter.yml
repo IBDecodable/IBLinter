@@ -1,2 +1,4 @@
 enabled_rules:
   - ambiguous
+disabled_rules:
+  - trailing_comma
