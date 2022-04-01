@@ -42,7 +42,7 @@ public struct Rules {
             ColorResourcesRule.self,
             HidesBottomBarRule.self,
             HasInitialViewControllerRule.self,
-            HasSingleViewControllerRule.self
+            HasSingleViewControllerRule.self,
         ]
     }()
 
