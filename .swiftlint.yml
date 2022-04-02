@@ -12,3 +12,4 @@ disabled_rules:
   - cyclomatic_complexity
   - pattern_matching_keywords
   - nesting
+  - trailing_comma
