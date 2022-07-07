@@ -168,6 +168,7 @@ enabled_rules:
   - hides_bottom_bar
   - has_single_view_controller
   - has_initial_view_controller
+  - custom_view
 disabled_rules:
   - custom_class_name
 excluded:

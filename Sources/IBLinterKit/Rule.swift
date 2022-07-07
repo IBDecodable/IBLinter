@@ -43,6 +43,7 @@ public struct Rules {
             HidesBottomBarRule.self,
             HasInitialViewControllerRule.self,
             HasSingleViewControllerRule.self,
+            CustomViewRule.self,
         ]
     }()
 
