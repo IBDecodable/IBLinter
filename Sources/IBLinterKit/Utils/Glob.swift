@@ -42,17 +42,15 @@ public final class Glob {
         let patterns = expandRecursiveStars(pattern: pattern)
         var results: [String] = []
 
-        for pattern in patterns {
-            if executeGlob(pattern: pattern, gt: &gt) {
-                #if os(Linux)
-                let matchCount = Int(gt.gl_pathc)
-                #else
-                let matchCount = Int(gt.gl_matchc)
-                #endif
-                for i in 0..<matchCount {
-                    let path = String.init(cString: gt.gl_pathv[i]!)
-                    results.append(path)
-                }
+        for pattern in patterns where executeGlob(pattern: pattern, gt: &gt) {
+            #if os(Linux)
+            let matchCount = Int(gt.gl_pathc)
+            #else
+            let matchCount = Int(gt.gl_matchc)
+            #endif
+            for i in 0..<matchCount {
+                let path = String.init(cString: gt.gl_pathv[i]!)
+                results.append(path)
             }
         }
         return Set(results.map(URL.init(fileURLWithPath: )))
