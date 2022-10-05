@@ -21,6 +21,7 @@ public struct Config: Codable {
     public let reporter: String
     public let disableWhileBuildingForIB: Bool
     public let ignoreCache: Bool
+    public var cachePath: String?
 
     enum CodingKeys: String, CodingKey {
         case disabledRules = "disabled_rules"
@@ -35,6 +36,7 @@ public struct Config: Codable {
         case reporter = "reporter"
         case disableWhileBuildingForIB = "disable_while_building_for_ib"
         case ignoreCache = "ignore_cache"
+        case cachePath = "cache_path"
     }
 
     public static let fileName = ".iblinter.yml"
@@ -53,6 +55,7 @@ public struct Config: Codable {
         reporter = "xcode"
         disableWhileBuildingForIB = true
         ignoreCache = false
+        cachePath = nil
     }
 
     init(disabledRules: [String] = [], enabledRules: [String] = [],
@@ -63,7 +66,7 @@ public struct Config: Codable {
          useTraitCollectionsRule: UseTraitCollectionsConfig? = nil,
          hidesBottomBarRule: HidesBottomBarConfig? = nil,
          reporter: String = "xcode", disableWhileBuildingForIB: Bool = true,
-         ignoreCache: Bool = false) {
+         ignoreCache: Bool = false, cachePath: String? = nil) {
         self.disabledRules = disabledRules
         self.enabledRules = enabledRules
         self.excluded = excluded
@@ -76,6 +79,7 @@ public struct Config: Codable {
         self.reporter = reporter
         self.disableWhileBuildingForIB = disableWhileBuildingForIB
         self.ignoreCache = ignoreCache
+        self.cachePath = cachePath
     }
 
     public init(from decoder: Decoder) throws {
