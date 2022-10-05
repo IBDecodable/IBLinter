@@ -22,13 +22,13 @@ struct LintEmptyCache: LintCache {
 }
 
 protocol CacheFileManager {
-    var cacheDir: URL { get }
+    var defaultCacheDir: URL { get }
     func modificationDate(for path: String) -> Date?
-    func createCacheDirectory() throws
+    func createDirectory(at path: URL) throws
 }
 
 extension FileManager: CacheFileManager {
-    var cacheDir: URL {
+    var defaultCacheDir: URL {
         return urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("IBLinter/\(Version.current.value)")
     }
@@ -37,8 +37,8 @@ extension FileManager: CacheFileManager {
         return (try? attributesOfItem(atPath: path))?[.modificationDate] as? Date
     }
 
-    func createCacheDirectory() throws {
-        try createDirectory(at: cacheDir, withIntermediateDirectories: true, attributes: nil)
+    func createDirectory(at path: URL) throws {
+        try createDirectory(at: path, withIntermediateDirectories: true, attributes: nil)
     }
 }
 
@@ -46,11 +46,14 @@ public class LintDiskCache: LintCache {
     var content: LintCacheContent
     let fileManager: CacheFileManager
     let configHashKey: String
+    let cacheDir: URL
 
-    fileprivate init(content: LintCacheContent, fileManager: CacheFileManager, configHashKey: String) {
+    fileprivate init(content: LintCacheContent, fileManager: CacheFileManager,
+                     configHashKey: String, cacheDir: URL) {
         self.content = content
         self.fileManager = fileManager
         self.configHashKey = configHashKey
+        self.cacheDir = cacheDir
     }
 
     public func insertCache(for fileURL: URL, violations: [Violation]) {
@@ -71,18 +74,28 @@ public class LintDiskCache: LintCache {
 
 extension LintDiskCache {
 
+    static func deriveCacheDir(from config: Config, fileManager: CacheFileManager) -> URL {
+        return config.cachePath.flatMap { URL(fileURLWithPath: $0) } ?? fileManager.defaultCacheDir
+    }
+
     static func new(with fileManager: CacheFileManager, config: Config) throws -> LintCache {
         let emptyContent = LintCacheContent(entries: [:])
         let hashKey = try cacheHashKey(for: config)
-        return LintDiskCache(content: emptyContent, fileManager: fileManager, configHashKey: hashKey)
+        return LintDiskCache(content: emptyContent, fileManager: fileManager, configHashKey: hashKey,
+                             cacheDir: Self.deriveCacheDir(from: config, fileManager: fileManager))
     }
 
     static func load(with fileManager: CacheFileManager, config: Config) throws -> LintCache {
         let hashKey = try cacheHashKey(for: config)
-        let cacheFilePath = fileManager.cacheDir.appendingPathComponent(hashKey)
+        let cacheDir = Self.deriveCacheDir(from: config, fileManager: fileManager)
+        let cacheFilePath = cacheDir.appendingPathComponent(hashKey)
         let cacheFileContent = try Data(contentsOf: cacheFilePath)
         let content = try JSONDecoder().decode(LintCacheContent.self, from: cacheFileContent)
-        return LintDiskCache(content: content, fileManager: fileManager, configHashKey: hashKey)
+        return LintDiskCache(
+          content: content, fileManager: fileManager,
+          configHashKey: hashKey,
+          cacheDir: cacheDir
+        )
     }
 
     private static func cacheHashKey(for config: Config) throws -> String {
@@ -94,9 +107,9 @@ extension LintDiskCache {
     }
 
     public func save() throws {
-        let cacheFilePath = fileManager.cacheDir.appendingPathComponent(configHashKey)
+        let cacheFilePath = cacheDir.appendingPathComponent(configHashKey)
         let contentData = try JSONEncoder().encode(content)
-        try fileManager.createCacheDirectory()
+        try fileManager.createDirectory(at: cacheDir)
         try contentData.write(to: cacheFilePath)
     }
 }

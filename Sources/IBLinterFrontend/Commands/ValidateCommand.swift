@@ -19,6 +19,8 @@ struct ValidateCommand: ParsableCommand {
     var reporter: String?
     @Option(name: .long, help: "the path to IBLint's configuration file", completion: .file())
     var configurationFile: String?
+    @Option(name: .long, help: "the directory of the cache used when linting", completion: .directory)
+    var cachePath: String?
     @Argument(help: "included files/paths to lint. This is ignored if you specified included paths in your yml configuration file.",
               completion: .file())
     var included: [String] = []
@@ -37,6 +39,9 @@ struct ValidateCommand: ParsableCommand {
         }
         if config.included.isEmpty {
             config.included = included
+        }
+        if let cachePath = cachePath {
+            config.cachePath = cachePath
         }
         let validator = Validator()
         let violations = validator.validate(workDirectory: workDirectory, config: config)
